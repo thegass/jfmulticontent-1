@@ -7,7 +7,8 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="tt_content.list_type_pi1">Multiple Content</label>
-			<label index="tt_content.tx_jfmulticontent.view">View</label>
+            <label index="tt_content.colPosOfIrreContent">Multiple Content</label>
+            <label index="tt_content.tx_jfmulticontent.view">View</label>
 			<label index="tt_content.tx_jfmulticontent.view.I.0">Contents</label>
 			<label index="tt_content.tx_jfmulticontent.view.I.1">Pages</label>
 			<label index="tt_content.tx_jfmulticontent.view.I.2">Inline content</label>

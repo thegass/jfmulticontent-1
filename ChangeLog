@@ -1,4 +1,7 @@
 
+2019-09-28  Franz Holzinger  <franz@ttproducts.de>
+    * Add support for TYPO3 7 and 8
+    * Remove support for TYPO3 before 7.6
 
 2019-09-05  Franz Holzinger  <franz@ttproducts.de>
 

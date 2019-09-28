@@ -25,6 +25,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 /**
  * Class for updating jfmulticontent content elements
  *
@@ -61,19 +64,15 @@ class ext_update
 	 */
 	public function main() {
 		$out = '';
-		if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4003000) {
-			// add flashmessages styles
-			$cssPath = $GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('jfmulticontent');
-			$out .= '<link rel="stylesheet" type="text/css" href="'.$cssPath.'compat/flashmessages.css" media="screen" />';
-		}
-		$this->flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
+
+		$this->flexObj = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class);
 		// analyze
 		$this->contentElements = $this->getContentElements();
 		$this->wrongLanguage   = $this->getWrongLanguage();
 		$this->wrongStyle      = $this->getWrongStyle();
-		if (t3lib_div::_GP('do_update')) {
-			$out .= '<a href="'.t3lib_div::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'back').'</a><br/>';
-			$func = trim(t3lib_div::_GP('func'));
+		if (GeneralUtility::_GP('do_update')) {
+			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'back').'</a><br/>';
+			$func = trim(GeneralUtility::_GP('func'));
 			if (method_exists($this, $func)) {
 				$out .= '
 <div style="padding:15px 15px 20px 0;">
@@ -93,8 +92,8 @@ class ext_update
 </div>';
 			}
 		} else {
-			$out .= '<a href="'.t3lib_div::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'reload').'
-			<img style="vertical-align:bottom;" '.t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/refresh_n.gif', 'width="18" height="16"').'></a><br/>';
+			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'reload').'
+			<img style="vertical-align:bottom;" '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/refresh_n.gif', 'width="18" height="16"').'></a><br/>';
 			$out .= $this->displayWarning();
 			$out .= '<h3>'.$GLOBALS['LANG']->sL($this->ll.'actions').'</h3>';
 			// Update all flexform
@@ -119,7 +118,7 @@ class ext_update
 	{
 		$msg = $GLOBALS['LANG']->sL($this->ll.'msg_'.$k).' ';
 		$msg .= '<br/><strong>'.str_replace('###COUNT###', $count, $GLOBALS['LANG']->sL($this->ll.'foundMsg_'.$k)).'</strong>';
-		$msg .= ' <img '.t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/icon_'.($count == 0 ? 'ok' : 'warning2').'.gif', 'width="18" height="16"').'>';
+		$msg .= ' <img '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/icon_'.($count == 0 ? 'ok' : 'warning2').'.gif', 'width="18" height="16"').'>';
 		if ($count) {
 			$msg .= '<p style="margin:5px 0;">'.$GLOBALS['LANG']->sL($this->ll.'question_'.$k).'<p>';
 			$msg .= '<p style="margin-bottom:10px;"><em>'.$GLOBALS['LANG']->sL($this->ll.'questionInfo_'.$k).'</em><p>';
@@ -180,7 +179,7 @@ class ext_update
 	private function getButton($func, $lbl = 'DO IT')
 	{
 		$params = array('do_update' => 1, 'func' => $func);
-		$onClick = "document.location='".t3lib_div::linkThisScript($params)."'; return false;";
+		$onClick = "document.location='".GeneralUtility::linkThisScript($params)."'; return false;";
 		$button = '<input type="submit" value="'.$lbl.'" onclick="'.htmlspecialchars($onClick).'">';
 		return $button;
 	}
@@ -202,7 +201,7 @@ class ext_update
 		if ($res) {
 			$resultRows = array();
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				$ff_parsed = t3lib_div::xml2array($row['pi_flexform']);
+				$ff_parsed = GeneralUtility::xml2array($row['pi_flexform']);
 				// Check for old sheet values
 				if (is_array($ff_parsed['data'])) {
 					foreach ($ff_parsed['data'] as $key => $val) {
@@ -238,7 +237,7 @@ class ext_update
 		if ($res) {
 			$resultRows = array();
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				$ff_parsed = t3lib_div::xml2array($row['pi_flexform']);
+				$ff_parsed = GeneralUtility::xml2array($row['pi_flexform']);
 				// Check for old sheet values
 				if (is_array($ff_parsed['data'])) {
 					foreach ($ff_parsed['data'] as $key => $val) {
@@ -279,7 +278,7 @@ class ext_update
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					$select_fields,
 					$from_table,
-					'uid IN ('.implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(t3lib_div::trimExplode(',', $row['tx_jfmulticontent_contents'], TRUE), $from_table)).')
+					'uid IN ('.implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(GeneralUtility::trimExplode(',', $row['tx_jfmulticontent_contents'], TRUE), $from_table)).')
 					AND deleted=0'
 				);
 				while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))) {

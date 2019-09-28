@@ -22,6 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 /**
  * Plugin 'Multiple Content' for the 'jfmulticontent' extension.
  *
@@ -29,7 +33,7 @@
  * @package    TYPO3
  * @subpackage tx_jfmulticontent
  */
-class tx_jfmulticontent_pi1 extends tslib_pibase
+class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
 	public $prefixId      = 'tx_jfmulticontent_pi1';
 	public $scriptRelPath = 'pi1/class.tx_jfmulticontent_pi1.php';
@@ -72,24 +76,24 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 		// get the config from EXT
 		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
 
-		$this->pagerenderer = t3lib_div::makeInstance('tx_jfmulticontent_pagerenderer');
+		$this->pagerenderer = GeneralUtility::makeInstance('tx_jfmulticontent_pagerenderer');
 		$this->pagerenderer->setConf($this->conf);
 
 		// Plugin or template?
-		if ($this->cObj->data['list_type'] == $this->extKey.'_pi1') {
+		if ($this->cObj->data['list_type'] == $this->extKey . '_pi1') {
 
 			// It's a content, all data from flexform
 
 			$this->lConf['style'] = $this->getFlexformData('general', 'style');
 
 			if ($this->lConf['style'] != 'typoscript') {
-				$this->lConf['columnOrder'] = $this->getFlexformData('general', 'columnOrder', in_array($this->lConf['style'], array('2column','3column','4column','5column')));
-				$this->lConf['column1']     = $this->getFlexformData('general', 'column1', in_array($this->lConf['style'], array('2column','3column','4column','5column')));
-				$this->lConf['column2']     = $this->getFlexformData('general', 'column2', in_array($this->lConf['style'], array('2column','3column','4column','5column')));
-				$this->lConf['column3']     = $this->getFlexformData('general', 'column3', in_array($this->lConf['style'], array('3column','4column','5column')));
-				$this->lConf['column4']     = $this->getFlexformData('general', 'column4', in_array($this->lConf['style'], array('4column','5column')));
+				$this->lConf['columnOrder'] = $this->getFlexformData('general', 'columnOrder', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column1']     = $this->getFlexformData('general', 'column1', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column2']     = $this->getFlexformData('general', 'column2', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column3']     = $this->getFlexformData('general', 'column3', in_array($this->lConf['style'], array('3column', '4column', '5column')));
+				$this->lConf['column4']     = $this->getFlexformData('general', 'column4', in_array($this->lConf['style'], array('4column', '5column')));
 				$this->lConf['column5']     = $this->getFlexformData('general', 'column5', in_array($this->lConf['style'], array('5column')));
-				$this->lConf['equalize']    = $this->getFlexformData('general', 'equalize', in_array($this->lConf['style'], array('1column','2column','3column','4column','5column')));
+				$this->lConf['equalize']    = $this->getFlexformData('general', 'equalize', in_array($this->lConf['style'], array('1column', '2column', '3column', '4column', '5column')));
 
 				$debuglog = ($this->lConf['style'] == 'tab');
 				$this->lConf['tabCollapsible']   = $this->getFlexformData('general', 'tabCollapsible', $debuglog);
@@ -188,7 +192,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 				$this->lConf['bookletArrowsHide']    = $this->getFlexformData('general', 'bookletArrows', $debuglog);
 				$this->lConf['bookletHovers']        = $this->getFlexformData('general', 'bookletHovers', $debuglog);
 
-				$this->lConf['delayDuration'] = $this->getFlexformData('general', 'delayDuration', in_array($this->lConf['style'], array('slider','slidedeck','easyaccordion')));
+				$this->lConf['delayDuration'] = $this->getFlexformData('general', 'delayDuration', in_array($this->lConf['style'], array('slider', 'slidedeck', 'easyaccordion')));
 				$this->lConf['autoplayCycle'] = $this->getFlexformData('general', 'autoplayCycle', ($this->lConf['style'] == 'slidedeck'));
 
 				// columns
@@ -488,11 +492,11 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 
 			// define the titles to overwrite
 			if (trim($this->lConf['titles'])) {
-				$this->titles = t3lib_div::trimExplode(chr(10), $this->lConf['titles']);
+				$this->titles = GeneralUtility::trimExplode(chr(10), $this->lConf['titles']);
 			}
 			// define the attributes
 			if (trim($this->lConf['attributes'])) {
-				$this->attributes = t3lib_div::trimExplode(chr(10), $this->lConf['attributes']);
+				$this->attributes = GeneralUtility::trimExplode(chr(10), $this->lConf['attributes']);
 			}
 			// options
 			if ($this->lConf['optionsOverride'] || trim($this->lConf['options'])) {
@@ -504,7 +508,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 
 			if ($this->conf['config.']['view'] == 'page') {
 				// get the page ID's
-				$page_ids = t3lib_div::trimExplode(",", $this->cObj->data['tx_jfmulticontent_pages']);
+				$page_ids = GeneralUtility::trimExplode(",", $this->cObj->data['tx_jfmulticontent_pages']);
 				// get the informations for every page
 				for ($a=0; $a < count($page_ids); $a++) {
 
@@ -541,7 +545,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 				}
 			} else if ($this->conf['config.']['view'] == 'content') {
 				// get the content ID's
-				$content_ids = t3lib_div::trimExplode(",", $this->cObj->data['tx_jfmulticontent_contents']);
+				$content_ids = GeneralUtility::trimExplode(",", $this->cObj->data['tx_jfmulticontent_contents']);
 				// get the informations for every content
 				for ($a=0; $a < count($content_ids); $a++) {
 					// Select the content
@@ -608,7 +612,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			// HOOK for additional views
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'] as $_classRef) {
-					$_procObj = & t3lib_div::getUserObj($_classRef);
+					$_procObj = GeneralUtility::getUserObj($_classRef);
 					if ($this->conf['config.']['view'] == $_procObj->getIdentifier()) {
 						if (! method_exists($_procObj, 'isActive') || (method_exists($_procObj, 'isActive') && $_procObj->isActive())) {
 							// If the methode "isActive" not exists, this will be true...
@@ -678,8 +682,8 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					$this->conf['config.']["column1"],
 					$this->conf['config.']["column2"],
 				);
-				$this->contentClass = t3lib_div::trimExplode("|*|", $this->conf['2columnClasses']);
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['2columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
 				break;
 			}
 			case "3column" : {
@@ -690,8 +694,8 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					$this->conf['config.']["column2"],
 					$this->conf['config.']["column3"],
 				);
-				$this->contentClass = t3lib_div::trimExplode("|*|", $this->conf['3columnClasses']);
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['3columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
 				break;
 			}
 			case "4column" : {
@@ -703,8 +707,8 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					$this->conf['config.']["column3"],
 					$this->conf['config.']["column4"],
 				);
-				$this->contentClass = t3lib_div::trimExplode("|*|", $this->conf['4columnClasses']);
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['4columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
 				break;
 			}
 			case "5column" : {
@@ -717,14 +721,14 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					$this->conf['config.']["column4"],
 					$this->conf['config.']["column5"],
 				);
-				$this->contentClass = t3lib_div::trimExplode("|*|", $this->conf['5columnClasses']);
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['5columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
 				break;
 			}
 			case "tab" : {
 				// jQuery Tabs
 				$this->templatePart = "TEMPLATE_TAB";
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['tabWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['tabWrap.']['wrap']);
 				// the id attribute is not permitted in tabs-style
 				if (count($this->attributes) > 0) {
 					foreach ($this->attributes as $key => $attribute) {
@@ -759,7 +763,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 						$this->pagerenderer->addJsFile($this->conf['jQueryCookies']);
 					}
 					unset($options['active']);
-					$cookie_path = t3lib_div::getIndpEnv('REQUEST_URI');
+					$cookie_path = GeneralUtility::getIndpEnv('REQUEST_URI');
 					if ($this->lConf['tabCookieRoot'] || preg_match("/^\/index.php/i", $cookie_path)) {
 						$cookie_path = "/";
 					}
@@ -778,7 +782,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					if ($this->conf['config.']['tabHideTransition']) {
 						$fx[] = "easing:'".(in_array($this->conf['config.']['tabHideTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabHideTransitiondir']}")."{$this->conf['config.']['tabHideTransition']}'";
 					}
-					$options['hide'] = "hide:{".implode(',', $fx)."}";
+					$options['hide'] = "hide:{".implode(', ', $fx)."}";
 				}
 
 				if ($this->conf['config.']['tabShowEffect'] == 'none') {
@@ -792,7 +796,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					if ($this->conf['config.']['tabShowTransition']) {
 						$fx[] = "easing:'".(in_array($this->conf['config.']['tabShowTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabShowTransitiondir']}")."{$this->conf['config.']['tabShowTransition']}'";
 					}
-					$options['show'] = "show:{".implode(',', $fx)."}";
+					$options['show'] = "show:{".implode(', ', $fx)."}";
 				}
 
 				// overwrite all options if set
@@ -848,7 +852,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			case "accordion" : {
 				// jQuery Accordion
 				$this->templatePart = "TEMPLATE_ACCORDION";
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['accordionWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['accordionWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['accordionCollapsible']) {
@@ -890,7 +894,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 					if ($this->conf['config.']['accordionTransition']) {
 						$fx[] = "easing:'".(in_array($this->conf['config.']['accordionTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['accordionTransitiondir']}")."{$this->conf['config.']['accordionTransition']}'";
 					}
-					$options['animate'] = "animate:{".implode(',', $fx)."}";
+					$options['animate'] = "animate:{".implode(', ', $fx)."}";
 				}
 
 				// app the open-link-template
@@ -938,7 +942,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			case "slider" : {
 				// anythingslider
 				$this->templatePart = "TEMPLATE_SLIDER";
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['sliderWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['sliderWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				//
 				if ($this->conf['config.']['sliderTransition']) {
@@ -982,14 +986,14 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 				$this->pagerenderer->addCssFileInc($this->conf['sliderCSSie7'], 'lte IE 7');
 
 				if ($this->conf['config.']['sliderTheme']) {
-					$options[] = "theme: '".t3lib_div::slashJS($this->conf['config.']['sliderTheme'])."'";
+					$options[] = "theme: '" . GeneralUtility::slashJS($this->conf['config.']['sliderTheme']) . "'";
 					if (substr($this->confArr['anythingSliderThemeFolder'], 0, 4) === 'EXT:') {
 						list($extKey, $local) = explode('/', substr($this->confArr['anythingSliderThemeFolder'], 4), 2);
-						$anythingSliderThemeFolder = t3lib_extMgm::siteRelPath($extKey) . $local;
+						$anythingSliderThemeFolder = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey) . $local;
 					} else {
 						$anythingSliderThemeFolder = $this->confArr['anythingSliderThemeFolder'];
 					}
-					$this->pagerenderer->addCssFile(t3lib_div::slashJS($anythingSliderThemeFolder).$this->conf['config.']['sliderTheme'].'/style.css');
+					$this->pagerenderer->addCssFile(GeneralUtility::slashJS($anythingSliderThemeFolder) . $this->conf['config.']['sliderTheme'] . '/style.css');
 				}
 				if ($this->conf['config.']['sliderMode']) {
 					$options[] = "mode: '".$this->conf['config.']['sliderMode']."'";
@@ -1003,24 +1007,24 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 				$options[] = "buildNavigation: ".($this->conf['config.']['sliderNavigation'] ? 'true' : 'false');
 				$options[] = "buildStartStop: ".($this->conf['config.']['sliderStartStop'] ? 'true' : 'false');
 
-				$options[] = "startText: '".t3lib_div::slashJS($this->pi_getLL('slider_start'))."'";
-				$options[] = "stopText: '".t3lib_div::slashJS($this->pi_getLL('slider_stop'))."'";
+				$options[] = "startText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_start')) . "'";
+				$options[] = "stopText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_stop')) . "'";
 				if ($this->pi_getLL('slider_forward')) {
-					$options[] = "forwardText: '".t3lib_div::slashJS($this->pi_getLL('slider_forward'))."'";
+					$options[] = "forwardText: '".GeneralUtility::slashJS($this->pi_getLL('slider_forward')) . "'";
 				}
 				if ($this->pi_getLL('slider_back')) {
-					$options[] = "backText: '".t3lib_div::slashJS($this->pi_getLL('slider_back'))."'";
+					$options[] = "backText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_back')) . "'";
 				}
 
 				// define the paneltext
 				if ($this->conf['config.']['sliderPanelFromHeader']) {
 					$tab = array();
 					for ($a=0; $a < $this->contentCount; $a++) {
-						$tab[] = "if(i==".($a+1).") return ".t3lib_div::quoteJSvalue($this->titles[$a]).";";
+						$tab[] = "if(i==".($a+1).") return " . GeneralUtility::quoteJSvalue($this->titles[$a]) . ";";
 					}
 					$options[] = "navigationFormatter: function(i,p){\n			".implode("\n			", $tab)."\n		}";
 				} elseif (trim($this->pi_getLL('slider_panel'))) {
-					$options[] = "navigationFormatter: function(i,p){ var str = '".(t3lib_div::slashJS($this->pi_getLL('slider_panel')))."'; return str.replace('%i%',i); }";
+					$options[] = "navigationFormatter: function(i,p){ var str = '" . (GeneralUtility::slashJS($this->pi_getLL('slider_panel'))) . "'; return str.replace('%i%',i); }";
 				}
 				if ($this->conf['config.']['sliderRandomContent']) {
 					$options[] = "startPanel: Math.floor(Math.random()*".($this->contentCount + 1).")";
@@ -1066,7 +1070,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			case "slidedeck" : {
 				// SlideDeck
 				$this->templatePart = "TEMPLATE_SLIDEDECK";
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['slidedeckWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['slidedeckWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['slidedeckTransitionduration']) {
@@ -1129,7 +1133,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 				// easyaccordion
 				$this->templatePart = "TEMPLATE_EASYACCORDION";
 				$this->additionalMarker["SKIN"] = $this->conf['config.']['easyaccordionSkin'];
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['easyaccordionWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['easyaccordionWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['delayDuration'] > 0) {
@@ -1174,7 +1178,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			case "booklet" : {
 				// easyaccordion
 				$this->templatePart = "TEMPLATE_BOOKLET";
-				$this->contentWrap = t3lib_div::trimExplode("|*|", $this->conf['bookletWrap.']['wrap']);
+				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['bookletWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if (is_numeric($this->conf['config.']['bookletWidth'])) {
@@ -1445,7 +1449,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 			if (isset($this->conf['additionalContentMarkers'])) {
 				$additonalMarkerArray = array();
 				// get additional markers
-				$additionalMarkers = t3lib_div::trimExplode(',', $this->conf['additionalContentMarkers']);
+				$additionalMarkers = GeneralUtility::trimExplode(', ', $this->conf['additionalContentMarkers']);
 				// get additional marker configuration
 				if(count($additionalMarkers) > 0) {
 					foreach($additionalMarkers as $additonalMarker) {
@@ -1468,7 +1472,7 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 		if (isset($this->conf['additionalMarkers'])) {
 			$additonalMarkerArray = array();
 			// get additional markers
-			$additionalMarkers = t3lib_div::trimExplode(',', $this->conf['additionalMarkers']);
+			$additionalMarkers = GeneralUtility::trimExplode(', ', $this->conf['additionalMarkers']);
 			// get additional marker configuration
 			if(count($additionalMarkers) > 0) {
 				foreach($additionalMarkers as $additonalMarker) {
@@ -1489,9 +1493,9 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 	* @return string
 	*/
 	public function outputError($msg='', $js=FALSE) {
-		t3lib_div::devLog($msg, $this->extKey, 3);
+		GeneralUtility::devLog($msg, $this->extKey, 3);
 		if ($this->confArr['frontendErrorMsg'] || ! isset($this->confArr['frontendErrorMsg'])) {
-			return ($js ? "alert(".t3lib_div::quoteJSvalue($msg).")" : "<p>{$msg}</p>");
+			return ($js ? "alert(".GeneralUtility::quoteJSvalue($msg).")" : "<p>{$msg}</p>");
 		} else {
 			return NULL;
 		}
@@ -1522,19 +1526,19 @@ class tx_jfmulticontent_pi1 extends tslib_pibase
 		$this->setFlexFormData();
 		if (! isset($this->piFlexForm['data'])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform Data not set", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform Data not set", $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform sheet '{$sheet}' not defined", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform sheet '{$sheet}' not defined", $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform Data [{$sheet}][{$name}] does not exist", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform Data [{$sheet}][{$name}] does not exist", $this->extKey, 1);
 			}
 			return NULL;
 		}

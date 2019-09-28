@@ -39,15 +39,9 @@ class tx_jfmulticontent_tsparserext
 	 *
 	 * @return	string
 	 */
-	function displayMessage(&$params, &$tsObj)
+	public function displayMessage(&$params, &$tsObj)
 	{
 		$out = '';
-
-		if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4003000) {
-			// 4.3.0 comes with flashmessages styles. For older versions we include the needed styles here
-			$cssPath = $GLOBALS['BACK_PATH'] . t3lib_extMgm::extRelPath('jfmulticontent');
-			$out .= '<link rel="stylesheet" type="text/css" href="' . $cssPath . 'compat/flashmessages.css" media="screen" />';
-		}
 
 		$checkConfig = NULL;
 		if ($this->checkConfig() === FALSE) {
@@ -60,11 +54,7 @@ class tx_jfmulticontent_tsparserext
 	</div>';
 		}
 
-		if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4005000) {
-			$url = 'index.php?&amp;id=0&amp;CMD[showExt]=jfmulticontent&amp;SET[singleDetails]=updateModule';
-		} else {
-			$url = 'mod.php?&id=0&M=tools_em&CMD[showExt]=jfmulticontent&SET[singleDetails]=updateModule';
-		}
+        $url = 'mod.php?&id=0&M=tools_em&CMD[showExt]=jfmulticontent&SET[singleDetails]=updateModule';
 
 		$out .= '
 <div style="position:absolute;top:10px;right:10px; width:300px;">
@@ -83,11 +73,11 @@ class tx_jfmulticontent_tsparserext
 	}
 
 	/**
-	 * Check the config for a gifen feature
+	 * Check the config for a given feature
 	 * 
 	 * @return boolean
 	 */
-	function checkConfig()
+	public function checkConfig()
 	{
 		$confDefault = array(
 			'useStoragePidOnly',
@@ -108,7 +98,7 @@ class tx_jfmulticontent_tsparserext
 		);
 		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
 		foreach ($confDefault as $val) {
-			if (! isset($confArr[$val]) && ! isset($_POST['data'][$val])) {
+			if (!isset($confArr[$val]) && !isset($_POST['data'][$val])) {
 				return FALSE;
 			}
 		}

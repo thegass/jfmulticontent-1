@@ -37,15 +37,15 @@
 class tx_jfmulticontent_tcemain
 {
 	/**
-	 * Checks if the colPos will be manipulate and if TemplaVoila references should be disabled for this record
+	 * Checks if the colPos will be manipulated and if TemplaVoila references should be disabled for this record
 	 *
 	 * @param array $incomingFieldArray
 	 * @param string $table
 	 * @param integer $id
-	 * @param t3lib_TCEmain $pObj
+	 * @param \TYPO3\CMS\Core\DataHandling\DataHandler $pObj
 	 * @see tx_templavoila_tcemain::processDatamap_afterDatabaseOperations()
 	 */
-	public function processDatamap_preProcessFieldArray(array &$incomingFieldArray, $table, $id, t3lib_TCEmain &$pObj) {
+	public function processDatamap_preProcessFieldArray(array &$incomingFieldArray, $table, $id, \TYPO3\CMS\Core\DataHandling\DataHandler &$pObj) {
 		if ($incomingFieldArray['list_type'] != 'jfmulticontent_pi1') {
 			if (is_array($pObj->datamap['tt_content'])) {
 				foreach ($pObj->datamap['tt_content'] as $key => $val) {
@@ -54,7 +54,7 @@ class tx_jfmulticontent_tcemain
 						$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
 						$incomingFieldArray['colPos'] = $confArr['colPosOfIrreContent'];
 						// Workaround for templavoila
-						if (t3lib_extMgm::isLoaded('templavoila')) {
+						if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila')) {
 							$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_templavoila_tcemain']['doNotInsertElementRefsToPage'] = TRUE;
 						}
 					}

@@ -22,6 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 /**
  * @author	Juergen Furrer <juergen.furrer@gmail.com>
  * @package	TYPO3
@@ -52,7 +56,7 @@ class tx_jfmulticontent
 			}
 		}
 
-		$page_flex_array = t3lib_div::xml2array($row['tx_templavoila_flex']);
+		$page_flex_array = GeneralUtility::xml2array($row['tx_templavoila_flex']);
 
 		$content_ids = array();
 		if (isset($page_flex_array['data'])) {
@@ -60,7 +64,7 @@ class tx_jfmulticontent
 				if (count($page_flex_array['data']['sDEF']['lDEF']) > 0) {
 					foreach ($page_flex_array['data']['sDEF']['lDEF'] as $key => $fields) {
 						if ($key == $field) {
-							$content_ids = array_merge($content_ids, t3lib_div::trimExplode(',', $fields['vDEF']));
+							$content_ids = array_merge($content_ids, GeneralUtility::trimExplode(',', $fields['vDEF']));
 						}
 					}
 				}

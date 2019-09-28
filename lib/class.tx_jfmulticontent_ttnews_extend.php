@@ -22,6 +22,10 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 /**
  * 'tx_jfmulticontent_ttnews_extend' for the 'jfmulticontent' extension.
  *
@@ -40,7 +44,7 @@ class tx_jfmulticontent_ttnews_extend
 	var $css = array();
 	var $piFlexForm = array();
 
-	function extraCodesProcessor($newsObject)
+	public function extraCodesProcessor($newsObject)
 	{
 		$content = NULL;
 		$this->cObj = $newsObject->cObj;
@@ -116,7 +120,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param $pObj
 	 * @return array
 	 */
-	function extraGlobalMarkerProcessor(&$pObj, $markerArray)
+	public function extraGlobalMarkerProcessor(&$pObj, $markerArray)
 	{
 		$conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_jfmulticontent_pi1.'];
 		$markerArray['###EASY_ACCORDION_SKIN###'] = $conf['config.']['easyaccordionSkin'];
@@ -129,11 +133,9 @@ class tx_jfmulticontent_ttnews_extend
 	 *
 	 * @return void
 	 */
-	function addResources()
+	public function addResources()
 	{
-		if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4003000) {
-			$pagerender = $GLOBALS['TSFE']->getPageRenderer();
-		}
+        $pagerender = GeneralUtility::makeInstance(PageRenderer::class) ;
 		// Fix moveJsFromHeaderToFooter (add all scripts to the footer)
 		if ($GLOBALS['TSFE']->config['config']['moveJsFromHeaderToFooter']) {
 			$allJsInFooter = TRUE;
@@ -153,22 +155,13 @@ class tx_jfmulticontent_ttnews_extend
 				} else {
 					$file = $this->getPath($jsToLoad);
 					if ($file) {
-						if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4003000) {
-							if ($this->conf['jsInFooter'] || $allJsInFooter) {
-								$pagerender->addJsFooterFile($file, 'text/javascript', $this->conf['jsMinify']);
-							} else {
-								$pagerender->addJsFile($file, 'text/javascript', $this->conf['jsMinify']);
-							}
-						} else {
-							$temp_file = '<script type="text/javascript" src="'.$file.'"></script>';
-							if ($this->conf['jsInFooter'] || $allJsInFooter) {
-								$GLOBALS['TSFE']->additionalFooterData['jsFile_'.$this->extKey.'_'.$file] = $temp_file;
-							} else {
-								$GLOBALS['TSFE']->additionalHeaderData['jsFile_'.$this->extKey.'_'.$file] = $temp_file;
-							}
-						}
+                        if ($this->conf['jsInFooter'] || $allJsInFooter) {
+                            $pagerender->addJsFooterFile($file, 'text/javascript', $this->conf['jsMinify']);
+                        } else {
+                            $pagerender->addJsFile($file, 'text/javascript', $this->conf['jsMinify']);
+                        }
 					} else {
-						t3lib_div::devLog("'{$jsToLoad}' does not exists!", $this->extKey, 2);
+						GeneralUtility::devLog("'{$jsToLoad}' does not exist!", $this->extKey, 2);
 					}
 				}
 			}
@@ -180,7 +173,7 @@ class tx_jfmulticontent_ttnews_extend
 			}
 			$conf = array();
 			$conf['jsdata'] = $temp_js;
-			if (T3JQUERY === TRUE && class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger($this->getExtensionVersion('t3jquery')) >= 1002000) {
+			if (T3JQUERY === TRUE && class_exists(\TYPO3\CMS\Core\Utility\VersionNumberUtility) && \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($this->getExtensionVersion('t3jquery')) >= 1002000) {
 				$conf['tofooter'] = ($this->conf['jsInFooter'] || $allJsInFooter);
 				$conf['jsminify'] = $this->conf['jsMinify'];
 				$conf['jsinline'] = $this->conf['jsInline'];
@@ -190,20 +183,11 @@ class tx_jfmulticontent_ttnews_extend
 				$hash = md5($temp_js);
 				if ($this->conf['jsInline']) {
 					$GLOBALS['TSFE']->inlineJS[$hash] = $temp_js;
-				} elseif (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4003000) {
+				} else {
 					if ($this->conf['jsInFooter'] || $allJsInFooter) {
 						$pagerender->addJsFooterInlineCode($hash, $temp_js, $this->conf['jsMinify']);
 					} else {
 						$pagerender->addJsInlineCode($hash, $temp_js, $this->conf['jsMinify']);
-					}
-				} else {
-					if ($this->conf['jsMinify']) {
-						$temp_js = t3lib_div::minifyJavaScript($temp_js);
-					}
-					if ($this->conf['jsInFooter'] || $allJsInFooter) {
-						$GLOBALS['TSFE']->additionalFooterData['js_'.$this->extKey.'_'.$hash] = t3lib_div::wrapJS($temp_js, TRUE);
-					} else {
-						$GLOBALS['TSFE']->additionalHeaderData['js_'.$this->extKey.'_'.$hash] = t3lib_div::wrapJS($temp_js, TRUE);
 					}
 				}
 			}
@@ -214,13 +198,9 @@ class tx_jfmulticontent_ttnews_extend
 				// Add script only once
 				$file = $this->getPath($cssToLoad);
 				if ($file) {
-					if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4003000) {
-						$pagerender->addCssFile($file, 'stylesheet', 'all', '', $this->conf['cssMinify']);
-					} else {
-						$GLOBALS['TSFE']->additionalHeaderData['cssFile_'.$this->extKey.'_'.$file] = '<link rel="stylesheet" type="text/css" href="'.$file.'" media="all" />'.chr(10);
-					}
+                    $pagerender->addCssFile($file, 'stylesheet', 'all', '', $this->conf['cssMinify']);
 				} else {
-					t3lib_div::devLog("'{$cssToLoad}' does not exists!", $this->extKey, 2);
+					GeneralUtility::devLog("'{$cssToLoad}' does not exist!", $this->extKey, 2);
 				}
 			}
 		}
@@ -230,12 +210,7 @@ class tx_jfmulticontent_ttnews_extend
 				$temp_css .= $cssToPut;
 			}
 			$hash = md5($temp_css);
-			if (class_exists(t3lib_utility_VersionNumber) && t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4003000) {
-				$pagerender->addCssInlineBlock($hash, $temp_css, $this->conf['cssMinify']);
-			} else {
-				// addCssInlineBlock
-				$GLOBALS['TSFE']->additionalCSS['css_'.$this->extKey.'_'.$hash] .= $temp_css;
-			}
+            $pagerender->addCssInlineBlock($hash, $temp_css, $this->conf['cssMinify']);
 		}
 	}
 
@@ -245,7 +220,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param string $path
 	 * return string
 	 */
-	function getPath($path="")
+	public function getPath($path="")
 	{
 		return $GLOBALS['TSFE']->tmpl->getFileName($path);
 	}
@@ -257,7 +232,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param boolean $first
 	 * @return void
 	 */
-	function addJsFile($script="", $first=FALSE)
+	public function addJsFile($script="", $first=FALSE)
 	{
 		if ($this->getPath($script) && ! in_array($script, $this->jsFiles)) {
 			if ($first === TRUE) {
@@ -274,7 +249,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param string $script
 	 * @return void
 	 */
-	function addJS($script="")
+	public function addJS($script="")
 	{
 		if (! in_array($script, $this->js)) {
 			$this->js[] = $script;
@@ -287,7 +262,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param string $script
 	 * @return void
 	 */
-	function addCssFile($script="")
+	public function addCssFile($script="")
 	{
 		if ($this->getPath($script) && ! in_array($script, $this->cssFiles)) {
 			$this->cssFiles[] = $script;
@@ -300,7 +275,7 @@ class tx_jfmulticontent_ttnews_extend
 	 * @param string $script
 	 * @return void
 	 */
-	function addCSS($script="")
+	public function addCSS($script="")
 	{
 		if (! in_array($script, $this->css)) {
 			$this->css[] = $script;
@@ -308,17 +283,17 @@ class tx_jfmulticontent_ttnews_extend
 	}
 
 	/**
-	 * Returns the version of an extension (in 4.4 its possible to this with t3lib_extMgm::getExtensionVersion)
+	 * Returns the version of an extension (in 4.4 its possible to this with \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion)
 	 * @param string $key
 	 * @return string
 	 */
-	function getExtensionVersion($key)
+	public function getExtensionVersion($key)
 	{
-		if (! t3lib_extMgm::isLoaded($key)) {
+		if (! \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($key)) {
 			return '';
 		}
 		$_EXTKEY = $key;
-		include(t3lib_extMgm::extPath($key) . 'ext_emconf.php');
+		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
 		return $EM_CONF[$key]['version'];
 	}
 
@@ -347,19 +322,19 @@ class tx_jfmulticontent_ttnews_extend
 		$this->setFlexFormData();
 		if (! isset($this->piFlexForm['data'])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform Data not set", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform Data not set", $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform sheet '{$sheet}' not defined", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform sheet '{$sheet}' not defined", $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
 			if ($devlog === TRUE) {
-				t3lib_div::devLog("Flexform Data [{$sheet}][{$name}] does not exist", $this->extKey, 1);
+				GeneralUtility::devLog("Flexform Data [{$sheet}][{$name}] does not exist", $this->extKey, 1);
 			}
 			return NULL;
 		}
