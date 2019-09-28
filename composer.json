@@ -1,0 +1,52 @@
+{
+  "name": "jambagecom/jfmulticontent",
+  "type": "typo3-cms-extension",
+  "description": "Arranges multiple contents into one content element with multiple columns, accordions, tabs, slider, slidedeck, easyAccordion or Booklet for TYPO3 CMS",
+  "keywords": [
+    "TYPO3",
+    "extension",
+    "multiple",
+    "content"
+  ],
+  "support": {
+    "issues": "https://github.com/franzholz/jfmulticontent/issues"
+  },
+  "homepage": "https://jambage.com",
+  "authors": [
+    {
+      "name": "Franz Holzinger",
+      "role": "Developer",
+      "homepage": "https://ttproducts.de"
+    },
+    {
+      "name": "Jürgen Furrer",
+      "role": "Developer"
+    }
+  ],
+  "license": [
+    "GPL-2.0+"
+  ],
+  "require": {
+    "typo3/cms-core": ">=7.6.0,<8.7.99",
+    "bugfix/patchlayout": ">=0.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "JambageCom\\Jfmulticontent\\": "Classes"
+    },
+    "classmap": [
+      "Classes",
+      "lib",
+      "pi1"
+    ]
+  },
+  "replace": {
+    "jfmulticontent": "self.version",
+    "typo3-ter/jfmulticontent": "self.version"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "jfmulticontent"
+    }
+  }
+}
