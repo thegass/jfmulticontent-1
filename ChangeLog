@@ -1,3 +1,5 @@
+2019-10-01  Franz Holzinger  <franz@ttproducts.de>
+    * Bugfix: add missing initialization of the WizardIcon.
 
 2019-09-28  Franz Holzinger  <franz@ttproducts.de>
     * Add support for TYPO3 7 and 8
