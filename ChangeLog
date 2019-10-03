@@ -1,3 +1,6 @@
+2019-10-03  Franz Holzinger  <franz@ttproducts.de>
+    * Bugfix: The constant T3JQUERY must always be defined, even if no extension t3jquery has been installed.
+
 2019-10-01  Franz Holzinger  <franz@ttproducts.de>
     * Bugfix: add missing initialization of the WizardIcon.
 

@@ -5,6 +5,10 @@ if (!defined ('JFMULTICONTENT_EXT')) {
     define('JFMULTICONTENT_EXT', 'jfmulticontent');
 }
 
+if (!defined ('T3JQUERY')) {
+    define('T3JQUERY', false);
+}
+
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][JFMULTICONTENT_EXT]);
 
 if ($confArr['ttNewsCodes']) {
@@ -39,7 +43,7 @@ if ($confArr['addBrowseLinks']) {
 	// Add browseLinksHook
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.browse_links.php']['browseLinksHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_browselinkshooks.php:&tx_jfmulticontent_browselinkshooks';
 	if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rtehtmlarea')) {
-		$TYPO3_CONF_VARS['SC_OPTIONS']['ext/rtehtmlarea/mod3/class.tx_rtehtmlarea_browse_links.php']['browseLinksHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_browselinkshooks.php:&tx_jfmulticontent_browselinkshooks';
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/rtehtmlarea/mod3/class.tx_rtehtmlarea_browse_links.php']['browseLinksHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_browselinkshooks.php:&tx_jfmulticontent_browselinkshooks';
 	}
 }
 
