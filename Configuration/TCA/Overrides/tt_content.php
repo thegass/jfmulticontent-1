@@ -109,7 +109,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'script',
 					'title'  => 'LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.contents_add',
 					'icon'   => 'add.gif',
-					'script' => 'wizard_add.php',
+					'module' => array(
+						'name' => 'wizard_add',
+					),
 					'params' => array(
 						'table'    => 'tt_content',
 						'pid'      => '###STORAGE_PID###',
@@ -120,7 +122,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'script',
 					'title'  => 'List',
 					'icon'   => 'list.gif',
-					'script' => 'wizard_list.php',
+					'module' => array(
+						'name' => 'wizard_list',
+					),
 					'params' => array(
 						'table' => 'tt_content',
 						'pid'   => '###STORAGE_PID###',
@@ -130,7 +134,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'popup',
 					'title'  => 'LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.contents_edit',
 					'icon'   => 'edit2.gif',
-					'script' => 'wizard_edit.php',
+					'module' => array(
+						'name' => 'wizard_edit',
+					),
 					'popup_onlyOpenIfSelected' => 1,
 					'JSopenParams' => 'height=600,width=800,status=0,menubar=0,scrollbars=1',
 				),
@@ -156,7 +162,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'script',
 					'title'  => 'LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.contents_add',
 					'icon'   => 'add.gif',
-					'script' => 'wizard_add.php',
+					'module' => array(
+						'name' => 'wizard_add',
+					),
 					'params' => array(
 						'table'    => 'tt_content',
 						'pid'      => '###STORAGE_PID###',
@@ -167,7 +175,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'script',
 					'title'  => 'List',
 					'icon'   => 'list.gif',
-					'script' => 'wizard_list.php',
+					'module' => array(
+						'name' => 'wizard_list',
+					),
 					'params' => array(
 						'table' => 'tt_content',
 						'pid'   => '###STORAGE_PID###',
@@ -177,7 +187,9 @@ if ($confArr["useStoragePidOnly"]) {
 					'type'   => 'popup',
 					'title'  => 'LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.contents_edit',
 					'icon'   => 'edit2.gif',
-					'script' => 'wizard_edit.php',
+					'module' => array(
+						'name' => 'wizard_edit',
+					),
 					'popup_onlyOpenIfSelected' => 1,
 					'JSopenParams' => 'height=600,width=800,status=0,menubar=0,scrollbars=1',
 				),
