@@ -1,3 +1,6 @@
+2019-10-15  Franz Holzinger  <franz@ttproducts.de>
+    * fix pull request #2: TCA configuration for TYPO3 7
+
 2019-10-03  Franz Holzinger  <franz@ttproducts.de>
     * Bugfix: The constant T3JQUERY must always be defined, even if no extension t3jquery has been installed.
 
