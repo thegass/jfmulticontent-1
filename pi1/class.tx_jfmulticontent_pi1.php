@@ -508,7 +508,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 			if ($this->conf['config.']['view'] == 'page') {
 				// get the page ID's
-				$page_ids = GeneralUtility::trimExplode(",", $this->cObj->data['tx_jfmulticontent_pages']);
+				$page_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_pages']);
 				// get the informations for every page
 				for ($a=0; $a < count($page_ids); $a++) {
 
@@ -545,7 +545,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 			} else if ($this->conf['config.']['view'] == 'content') {
 				// get the content ID's
-				$content_ids = GeneralUtility::trimExplode(",", $this->cObj->data['tx_jfmulticontent_contents']);
+				$content_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_contents']);
 				// get the informations for every content
 				for ($a=0; $a < count($content_ids); $a++) {
 					// Select the content
@@ -615,7 +615,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$_procObj = GeneralUtility::getUserObj($_classRef);
 					if ($this->conf['config.']['view'] == $_procObj->getIdentifier()) {
 						if (! method_exists($_procObj, 'isActive') || (method_exists($_procObj, 'isActive') && $_procObj->isActive())) {
-							// If the methode "isActive" not exists, this will be true...
+							// If the methode 'isActive' not exists, this will be true...
 							$_procObj->main($this->content, $this->conf, $this);
 							$this->titles = $_procObj->getTitles();
 							$this->cElements = $_procObj->getElements();
@@ -659,102 +659,102 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 		// The template
 		if (! $this->templateFile = $this->cObj->fileResource($this->conf['templateFile'])) {
-			$this->templateFile = $this->cObj->fileResource("EXT:jfmulticontent/res/tx_jfmulticontent_pi1.tmpl");
+			$this->templateFile = $this->cObj->fileResource('EXT:jfmulticontent/res/tx_jfmulticontent_pi1.tmpl');
 		}
 		// The template for JS
 		if (! $this->templateFileJS = $this->cObj->fileResource($this->conf['templateFileJS'])) {
-			$this->templateFileJS = $this->cObj->fileResource("EXT:jfmulticontent/res/tx_jfmulticontent_pi1.js");
+			$this->templateFileJS = $this->cObj->fileResource('EXT:jfmulticontent/res/tx_jfmulticontent_pi1.js');
 		}
 
 		// define the jQuery mode and function
 		if ($this->conf['jQueryNoConflict']) {
-			$jQueryNoConflict = "jQuery.noConflict();";
+			$jQueryNoConflict = 'jQuery.noConflict();';
 		} else {
-			$jQueryNoConflict = "";
+			$jQueryNoConflict = '';
 		}
 
 		// style
 		switch ($this->conf['config.']['style']) {
-			case "2column" : {
-				$this->templatePart = "TEMPLATE_COLUMNS";
+			case '2column' : {
+				$this->templatePart = 'TEMPLATE_COLUMNS';
 				$this->contentCount = 2;
 				$this->classes = array(
-					$this->conf['config.']["column1"],
-					$this->conf['config.']["column2"],
+					$this->conf['config.']['column1'],
+					$this->conf['config.']['column2'],
 				);
-				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['2columnClasses']);
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode('|*|', $this->conf['2columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['columnWrap.']['wrap']);
 				break;
 			}
-			case "3column" : {
-				$this->templatePart = "TEMPLATE_COLUMNS";
+			case '3column' : {
+				$this->templatePart = 'TEMPLATE_COLUMNS';
 				$this->contentCount = 3;
 				$this->classes = array(
-					$this->conf['config.']["column1"],
-					$this->conf['config.']["column2"],
-					$this->conf['config.']["column3"],
+					$this->conf['config.']['column1'],
+					$this->conf['config.']['column2'],
+					$this->conf['config.']['column3'],
 				);
-				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['3columnClasses']);
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode('|*|', $this->conf['3columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['columnWrap.']['wrap']);
 				break;
 			}
-			case "4column" : {
-				$this->templatePart = "TEMPLATE_COLUMNS";
+			case '4column' : {
+				$this->templatePart = 'TEMPLATE_COLUMNS';
 				$this->contentCount = 4;
 				$this->classes = array(
-					$this->conf['config.']["column1"],
-					$this->conf['config.']["column2"],
-					$this->conf['config.']["column3"],
-					$this->conf['config.']["column4"],
+					$this->conf['config.']['column1'],
+					$this->conf['config.']['column2'],
+					$this->conf['config.']['column3'],
+					$this->conf['config.']['column4'],
 				);
-				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['4columnClasses']);
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode('|*|', $this->conf['4columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['columnWrap.']['wrap']);
 				break;
 			}
-			case "5column" : {
-				$this->templatePart = "TEMPLATE_COLUMNS";
+			case '5column' : {
+				$this->templatePart = 'TEMPLATE_COLUMNS';
 				$this->contentCount = 5;
 				$this->classes = array(
-					$this->conf['config.']["column1"],
-					$this->conf['config.']["column2"],
-					$this->conf['config.']["column3"],
-					$this->conf['config.']["column4"],
-					$this->conf['config.']["column5"],
+					$this->conf['config.']['column1'],
+					$this->conf['config.']['column2'],
+					$this->conf['config.']['column3'],
+					$this->conf['config.']['column4'],
+					$this->conf['config.']['column5'],
 				);
-				$this->contentClass = GeneralUtility::trimExplode("|*|", $this->conf['5columnClasses']);
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['columnWrap.']['wrap']);
+				$this->contentClass = GeneralUtility::trimExplode('|*|', $this->conf['5columnClasses']);
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['columnWrap.']['wrap']);
 				break;
 			}
-			case "tab" : {
+			case 'tab' : {
 				// jQuery Tabs
-				$this->templatePart = "TEMPLATE_TAB";
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['tabWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_TAB';
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['tabWrap.']['wrap']);
 				// the id attribute is not permitted in tabs-style
 				if (count($this->attributes) > 0) {
 					foreach ($this->attributes as $key => $attribute) {
-						if (preg_match("/id=[\"|\'](.*?)[\"|\']/i", $attribute, $preg)) {
-							$this->attributes[$key] = trim(str_replace($preg[0], "", $attribute));
+						if (preg_match('/id=[\"|\'](.*?)[\"|\']/i', $attribute, $preg)) {
+							$this->attributes[$key] = trim(str_replace($preg[0], '', $attribute));
 						}
 					}
 				}
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['tabCollapsible']) {
-					$options['collapsible'] = "collapsible:true";
+					$options['collapsible'] = 'collapsible:true';
 					if (! $this->conf['config.']['tabOpen']) {
-						$options['active'] = "active:false";
+						$options['active'] = 'active:false';
 					}
 				}
 				if ($this->conf['config.']['tabRandomContent']) {
-					$options['active'] = "active:Math.floor(Math.random()*{$this->contentCount})";
+					$options['active'] = 'active:Math.floor(Math.random()*' . $this->contentCount . ')';
 				} elseif (is_numeric($this->conf['config.']['tabOpen'])) {
-					$options['active'] = "active:".($this->conf['config.']['tabOpen'] - 1);
+					$options['active'] = 'active:' . ($this->conf['config.']['tabOpen'] - 1);
 				}
 				if (in_array($this->conf['config.']['tabEvent'], array('click', 'mouseover'))) {
-					$options['event'] = "event:'{$this->conf['config.']['tabEvent']}'";
+					$options['event'] = 'event:\'' . $this->conf['config.']['tabEvent'] . '\'';
 				}
 				if (in_array($this->conf['config.']['tabHeightStyle'], array('auto', 'fill', 'content'))) {
-					$options['heightStyle'] = "heightStyle:'{$this->conf['config.']['tabHeightStyle']}'";
+					$options['heightStyle'] = 'heightStyle:\'' . $this->conf['config.']['tabHeightStyle'] . '\'';
 				}
 
 				// Add Cookies script, if cookie is active
@@ -764,8 +764,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					}
 					unset($options['active']);
 					$cookie_path = GeneralUtility::getIndpEnv('REQUEST_URI');
-					if ($this->lConf['tabCookieRoot'] || preg_match("/^\/index.php/i", $cookie_path)) {
-						$cookie_path = "/";
+					if ($this->lConf['tabCookieRoot'] || preg_match('/^\/index.php/i', $cookie_path)) {
+						$cookie_path = '/';
 					}
 					$options['activate'] = "activate:function(e,ui) { jQuery.cookie('{$this->getContentKey()}', ui.newTab.index(), { expires: ".$this->conf['config.']['tabCookieExpires'].", path:'$cookie_path' }); }";
 					$options['active'] = "active:jQuery.cookie('{$this->getContentKey()}')";
@@ -811,13 +811,13 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the Template of the Javascript
 				$markerArray = array();
 				// get the template
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_TAB_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_TAB_JS is missing", TRUE);
+				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, '###TEMPLATE_TAB_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_TAB_JS is missing', TRUE);
 				}
 
 				// open tab by hash
 				if ($this->confArr['tabSelectByHash']) {
-					$tabSelector = trim($this->cObj->getSubpart($templateCode, "###TAB_SELECT_BY_HASH###"));
+					$tabSelector = trim($this->cObj->getSubpart($templateCode, '###TAB_SELECT_BY_HASH###'));
 				} else {
 					$tabSelector = NULL;
 				}
@@ -825,16 +825,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 				// app the open-link-template
 				if ($this->confArr['openExternalLink']) {
-					$openExtLink = trim($this->cObj->getSubpart($templateCode, "###OPEN_EXTERNAL_LINK###"));
+					$openExtLink = trim($this->cObj->getSubpart($templateCode, '###OPEN_EXTERNAL_LINK###'));
 				} else {
 					$openExtLink = NULL;
 				}
 				$templateCode = trim($this->cObj->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
 
 				// Replace default values
-				$markerArray["KEY"] = $this->getContentKey();
-				$markerArray["PREG_QUOTE_KEY"] = preg_quote($this->getContentKey(), "/");
-				$markerArray["OPTIONS"] = implode(", ", $options);
+				$markerArray['KEY'] = $this->getContentKey();
+				$markerArray['PREG_QUOTE_KEY'] = preg_quote($this->getContentKey(), '/');
+				$markerArray['OPTIONS'] = implode(', ', $options);
 				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
@@ -849,20 +849,20 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->pagerenderer->addJS($templateCode);
 				break;
 			}
-			case "accordion" : {
+			case 'accordion' : {
 				// jQuery Accordion
-				$this->templatePart = "TEMPLATE_ACCORDION";
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['accordionWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_ACCORDION';
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['accordionWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['accordionCollapsible']) {
-					$options['collapsible'] = "collapsible:true";
+					$options['collapsible'] = 'collapsible:true';
 				}
 				if ($this->conf['config.']['accordionClosed']) {
-					$options['active'] = "active:false";
-					$options['collapsible'] = "collapsible:true";
+					$options['active'] = 'active:false';
+					$options['collapsible'] = 'collapsible:true';
 				} elseif ($this->conf['config.']['accordionRandomContent']) {
-					$options['active'] = "active:Math.floor(Math.random()*{$this->contentCount})";
+					$options['active'] = 'active:Math.floor(Math.random()*' . $this->contentCount . ')';
 				} elseif ($this->conf['config.']['accordionOpen'] > 0) {
 					$options['active'] = "active:".($this->conf['config.']['accordionOpen'] - 1);
 				}
@@ -1362,33 +1362,33 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["ATTRIBUTE"] .= ' ' . $this->attributes[$a];
 			}
 			// if the attribute does not have a class entry, the class will be wraped for yaml (c33l, c33l, c33r)
-			if ($this->classes[$a] && isset($this->contentClass[$a]) && ! preg_match("/class\=/i", $markerArray["ATTRIBUTE"])) {
+			if ($this->classes[$a] && isset($this->contentClass[$a]) && ! preg_match('/class\=/i', $markerArray['ATTRIBUTE'])) {
 				// wrap the class
-				$markerArray["ATTRIBUTE"] .= $this->cObj->stdWrap($this->classes[$a], array("wrap" => ' class="'.$this->contentClass[$a].'"', "required" => 1));
+				$markerArray['ATTRIBUTE'] .= $this->cObj->stdWrap($this->classes[$a], array('wrap' => ' class="' . $this->contentClass[$a] . '"', 'required' => 1));
 			}
 			// Set the active class for the active slide
 			if (($a+1) ==  $this->conf['config.']['easyaccordionOpen']) {
-				$markerArray["EASYACCORDION_ACTIVE"] = 'class="active"';
+				$markerArray['EASYACCORDION_ACTIVE'] = 'class="active"';
 			} else {
-				$markerArray["EASYACCORDION_ACTIVE"] = '';
+				$markerArray['EASYACCORDION_ACTIVE'] = '';
 			}
 
 			// render the content
-			$markerArray["CONTENT_ID"] = $this->content_id[$a];
-			$markerArray["ID"]         = $a+1;
-			$markerArray["TITLE"]      = NULL;
+			$markerArray['CONTENT_ID'] = $this->content_id[$a];
+			$markerArray['ID']         = $a+1;
+			$markerArray['TITLE']      = NULL;
 
 			// Title will be selected if not COLUMNS (TAB, ACCORDION and SLIDER)
-			if ($this->templatePart != "TEMPLATE_COLUMNS") {
+			if ($this->templatePart != 'TEMPLATE_COLUMNS') {
 				// overwrite the title if set in $this->titles
-				$markerArray["TITLE"] = $this->titles[$a];
+				$markerArray['TITLE'] = $this->titles[$a];
 			}
 
-			$GLOBALS['TSFE']->register['content_id'] = $markerArray["CONTENT_ID"];
-			$GLOBALS['TSFE']->register['id']         = $markerArray["ID"];
-			$GLOBALS['TSFE']->register['title']      = $markerArray["TITLE"];
+			$GLOBALS['TSFE']->register['content_id'] = $markerArray['CONTENT_ID'];
+			$GLOBALS['TSFE']->register['id']         = $markerArray['ID'];
+			$GLOBALS['TSFE']->register['title']      = $markerArray['TITLE'];
 
-			$markerArray["TAB_KEY"] = $this->cObj->cObjGetSingle($this->conf['tabKey'], $this->conf['tabKey.']);
+			$markerArray['TAB_KEY'] = $this->cObj->cObjGetSingle($this->conf['tabKey'], $this->conf['tabKey.']);
 
 			// define the used wrap
 			if ($a == 0) {
@@ -1400,14 +1400,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$addContent = FALSE;
 			// override the CONTENT
-			if ($this->templatePart == "TEMPLATE_COLUMNS" && $this->conf['config.']['columnOrder']) {
+			if ($this->templatePart == 'TEMPLATE_COLUMNS' && $this->conf['config.']['columnOrder']) {
 				switch ($this->conf['config.']['columnOrder']) {
 					case 1 : {
 						// left to right, top to down
 						foreach ($this->cElements as $key => $cElements) {
 							$test = ($key - $a) / $this->contentCount;
 							if (intval($test) == $test) {
-								$markerArray["CONTENT"] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
+								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
 								$addContent = TRUE;
 							}
 						}
@@ -1418,7 +1418,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						foreach ($this->cElements as $key => $cElements) {
 							$test = ($key - ($this->contentCount - ($a + 1))) / $this->contentCount;
 							if (intval($test) == $test) {
-								$markerArray["CONTENT"] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
+								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
 								$addContent = TRUE;
 							}
 						}
@@ -1437,14 +1437,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 			} else {
 				// wrap the content
-				$markerArray["CONTENT"] = $this->cObj->stdWrap($this->cElements[$a], array('wrap' => $wrap));
+				$markerArray['CONTENT'] = $this->cObj->stdWrap($this->cElements[$a], array('wrap' => $wrap));
 				$addContent = TRUE;
 			}
-			$markerArray["REL"] = htmlspecialchars($this->rels[$a]);
+			$markerArray['REL'] = htmlspecialchars($this->rels[$a]);
 			// Generate the QUOTE_TITLE
-			$markerArray["DEFAULT_QUOTE_TITLE"]   = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('default_quote_title_template'), $markerArray, '###|###', 0));
-			$markerArray["TAB_QUOTE_TITLE"]       = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('tab_quote_title_template'), $markerArray, '###|###', 0));
-			$markerArray["ACCORDION_QUOTE_TITLE"] = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('accordion_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['DEFAULT_QUOTE_TITLE']   = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('default_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['TAB_QUOTE_TITLE']       = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('tab_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['ACCORDION_QUOTE_TITLE'] = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('accordion_quote_title_template'), $markerArray, '###|###', 0));
 
 			if (isset($this->conf['additionalContentMarkers'])) {
 				$additonalMarkerArray = array();
@@ -1458,7 +1458,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 			}
 
-			if ($markerArray["CONTENT"] || ($addContent && $this->confArr['showEmptyContent'])) {
+			if ($markerArray['CONTENT'] || ($addContent && $this->confArr['showEmptyContent'])) {
 				// add content to COLUMNS
 				$columns .= $this->cObj->substituteMarkerArray($columnCode, $markerArray, '###|###', 0);
 				// add content to TITLE
@@ -1495,7 +1495,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	public function outputError($msg='', $js=FALSE) {
 		GeneralUtility::devLog($msg, $this->extKey, 3);
 		if ($this->confArr['frontendErrorMsg'] || ! isset($this->confArr['frontendErrorMsg'])) {
-			return ($js ? "alert(".GeneralUtility::quoteJSvalue($msg).")" : "<p>{$msg}</p>");
+			return ($js ? 'alert(' . GeneralUtility::quoteJSvalue($msg) . ')' : '<p>' . $msg . '</p>');
 		} else {
 			return NULL;
 		}
@@ -1526,19 +1526,19 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->setFlexFormData();
 		if (! isset($this->piFlexForm['data'])) {
 			if ($devlog === TRUE) {
-				GeneralUtility::devLog("Flexform Data not set", $this->extKey, 1);
+				GeneralUtility::devLog('Flexform Data not set', $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet])) {
 			if ($devlog === TRUE) {
-				GeneralUtility::devLog("Flexform sheet '{$sheet}' not defined", $this->extKey, 1);
+				GeneralUtility::devLog('Flexform sheet ' . $sheet . ' not defined', $this->extKey, 1);
 			}
 			return NULL;
 		}
 		if (! isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
 			if ($devlog === TRUE) {
-				GeneralUtility::devLog("Flexform Data [{$sheet}][{$name}] does not exist", $this->extKey, 1);
+				GeneralUtility::devLog('Flexform Data [' . $sheet . '][' . $name . '] does not exist', $this->extKey, 1);
 			}
 			return NULL;
 		}
