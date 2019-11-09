@@ -1067,17 +1067,17 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->pagerenderer->addJS($templateCode);
 				break;
 			}
-			case "slidedeck" : {
+			case 'slidedeck' : {
 				// SlideDeck
-				$this->templatePart = "TEMPLATE_SLIDEDECK";
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['slidedeckWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_SLIDEDECK';
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['slidedeckWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['slidedeckTransitionduration']) {
 					$options['speed'] = "speed: {$this->conf['config.']['slidedeckTransitionduration']}";
 				}
 				if ($this->conf['config.']['slidedeckTransition']) {
-					$options['transition'] = "transition: '".(in_array($this->conf['config.']['slidedeckTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['slidedeckTransitiondir']}")."{$this->conf['config.']['slidedeckTransition']}'";
+					$options['transition'] = 'transition: \'' . (in_array($this->conf['config.']['slidedeckTransition'], array('swing', 'linear')) ? '' : 'ease' . $this->conf['config.']['slidedeckTransitiondir']) . $this->conf['config.']['slidedeckTransition'] . '\'';
 				}
 				if ($this->conf['config.']['slidedeckStart']) {
 					$options['start'] = "start: {$this->conf['config.']['slidedeckStart']}";
