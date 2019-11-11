@@ -1,4 +1,8 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Hooks;
+
+
 /***************************************************************
 *  Copyright notice
 *
@@ -32,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package    TYPO3
  * @subpackage tx_jfmulticontent
  */
-class tx_jfmulticontent_cms_layout
+class CmsBackend
 {
 	/**
 	 * Returns information about this extension's pi1 plugin
@@ -46,7 +50,7 @@ class tx_jfmulticontent_cms_layout
 		if ($params['row']['list_type'] == 'jfmulticontent_pi1') {
 			$data = GeneralUtility::xml2array($params['row']['pi_flexform']);
 			if (is_array($data) && $data['data']['general']['lDEF']['style']['vDEF']) {
-				$result = sprintf($GLOBALS['LANG']->sL('LLL:EXT:jfmulticontent/locallang.xml:cms_layout.style'), '<strong>'.$data['data']['general']['lDEF']['style']['vDEF'].'</strong><br/>');
+				$result = sprintf($GLOBALS['LANG']->sL('LLL:EXT:jfmulticontent/locallang.xml:cms_layout.style'), '<strong>'.$data['data']['general']['lDEF']['style']['vDEF'] . '</strong><br/>');
 			}
 			if (!$result) {
 				$result = $GLOBALS['LANG']->sL('LLL:EXT:jfmulticontent/locallang.xml:cms_layout.not_configured').'<br/>';
@@ -59,9 +63,3 @@ class tx_jfmulticontent_cms_layout
 	}
 }
 
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_cms_layout.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_cms_layout.php']);
-}
-
-?>

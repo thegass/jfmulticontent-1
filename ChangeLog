@@ -1,5 +1,6 @@
 
 2019-11-11  Franz Holzinger  <franz@ttproducts.de>
+    * move lib/class.tx_jfmulticontent_cms_layout.php -> Classes/Hooks/CmsBackend.php
     * move lib/class.tx_jfmulticontent_tsparserext.php -> Classes/Backend/TsparserExtensionUpdate.php
     * replace $this->cObj->fileResource by $tsfe->tmpl->getFileName and file_get_contents
     * add ConnectionPool / queryBuilder SQL queries 

@@ -33,8 +33,11 @@ if ($confArr['ttNewsCodes']) {
 	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['extraGlobalMarkerHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_ttnews_extend.php:tx_jfmulticontent_ttnews_extend';
 }
 
+
+$listType = 'jfmulticontent_pi1';
+
 // Page module hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['jfmulticontent_pi1'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_cms_layout.php:tx_jfmulticontent_cms_layout->getExtensionSummary';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']$listType][JFMULTICONTENT_EXT] = 'JambageCom\\Jfmulticontent\\Hooks\\CmsBackend->getExtensionSummary';
 
 // Save the content
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_tcemain.php:&tx_jfmulticontent_tcemain';
