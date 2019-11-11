@@ -521,12 +521,20 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					} else {
 						$row = NULL;
 						if ($GLOBALS['TSFE']->sys_language_content) {
-							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $GLOBALS['TSFE']->sys_language_content, '', '', 1);
-							$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                            if (
+                                version_compare(TYPO3_version, '9.0.0', '<')
+                            ) {
+                                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $GLOBALS['TSFE']->sys_language_content, '', '', 1);
+                                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                            }
 						}
-						if (! is_array($row)) {
-							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
-							$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+						if (!is_array($row)) {
+                            if (
+                                version_compare(TYPO3_version, '9.0.0', '<')
+                            ) {
+                                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
+                                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                            }
 						}
 						if (is_array($row)) {
 							foreach ($row as $key => $val) {
@@ -549,15 +557,19 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the informations for every content
 				for ($a=0; $a < count($content_ids); $a++) {
 					// Select the content
-					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-						'*',
-						'tt_content',
-						'uid='.intval($content_ids[$a]),
-						'',
-						'',
-						1
-					);
-					$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                    if (
+                        version_compare(TYPO3_version, '9.0.0', '<')
+                    ) {
+                        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                            '*',
+                            'tt_content',
+                            'uid=' . intval($content_ids[$a]),
+                            '',
+                            '',
+                            1
+                        );
+                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                    }
 					if ($GLOBALS['TSFE']->sys_language_content) {
 						$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
 					} elseif ($GLOBALS['TSFE']->sys_page->versioningPreview) {
@@ -579,36 +591,41 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				if ($GLOBALS['TSFE']->sys_page->versioningPreview) {
 					$elementUID = $this->cObj->data['_ORIG_uid'];
 				}
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'*',
-					'tt_content',
-					'tx_jfmulticontent_irre_parentid=' . intval($elementUID) . ' AND deleted = 0 AND hidden = 0',
-					'',
-					'sorting ASC'
-				);
-				$a = 0;
-				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					if ($GLOBALS['TSFE']->sys_language_content) {
-						$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
-					} elseif ($GLOBALS['TSFE']->sys_page->versioningPreview) {
-						$GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
-					}
-					$uid = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
-					if ($row['t3ver_oid']) {
-						$uid = $row['t3ver_oid'];
-					}
-					$GLOBALS['TSFE']->register['uid'] = $uid;
-					$GLOBALS['TSFE']->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
-					if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
-						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
-						$GLOBALS['TSFE']->register['title'] = $this->titles[$a];
-					}
-					$this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-					$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
-					$this->content_id[$a] = $row['uid'];
-					$a ++;
-				}
-			}
+                if (
+                    version_compare(TYPO3_version, '9.0.0', '<')
+                ) {
+                    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                        '*',
+                        'tt_content',
+                        'tx_jfmulticontent_irre_parentid=' . intval($elementUID) . ' AND deleted = 0 AND hidden = 0',
+                        '',
+                        'sorting ASC'
+                    );
+                    $a = 0;
+                    while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                        if ($GLOBALS['TSFE']->sys_language_content) {
+                            $row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
+                        } elseif ($GLOBALS['TSFE']->sys_page->versioningPreview) {
+                            $GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
+                        }
+                        $uid = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
+                        if ($row['t3ver_oid']) {
+                            $uid = $row['t3ver_oid'];
+                        }
+                        $GLOBALS['TSFE']->register['uid'] = $uid;
+                        $GLOBALS['TSFE']->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
+                        if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
+                            $this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
+                            $GLOBALS['TSFE']->register['title'] = $this->titles[$a];
+                        }
+                        $this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+                        $this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
+                        $this->content_id[$a] = $row['uid'];
+                        $a ++;
+                    }
+                }
+            }
+
 			// HOOK for additional views
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'] as $_classRef) {
