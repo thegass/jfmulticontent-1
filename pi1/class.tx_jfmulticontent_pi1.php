@@ -500,8 +500,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			// options
 			if ($this->lConf['optionsOverride'] || trim($this->lConf['options'])) {
-				$this->conf['config.'][$this->lConf['style'].'Options'] = $this->lConf['options'];
-				$this->conf['config.'][$this->lConf['style'].'OptionsOverride'] = $this->lConf['optionsOverride'];
+				$this->conf['config.'][$this->lConf['style'] . 'Options'] = $this->lConf['options'];
+				$this->conf['config.'][$this->lConf['style'] . 'OptionsOverride'] = $this->lConf['optionsOverride'];
 			}
 
 			$view = $this->conf['views.'][$this->conf['config.']['view'].'.'];
@@ -521,16 +521,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					} else {
 						$row = NULL;
 						if ($GLOBALS['TSFE']->sys_language_content) {
-							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid='.intval($page_ids[$a]).' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_content, '', '', 1);
+							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $GLOBALS['TSFE']->sys_language_content, '', '', 1);
 							$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 						}
 						if (! is_array($row)) {
-							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid='.intval($page_ids[$a]), '', '', 1);
+							$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
 							$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 						}
 						if (is_array($row)) {
 							foreach ($row as $key => $val) {
-								$GLOBALS['TSFE']->register['page_'.$key] = $val;
+								$GLOBALS['TSFE']->register['page_' . $key] = $val;
 							}
 						}
 
@@ -575,14 +575,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 			} else if ($this->conf['config.']['view'] == 'irre') {
 				// get the content ID's
-				$elementUID = ($this->cObj->data['_LOCALIZED_UID'])?$this->cObj->data['_LOCALIZED_UID']:$this->cObj->data['uid'];
+				$elementUID = ($this->cObj->data['_LOCALIZED_UID']) ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'];
 				if ($GLOBALS['TSFE']->sys_page->versioningPreview) {
 					$elementUID = $this->cObj->data['_ORIG_uid'];
 				}
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					'*',
 					'tt_content',
-					'tx_jfmulticontent_irre_parentid='.intval($elementUID).' AND deleted = 0 AND hidden = 0',
+					'tx_jfmulticontent_irre_parentid=' . intval($elementUID) . ' AND deleted = 0 AND hidden = 0',
 					'',
 					'sorting ASC'
 				);
@@ -767,7 +767,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					if ($this->lConf['tabCookieRoot'] || preg_match('/^\/index.php/i', $cookie_path)) {
 						$cookie_path = '/';
 					}
-					$options['activate'] = "activate:function(e,ui) { jQuery.cookie('{$this->getContentKey()}', ui.newTab.index(), { expires: ".$this->conf['config.']['tabCookieExpires'].", path:'$cookie_path' }); }";
+					$options['activate'] = "activate:function(e,ui) { jQuery.cookie('{$this->getContentKey()}', ui.newTab.index(), { expires: " . $this->conf['config.']['tabCookieExpires'] . ", path:'$cookie_path' }); }";
 					$options['active'] = "active:jQuery.cookie('{$this->getContentKey()}')";
 				}
 
@@ -794,9 +794,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$fx[] = "duration:'{$this->conf['config.']['tabShowTransitionduration']}'";
 					}
 					if ($this->conf['config.']['tabShowTransition']) {
-						$fx[] = "easing:'".(in_array($this->conf['config.']['tabShowTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabShowTransitiondir']}")."{$this->conf['config.']['tabShowTransition']}'";
+						$fx[] = "easing:'".(in_array($this->conf['config.']['tabShowTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabShowTransitiondir']}") . "{$this->conf['config.']['tabShowTransition']}'";
 					}
-					$options['show'] = "show:{".implode(', ', $fx)."}";
+					$options['show'] = "show:{" . implode(', ', $fx) . "}";
 				}
 
 				// overwrite all options if set
