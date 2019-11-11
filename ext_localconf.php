@@ -34,7 +34,7 @@ if ($confArr['ttNewsCodes']) {
 }
 
 // Page module hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['jfmulticontent_pi1']['jfmulticontent'] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_cms_layout.php:tx_jfmulticontent_cms_layout->getExtensionSummary';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['jfmulticontent_pi1'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_cms_layout.php:tx_jfmulticontent_cms_layout->getExtensionSummary';
 
 // Save the content
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_tcemain.php:&tx_jfmulticontent_tcemain';

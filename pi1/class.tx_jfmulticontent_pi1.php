@@ -23,7 +23,10 @@
 ***************************************************************/
 
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 
 /**
@@ -72,6 +75,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
+
+		$tsfe = $this->getTypoScriptFrontendController()
 
 		// get the config from EXT
 		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
@@ -512,7 +517,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the informations for every page
 				for ($a=0; $a < count($page_ids); $a++) {
 
-					$GLOBALS['TSFE']->register['pid'] = $page_ids[$a];
+					$tsfe->register['pid'] = $page_ids[$a];
 
 					if ($this->confArr['useOwnUserFuncForPages']) {
 						// TemplaVoila will render the content with a userFunc
@@ -520,25 +525,55 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					} else {
 						$row = NULL;
-						if ($GLOBALS['TSFE']->sys_language_content) {
+						debug ($tsfe->sys_language_content, '$GLOBALS[\'TSFE\']->sys_language_content');
+						if ($tsfe->sys_language_content) {
                             if (
-                                version_compare(TYPO3_version, '9.0.0', '<')
+                                version_compare(TYPO3_version, '9.0.0', '>=')
                             ) {
-                                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $GLOBALS['TSFE']->sys_language_content, '', '', 1);
+                                // SELECT * FROM `pages_language_overlay` WHERE `deleted`=0 AND `hidden`=0 AND `pid`=<mypid> AND `sys_language_uid`=<mylanguageid>
+                                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages_language_overlay');
+                                $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+                                $row = $queryBuilder->select('*')
+                                    ->from('pages_language_overlay')
+                                    ->where(
+                                        $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($page_ids[$a], \PDO::PARAM_INT))
+                                    )
+                                    ->andWhere(
+                                        $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($tsfe->sys_language_content, \PDO::PARAM_INT))
+                                    )
+                                    ->execute()
+                                    ->fetchAll();
+                                // +++
+                            } else {
+                                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $tsfe->sys_language_content, '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                             }
-						}
+                        }
+
 						if (!is_array($row)) {
+						debug ($row, '$row');
                             if (
-                                version_compare(TYPO3_version, '9.0.0', '<')
+                                version_compare(TYPO3_version, '9.0.0', '>=')
                             ) {
+                                // SELECT * FROM `pages` WHERE `deleted`=0 AND `hidden`=0 AND `uid`=<mypid>
+                                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+                                $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+                                $row = $queryBuilder->select('*')
+                                    ->from('pages')
+                                    ->where(
+                                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($page_ids[$a], \PDO::PARAM_INT))
+                                    )
+                                    ->execute()
+                                    ->fetchAll();
+                                // +++
+                            } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                             }
 						}
 						if (is_array($row)) {
 							foreach ($row as $key => $val) {
-								$GLOBALS['TSFE']->register['page_' . $key] = $val;
+								$tsfe->register['page_' . $key] = $val;
 							}
 						}
 
@@ -555,11 +590,25 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the content ID's
 				$content_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_contents']);
 				// get the informations for every content
-				for ($a=0; $a < count($content_ids); $a++) {
+				for ($a = 0; $a < count($content_ids); $a++) {
+    						debug ($a, '$a');
+
 					// Select the content
                     if (
-                        version_compare(TYPO3_version, '9.0.0', '<')
+                        version_compare(TYPO3_version, '9.0.0', '>=')
                     ) {
+                        // SELECT * FROM `tt_content` WHERE `deleted`=0 AND `hidden`=0 AND `uid`=<mycontentid>
+                        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+                        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+                        $row = $queryBuilder->select('*')
+                            ->from('tt_content')
+                            ->where(
+                                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($content_ids[$a], \PDO::PARAM_INT))
+                            )
+                            ->execute()
+                            ->fetchAll();
+                        // +++
+                    } else {
                         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                             '*',
                             'tt_content',
@@ -570,16 +619,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         );
                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                     }
-					if ($GLOBALS['TSFE']->sys_language_content) {
-						$row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
-					} elseif ($GLOBALS['TSFE']->sys_page->versioningPreview) {
-						$GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
+					if ($tsfe->sys_language_content) {
+						$row = $tsfe->sys_page->getRecordOverlay('tt_content', $row, $tsfe->sys_language_content, $tsfe->sys_language_contentOL);
+					} elseif ($tsfe->sys_page->versioningPreview) {
+						$tsfe->sys_page->versionOL('tt_content', $row);
 					}
-					$GLOBALS['TSFE']->register['uid'] = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
-					$GLOBALS['TSFE']->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
+					$tsfe->register['uid'] = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
+					$tsfe->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
 					if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
 						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
-						$GLOBALS['TSFE']->register['title'] = $this->titles[$a];
+						$tsfe->register['title'] = $this->titles[$a];
 					}
 					$this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
 					$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
@@ -588,12 +637,27 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			} else if ($this->conf['config.']['view'] == 'irre') {
 				// get the content ID's
 				$elementUID = ($this->cObj->data['_LOCALIZED_UID']) ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'];
-				if ($GLOBALS['TSFE']->sys_page->versioningPreview) {
+				if ($tsfe->sys_page->versioningPreview) {
 					$elementUID = $this->cObj->data['_ORIG_uid'];
 				}
+                    debug ($elementUID, '$elementUID');
+
                 if (
-                    version_compare(TYPO3_version, '9.0.0', '<')
+                    version_compare(TYPO3_version, '9.0.0', '>=')
                 ) {
+                    // SELECT * FROM `tt_content` WHERE `deleted`=0 AND `hidden`=0 AND `tx_jfmulticontent_irre_parentid`=<myrecordid>
+                    $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+                    $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+                    $row = $queryBuilder->select('*')
+                        ->from('tt_content')
+                        ->where(
+                            $queryBuilder->expr()->eq('tx_jfmulticontent_irre_parentid', $queryBuilder->createNamedParameter($elementUID, \PDO::PARAM_INT))
+                        )
+                        ->orderBy('sorting', 'ASC')
+                        ->execute()
+                        ->fetchAll();
+                    // +++
+                } else {
                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                         '*',
                         'tt_content',
@@ -603,25 +667,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     );
                     $a = 0;
                     while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                        if ($GLOBALS['TSFE']->sys_language_content) {
-                            $row = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
-                        } elseif ($GLOBALS['TSFE']->sys_page->versioningPreview) {
-                            $GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
-                        }
-                        $uid = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
-                        if ($row['t3ver_oid']) {
-                            $uid = $row['t3ver_oid'];
-                        }
-                        $GLOBALS['TSFE']->register['uid'] = $uid;
-                        $GLOBALS['TSFE']->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
-                        if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
-                            $this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
-                            $GLOBALS['TSFE']->register['title'] = $this->titles[$a];
-                        }
-                        $this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-                        $this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
-                        $this->content_id[$a] = $row['uid'];
-                        $a ++;
+                        $this->addIRREContent($a, $row);
                     }
                 }
             }
@@ -675,12 +721,22 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 
 		// The template
-		if (! $this->templateFile = $this->cObj->fileResource($this->conf['templateFile'])) {
-			$this->templateFile = $this->cObj->fileResource('EXT:jfmulticontent/res/tx_jfmulticontent_pi1.tmpl');
+		$incFile = $tsfe->tmpl->getFileName($this->conf['templateFile']);
+		if (file_exists($incFile)) {
+            $this->templateFile = file_get_contents($incFile);
+        }
+		if (!$this->templateFile) {
+            $incFile = $tsfe->tmpl->getFileName('EXT:' . JFMULTICONTENT_EXT . '/res/tx_jfmulticontent_pi1.tmpl');
+			$this->templateFile = file_get_contents($incFile);
 		}
 		// The template for JS
-		if (! $this->templateFileJS = $this->cObj->fileResource($this->conf['templateFileJS'])) {
-			$this->templateFileJS = $this->cObj->fileResource('EXT:jfmulticontent/res/tx_jfmulticontent_pi1.js');
+		$incFile = $tsfe->tmpl->getFileName($this->conf['templateFileJS']);
+		if (file_exists($incFile)) {
+            $this->templateFileJS = file_get_contents($incFile);
+        }
+		if (!$this->templateFileJS) {
+            $incFile = $tsfe->tmpl->getFileName($this->conf['EXT:jfmulticontent/res/tx_jfmulticontent_pi1.js']);
+			$this->templateFileJS = file_get_contents($incFile);
 		}
 
 		// define the jQuery mode and function
@@ -1286,6 +1342,36 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	}
 
 	/**
+	 * add a IRRE content record
+     * @param integer $a index
+     * @param array $row record
+	 * @return void
+	 */
+    public function addIRREContent(&$a, $row) {
+        $tsfe = $this->getTypoScriptFrontendController()
+
+        if ($tsfe->sys_language_content) {
+            $row = $tsfe->sys_page->getRecordOverlay('tt_content', $row, $tsfe->sys_language_content, $tsfe->sys_language_contentOL);
+        } elseif ($tsfe->sys_page->versioningPreview) {
+            $tsfe->sys_page->versionOL('tt_content', $row);
+        }
+        $uid = $row['_LOCALIZED_UID'] ? $row['_LOCALIZED_UID'] : $row['uid'];
+        if ($row['t3ver_oid']) {
+            $uid = $row['t3ver_oid'];
+        }
+        $tsfe->register['uid'] = $uid;
+        $tsfe->register['title'] = (strlen(trim($this->titles[$a])) > 0 ? $this->titles[$a] : $row['header']);
+        if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
+            $this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
+            $tsfe->register['title'] = $this->titles[$a];
+        }
+        $this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+        $this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
+        $this->content_id[$a] = $row['uid'];
+        $a++;
+    }
+
+	/**
 	 * Set the contentKey
 	 * @param string $contentKey
 	 */
@@ -1310,14 +1396,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 */
 	public function renderTemplate()
 	{
+        $tsfe = $this->getTypoScriptFrontendController()
+
 		// set the register:key for TS manipulation
-		$GLOBALS['TSFE']->register['key'] = $this->getContentKey();
+		$tsfe->register['key'] = $this->getContentKey();
 
 		$markerArray = $this->additionalMarker;
 
 		// Define string with all classes
 		$markerArray["COLUMN_CLASSES"] = implode('', $this->classes);
-		$GLOBALS['TSFE']->register['COLUMN_CLASSES'] = $markerArray["COLUMN_CLASSES"];
+		$tsfe->register['COLUMN_CLASSES'] = $markerArray["COLUMN_CLASSES"];
 
 		// get the template
 		if (! $templateCode = $this->cObj->getSubpart($this->templateFile, "###{$this->templatePart}###")) {
@@ -1401,9 +1489,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray['TITLE'] = $this->titles[$a];
 			}
 
-			$GLOBALS['TSFE']->register['content_id'] = $markerArray['CONTENT_ID'];
-			$GLOBALS['TSFE']->register['id']         = $markerArray['ID'];
-			$GLOBALS['TSFE']->register['title']      = $markerArray['TITLE'];
+			$tsfe->register['content_id'] = $markerArray['CONTENT_ID'];
+			$tsfe->register['id']         = $markerArray['ID'];
+			$tsfe->register['title']      = $markerArray['TITLE'];
 
 			$markerArray['TAB_KEY'] = $this->cObj->cObjGetSingle($this->conf['tabKey'], $this->conf['tabKey.']);
 
@@ -1565,6 +1653,23 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			return $this->piFlexForm['data'][$sheet]['lDEF'][$name];
 		}
 	}
+	
+    /**
+     * @return PageRepository
+     */
+    protected function getPageRepository(): PageRepository
+    {
+        return $this->getTypoScriptFrontendController()->sys_page ?: GeneralUtility::makeInstance(PageRepository::class);
+    }
+    
+    /**
+     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     */
+    protected function getTypoScriptFrontendController ()
+    {
+        return $GLOBALS['TSFE'];
+    }
+
 }
 
 

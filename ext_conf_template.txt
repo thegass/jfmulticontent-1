@@ -78,6 +78,6 @@ easyAccordionSkinFolder = EXT:jfmulticontent/res/easyaccordion/skins/
 # cat=basic/basic/20; type=string; label=Slider Modes: Possible values to use for AnythingSlider "mode" (horizontal,vertical,fade)
 anythingSliderModes = horizontal,vertical,fade
 
-# cat=basic/dev/1000; type=user[EXT:jfmulticontent/lib/class.tx_jfmulticontent_tsparserext.php:tx_jfmulticontent_tsparserext->displayMessage]; label=Updater
+# cat=basic/dev/1000; type=user[JambageCom\Jfmulticontent\Backend\TsparserExtensionUpdate->render]; label=Updater
 updateMessage = 0
 

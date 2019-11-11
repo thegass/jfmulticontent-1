@@ -11,7 +11,7 @@
 			<label index="cms_layout.style">Display: %s</label>
 			<label index="cms_layout.not_configured">Plugin is not configured!</label>
 			<label index="extmng.updatermsgHeader">Important!</label>
-			<label index="extmng.updatermsg">jfmulticontent comes with a new updater-script which fix old content elements. You have to run this script if you are updating from older installation.</label>
+			<label index="extmng.updatermsg">jfmulticontent comes with a new updater-script which fixes old content elements. You have to run this script if you are updating from an older installation.</label>
 			<label index="extmng.updatermsgLink">[Click here to open the updater]</label>
 
 			<label index="extmng.classInnerHeader">Warning!</label>
