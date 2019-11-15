@@ -735,7 +735,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $this->templateFileJS = file_get_contents($incFile);
         }
 		if (!$this->templateFileJS) {
-            $incFile = $tsfe->tmpl->getFileName($this->conf['EXT:jfmulticontent/res/tx_jfmulticontent_pi1.js']);
+            $incFile = $tsfe->tmpl->getFileName('EXT:' . JFMULTICONTENT_EXT . '/res/tx_jfmulticontent_pi1.js');
 			$this->templateFileJS = file_get_contents($incFile);
 		}
 
