@@ -1,3 +1,5 @@
+2019-11-15  Franz Holzinger  <franz@ttproducts.de>
+    * compatibility with TYPO3 9.5
 
 2019-11-11  Franz Holzinger  <franz@ttproducts.de>
     * move lib/class.tx_jfmulticontent_cms_layout.php -> Classes/Hooks/CmsBackend.php

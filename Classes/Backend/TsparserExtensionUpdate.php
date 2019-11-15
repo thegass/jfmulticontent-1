@@ -1,4 +1,8 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Backend;
+
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,6 +29,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
 /**
  * Class that renders fields for the extensionmanager configuration
  *
@@ -32,14 +37,14 @@
  * @package    TYPO3
  * @subpackage tx_jfmulticontent
  */
-class tx_jfmulticontent_tsparserext
+class TsparserExtensionUpdate
 {
 	/**
 	 * Shows the update Message
 	 *
 	 * @return	string
 	 */
-	public function displayMessage(&$params, &$tsObj)
+	public function render(&$params, &$tsObj)
 	{
 		$out = '';
 

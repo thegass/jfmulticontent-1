@@ -9,9 +9,20 @@ if (!defined ('T3JQUERY')) {
     define('T3JQUERY', false);
 }
 
-$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][JFMULTICONTENT_EXT]);
+$extensionConfiguration = array();
 
-if ($confArr['ttNewsCodes']) {
+if (isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][JFMULTICONTENT_EXT])) {
+    $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][JFMULTICONTENT_EXT]);
+} else if (
+    defined('TYPO3_version') &&
+    version_compare(TYPO3_version, '9.0.0', '>=')
+) {
+    $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+    )->get(JFMULTICONTENT_EXT);
+}
+
+if ($extensionConfiguration['ttNewsCodes']) {
 	// Add the additional CODES to tt_news
 	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['what_to_display'][] = array(
 		0 => 'LIST_ACCORDION',
@@ -37,12 +48,12 @@ if ($confArr['ttNewsCodes']) {
 $listType = 'jfmulticontent_pi1';
 
 // Page module hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']$listType][JFMULTICONTENT_EXT] = 'JambageCom\\Jfmulticontent\\Hooks\\CmsBackend->getExtensionSummary';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$listType][JFMULTICONTENT_EXT] = 'JambageCom\\Jfmulticontent\\Hooks\\CmsBackend->getExtensionSummary';
 
 // Save the content
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_tcemain.php:&tx_jfmulticontent_tcemain';
 
-if ($confArr['addBrowseLinks']) {
+if ($extensionConfiguration['addBrowseLinks']) {
 	// Add browseLinksHook
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.browse_links.php']['browseLinksHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_browselinkshooks.php:&tx_jfmulticontent_browselinkshooks';
 	if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rtehtmlarea')) {
@@ -51,3 +62,7 @@ if ($confArr['addBrowseLinks']) {
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43(JFMULTICONTENT_EXT, 'pi1/class.tx_jfmulticontent_pi1.php', '_pi1', 'list_type', 1);
+
+
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT] = $extensionConfiguration;
+

@@ -76,10 +76,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 
-		$tsfe = $this->getTypoScriptFrontendController()
+		$tsfe = $this->getTypoScriptFrontendController();
 
 		// get the config from EXT
-		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 
 		$this->pagerenderer = GeneralUtility::makeInstance('tx_jfmulticontent_pagerenderer');
 		$this->pagerenderer->setConf($this->conf);
@@ -1348,7 +1348,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 * @return void
 	 */
     public function addIRREContent(&$a, $row) {
-        $tsfe = $this->getTypoScriptFrontendController()
+        $tsfe = $this->getTypoScriptFrontendController();
 
         if ($tsfe->sys_language_content) {
             $row = $tsfe->sys_page->getRecordOverlay('tt_content', $row, $tsfe->sys_language_content, $tsfe->sys_language_contentOL);
@@ -1396,7 +1396,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 */
 	public function renderTemplate()
 	{
-        $tsfe = $this->getTypoScriptFrontendController()
+        $tsfe = $this->getTypoScriptFrontendController();
 
 		// set the register:key for TS manipulation
 		$tsfe->register['key'] = $this->getContentKey();
@@ -1404,8 +1404,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$markerArray = $this->additionalMarker;
 
 		// Define string with all classes
-		$markerArray["COLUMN_CLASSES"] = implode('', $this->classes);
-		$tsfe->register['COLUMN_CLASSES'] = $markerArray["COLUMN_CLASSES"];
+		$markerArray['COLUMN_CLASSES'] = implode('', $this->classes);
+		$tsfe->register['COLUMN_CLASSES'] = $markerArray['COLUMN_CLASSES'];
 
 		// get the template
 		if (! $templateCode = $this->cObj->getSubpart($this->templateFile, "###{$this->templatePart}###")) {
@@ -1676,4 +1676,3 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/pi1/class.tx_jfmulticontent_pi1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/pi1/class.tx_jfmulticontent_pi1.php']);
 }
-?>
