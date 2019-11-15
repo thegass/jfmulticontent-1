@@ -52,7 +52,7 @@ call_user_func(function () {
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$listType][JFMULTICONTENT_EXT] = 'JambageCom\\Jfmulticontent\\Hooks\\CmsBackend->getExtensionSummary';
 
     // Save the content
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][JFMULTICONTENT_EXT] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_tcemain.php:&tx_jfmulticontent_tcemain';
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][JFMULTICONTENT_EXT] = 'JambageCom\\Jfmulticontent\\Hooks\\CmsBackend';
 
     if ($extensionConfiguration['addBrowseLinks']) {
         // Add browseLinksHook

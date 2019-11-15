@@ -1,5 +1,6 @@
 2019-11-15  Franz Holzinger  <franz@ttproducts.de>
-    * use a directly called closure function to encapsulate all locally defined variables in ext_localconf.php 
+    * move lib/class.tx_jfmulticontent_tcemain.php -> Classes/Hooks/DataHandler.php
+    * use a directly called closure function to encapsulate all locally defined variables in ext_localconf.php
     * compatibility with TYPO3 9.5
 
 2019-11-11  Franz Holzinger  <franz@ttproducts.de>

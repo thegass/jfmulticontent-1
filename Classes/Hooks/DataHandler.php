@@ -1,4 +1,7 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Hooks;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -34,7 +37,7 @@
  * @package    TYPO3
  * @subpackage tx_jfmulticontent
  */
-class tx_jfmulticontent_tcemain
+class DataHandler
 {
 	/**
 	 * Checks if the colPos will be manipulated and if TemplaVoila references should be disabled for this record
