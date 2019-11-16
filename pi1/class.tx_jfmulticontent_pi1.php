@@ -80,6 +80,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 		// get the config from EXT
 		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
+		$parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
 		$this->pagerenderer = GeneralUtility::makeInstance('tx_jfmulticontent_pagerenderer');
 		$this->pagerenderer->setConf($this->conf);
@@ -677,7 +678,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'] as $_classRef) {
 					$_procObj = GeneralUtility::getUserObj($_classRef);
 					if ($this->conf['config.']['view'] == $_procObj->getIdentifier()) {
-						if (! method_exists($_procObj, 'isActive') || (method_exists($_procObj, 'isActive') && $_procObj->isActive())) {
+						if (!method_exists($_procObj, 'isActive') || (method_exists($_procObj, 'isActive') && $_procObj->isActive())) {
 							// If the methode 'isActive' not exists, this will be true...
 							$_procObj->main($this->content, $this->conf, $this);
 							$this->titles = $_procObj->getTitles();
@@ -814,7 +815,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$options = array();
 				if ($this->conf['config.']['tabCollapsible']) {
 					$options['collapsible'] = 'collapsible:true';
-					if (! $this->conf['config.']['tabOpen']) {
+					if (!$this->conf['config.']['tabOpen']) {
 						$options['active'] = 'active:false';
 					}
 				}
@@ -884,31 +885,31 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the Template of the Javascript
 				$markerArray = array();
 				// get the template
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, '###TEMPLATE_TAB_JS###'))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_TAB_JS###'))) {
 					$templateCode = $this->outputError('Template TEMPLATE_TAB_JS is missing', TRUE);
 				}
 
 				// open tab by hash
 				if ($this->confArr['tabSelectByHash']) {
-					$tabSelector = trim($this->cObj->getSubpart($templateCode, '###TAB_SELECT_BY_HASH###'));
+					$tabSelector = trim($parser->getSubpart($templateCode, '###TAB_SELECT_BY_HASH###'));
 				} else {
 					$tabSelector = NULL;
 				}
-				$templateCode = trim($this->cObj->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
+				$templateCode = trim($parser->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
 
 				// app the open-link-template
 				if ($this->confArr['openExternalLink']) {
-					$openExtLink = trim($this->cObj->getSubpart($templateCode, '###OPEN_EXTERNAL_LINK###'));
+					$openExtLink = trim($parser->getSubpart($templateCode, '###OPEN_EXTERNAL_LINK###'));
 				} else {
 					$openExtLink = NULL;
 				}
-				$templateCode = trim($this->cObj->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
+				$templateCode = trim($parser->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
 
 				// Replace default values
 				$markerArray['KEY'] = $this->getContentKey();
 				$markerArray['PREG_QUOTE_KEY'] = preg_quote($this->getContentKey(), '/');
 				$markerArray['OPTIONS'] = implode(', ', $options);
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -953,11 +954,11 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["TRANS_DURATION"] = (is_numeric($this->conf['config.']['accordionTransitionduration']) ? $this->conf['config.']['accordionTransitionduration'] : 1000);
 
 				// get the template for the Javascript
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_ACCORDION_JS###"))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_ACCORDION_JS###"))) {
 					$templateCode = $this->outputError("Template TEMPLATE_ACCORDION_JS is missing", TRUE);
 				}
 				$easingAnimation = NULL;
-				if (! $this->conf['config.']['accordionAnimate']) {
+				if (!$this->conf['config.']['accordionAnimate']) {
 					$options['animate'] = "animate:false";
 				} else {
 					$fx = array();
@@ -972,19 +973,19 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 				// app the open-link-template
 				if ($this->confArr['openExternalLink']) {
-					$openExtLink = trim($this->cObj->getSubpart($templateCode, "###OPEN_EXTERNAL_LINK###"));
+					$openExtLink = trim($parser->getSubpart($templateCode, "###OPEN_EXTERNAL_LINK###"));
 				} else {
 					$openExtLink = NULL;
 				}
-				$templateCode = trim($this->cObj->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
+				$templateCode = trim($parser->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
 
 				// open tab by hash
 				if ($this->confArr['tabSelectByHash']) {
-					$tabSelector = trim($this->cObj->getSubpart($templateCode, "###TAB_SELECT_BY_HASH###"));
+					$tabSelector = trim($parser->getSubpart($templateCode, "###TAB_SELECT_BY_HASH###"));
 				} else {
 					$tabSelector = NULL;
 				}
-				$templateCode = trim($this->cObj->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
+				$templateCode = trim($parser->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
 
 				// overwrite all options if set
 				if ($this->conf['config.']['accordionOptionsOverride']) {
@@ -998,7 +999,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// Replace default values
 				$markerArray["OPTIONS"] = implode(", ", $options);
 				// Replace all markers
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -1117,14 +1118,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the Template of the Javascript
 				$markerArray = array();
 				// get the template
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDER_JS###"))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDER_JS###"))) {
 					$templateCode = $this->outputError("Template TEMPLATE_SLIDER_JS is missing", TRUE);
 				}
 
 				// Replace default values
 				$markerArray["KEY"] = $this->getContentKey();
 				$markerArray["OPTIONS"] = implode(", ", $options);
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -1176,7 +1177,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDEDECK_JS###"))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDEDECK_JS###"))) {
 					$templateCode = $this->outputError("Template TEMPLATE_SLIDEDECK_JS is missing", TRUE);
 				}
 				// Replace default values
@@ -1185,7 +1186,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["HEIGHT"]  = ($this->conf['config.']['slidedeckHeight'] > 0 ? $this->conf['config.']['slidedeckHeight'] : 300);
 				$markerArray["OPTIONS"] = implode(", ", $options);
 				// Replace all markers
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -1225,7 +1226,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_EASYACCORDION_JS###"))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_EASYACCORDION_JS###"))) {
 					$templateCode = $this->outputError("Template TEMPLATE_EASYACCORDION_JS is missing", TRUE);
 				}
 				// Replace default values
@@ -1234,7 +1235,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["WIDTH"]   = ($this->conf['config.']['easyaccordionWidth'] > 0  ? $this->conf['config.']['easyaccordionWidth']  : 600);
 				$markerArray["OPTIONS"] = implode(", ", $options);
 				// Replace all markers
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -1298,7 +1299,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (! $templateCode = trim($this->cObj->getSubpart($this->templateFileJS, "###TEMPLATE_BOOKLET_JS###"))) {
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_BOOKLET_JS###"))) {
 					$templateCode = $this->outputError("Template TEMPLATE_BOOKLET_JS is missing", TRUE);
 				}
 
@@ -1308,7 +1309,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["OPTIONS"] = implode(",\n		", $options);
 
 				// Replace all markers
-				$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
 				if (T3JQUERY === TRUE) {
@@ -1331,7 +1332,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->pagerenderer->addCssFile($this->conf['cssFile']);
 
 		// Add the ressources
-		if (! $this->conf['disableJs']) {
+		if (!$this->conf['disableJs']) {
 			$this->pagerenderer->addResources();
 		}
 
@@ -1397,6 +1398,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	public function renderTemplate()
 	{
         $tsfe = $this->getTypoScriptFrontendController();
+        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
 		// set the register:key for TS manipulation
 		$tsfe->register['key'] = $this->getContentKey();
@@ -1408,7 +1410,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$tsfe->register['COLUMN_CLASSES'] = $markerArray['COLUMN_CLASSES'];
 
 		// get the template
-		if (! $templateCode = $this->cObj->getSubpart($this->templateFile, "###{$this->templatePart}###")) {
+		if (!$templateCode = $parser->getSubpart($this->templateFile, "###{$this->templatePart}###")) {
 			$templateCode = $this->outputError("Template {$this->templatePart} is missing", FALSE);
 		}
 		// Replace default values
@@ -1419,11 +1421,11 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		} else {
 			$markerArray["EQUALIZE_CLASS"] = '';
 		}
-		$templateCode = $this->cObj->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+		$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 		// Get the title template
-		$titleCode = $this->cObj->getSubpart($templateCode, "###TITLES###");
+		$titleCode = $parser->getSubpart($templateCode, "###TITLES###");
 		// Get the column template
-		$columnCode = $this->cObj->getSubpart($templateCode, "###COLUMNS###");
+		$columnCode = $parser->getSubpart($templateCode, "###COLUMNS###");
 		// Define the contentWrap
 		switch (count($this->contentWrap)) {
 			case 1 : {
@@ -1467,7 +1469,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray["ATTRIBUTE"] .= ' ' . $this->attributes[$a];
 			}
 			// if the attribute does not have a class entry, the class will be wraped for yaml (c33l, c33l, c33r)
-			if ($this->classes[$a] && isset($this->contentClass[$a]) && ! preg_match('/class\=/i', $markerArray['ATTRIBUTE'])) {
+			if ($this->classes[$a] && isset($this->contentClass[$a]) && !preg_match('/class\=/i', $markerArray['ATTRIBUTE'])) {
 				// wrap the class
 				$markerArray['ATTRIBUTE'] .= $this->cObj->stdWrap($this->classes[$a], array('wrap' => ' class="' . $this->contentClass[$a] . '"', 'required' => 1));
 			}
@@ -1547,9 +1549,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$markerArray['REL'] = htmlspecialchars($this->rels[$a]);
 			// Generate the QUOTE_TITLE
-			$markerArray['DEFAULT_QUOTE_TITLE']   = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('default_quote_title_template'), $markerArray, '###|###', 0));
-			$markerArray['TAB_QUOTE_TITLE']       = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('tab_quote_title_template'), $markerArray, '###|###', 0));
-			$markerArray['ACCORDION_QUOTE_TITLE'] = htmlspecialchars($this->cObj->substituteMarkerArray($this->pi_getLL('accordion_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['DEFAULT_QUOTE_TITLE']   = htmlspecialchars($parser->substituteMarkerArray($this->pi_getLL('default_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['TAB_QUOTE_TITLE']       = htmlspecialchars($parser->substituteMarkerArray($this->pi_getLL('tab_quote_title_template'), $markerArray, '###|###', 0));
+			$markerArray['ACCORDION_QUOTE_TITLE'] = htmlspecialchars($parser->substituteMarkerArray($this->pi_getLL('accordion_quote_title_template'), $markerArray, '###|###', 0));
 
 			if (isset($this->conf['additionalContentMarkers'])) {
 				$additonalMarkerArray = array();
@@ -1565,14 +1567,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 			if ($markerArray['CONTENT'] || ($addContent && $this->confArr['showEmptyContent'])) {
 				// add content to COLUMNS
-				$columns .= $this->cObj->substituteMarkerArray($columnCode, $markerArray, '###|###', 0);
+				$columns .= $parser->substituteMarkerArray($columnCode, $markerArray, '###|###', 0);
 				// add content to TITLE
-				$titles .= $this->cObj->substituteMarkerArray($titleCode, $markerArray, '###|###', 0);
+				$titles .= $parser->substituteMarkerArray($titleCode, $markerArray, '###|###', 0);
 			}
 		}
 		$return_string = $templateCode;
-		$return_string = $this->cObj->substituteSubpart($return_string, '###TITLES###', $titles, 0);
-		$return_string = $this->cObj->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);
+		$return_string = $parser->substituteSubpart($return_string, '###TITLES###', $titles, 0);
+		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);
 
 		if (isset($this->conf['additionalMarkers'])) {
 			$additonalMarkerArray = array();
@@ -1585,7 +1587,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 			}
 			// add addtional marker content to template
-			$return_string = $this->cObj->substituteMarkerArray($return_string, $additonalMarkerArray, '###|###', 0);
+			$return_string = $parser->substituteMarkerArray($return_string, $additonalMarkerArray, '###|###', 0);
 		}
 
 		return $return_string;
@@ -1599,7 +1601,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	*/
 	public function outputError($msg='', $js=FALSE) {
 		GeneralUtility::devLog($msg, $this->extKey, 3);
-		if ($this->confArr['frontendErrorMsg'] || ! isset($this->confArr['frontendErrorMsg'])) {
+		if ($this->confArr['frontendErrorMsg'] || !isset($this->confArr['frontendErrorMsg'])) {
 			return ($js ? 'alert(' . GeneralUtility::quoteJSvalue($msg) . ')' : '<p>' . $msg . '</p>');
 		} else {
 			return NULL;
@@ -1613,7 +1615,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	*/
 	protected function setFlexFormData()
 	{
-		if (! count($this->piFlexForm)) {
+		if (!count($this->piFlexForm)) {
 			$this->pi_initPIflexForm();
 			$this->piFlexForm = $this->cObj->data['pi_flexform'];
 		}
@@ -1629,19 +1631,19 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	protected function getFlexformData($sheet='', $name='', $devlog=TRUE)
 	{
 		$this->setFlexFormData();
-		if (! isset($this->piFlexForm['data'])) {
+		if (!isset($this->piFlexForm['data'])) {
 			if ($devlog === TRUE) {
 				GeneralUtility::devLog('Flexform Data not set', $this->extKey, 1);
 			}
 			return NULL;
 		}
-		if (! isset($this->piFlexForm['data'][$sheet])) {
+		if (!isset($this->piFlexForm['data'][$sheet])) {
 			if ($devlog === TRUE) {
 				GeneralUtility::devLog('Flexform sheet ' . $sheet . ' not defined', $this->extKey, 1);
 			}
 			return NULL;
 		}
-		if (! isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
+		if (!isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
 			if ($devlog === TRUE) {
 				GeneralUtility::devLog('Flexform Data [' . $sheet . '][' . $name . '] does not exist', $this->extKey, 1);
 			}

@@ -1,3 +1,6 @@
+2019-11-16  Franz Holzinger  <franz@ttproducts.de>
+    * Use $parser as instance of \TYPO3\CMS\Core\Service\MarkerBasedTemplateService instead of $this->cObj for the HTML parsing and replacing methods getSubpart, substituteSubpart and substituteMarkerArray. This has been available since TYPO3 7.
+
 2019-11-15  Franz Holzinger  <franz@ttproducts.de>
     * move lib/class.tx_jfmulticontent_tcemain.php -> Classes/Hooks/DataHandler.php
     * use a directly called closure function to encapsulate all locally defined variables in ext_localconf.php
