@@ -1,4 +1,7 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Hooks;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -30,8 +33,8 @@ use TYPO3\CMS\Backend\Utility\IconUtility
  * @package	TYPO3
  * @subpackage	tx_jfmulticontent
  */
-class tx_jfmulticontent_browselinkshooks implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHookInterface {
-
+class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHookInterface
+{
 	protected $invokingObject;
 	protected $mode;
 	protected $act;
@@ -246,10 +249,5 @@ class tx_jfmulticontent_browselinkshooks implements \TYPO3\CMS\Core\ElementBrows
 		}
 		return $out;
 	}
-
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.tx_jfmulticontent_browselinkshooks.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.tx_jfmulticontent_browselinkshooks.php']);
-}
-?>

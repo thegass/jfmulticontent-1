@@ -1,3 +1,11 @@
+
+
+2019-11-18  Franz Holzinger  <franz@ttproducts.de>
+    * move lib/class.tx_jfmulticontent_browselinkshooks.php -> Classes/Hooks/ElementBrowser.php
+    * move lib/class.tx_jfmulticontent_itemsProcFunc.php -> Classes/Hooks/ItemsProcFunc.php
+    * move lib/class.tx_jfmulticontent_pagerenderer.php -> Classes/Hooks/PageRenderer.php
+    * move lib/class.tx_jfmulticontent_ttnews_extend.php -> Classes/Hooks/TtNewsExtend.php
+
 2019-11-16  Franz Holzinger  <franz@ttproducts.de>
     * Use $parser as instance of \TYPO3\CMS\Core\Service\MarkerBasedTemplateService instead of $this->cObj for the HTML parsing and replacing methods getSubpart, substituteSubpart and substituteMarkerArray. This has been available since TYPO3 7.
 

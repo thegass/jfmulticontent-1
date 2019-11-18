@@ -1,4 +1,7 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Hooks;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -31,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package    TYPO3
  * @subpackage tx_jfmulticontent
  */
-class tx_jfmulticontent_itemsProcFunc
+class ItemsProcFunc
 {
 	/**
 	 * Get defined views for dropdown (from hook)
@@ -273,8 +276,3 @@ class tx_jfmulticontent_itemsProcFunc
 		return $config;
 	}
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_itemsProcFunc.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_itemsProcFunc.php']);
-}
-?>
