@@ -101,7 +101,20 @@ class TsparserExtensionUpdate
 			'anythingSliderModes',
 			'easyAccordionSkinFolder',
 		);
-		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
+
+        $extensionConfiguration = array();
+
+        if (
+            version_compare(TYPO3_version, '9.0.0', '>=')
+        ) {
+            $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+            )->get('jfmulticontent');
+        } else {
+            $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+        }
+
+		$confArr = $extensionConfiguration;
 		foreach ($confDefault as $val) {
 			if (!isset($confArr[$val]) && !isset($_POST['data'][$val])) {
 				return FALSE;
@@ -111,8 +124,3 @@ class TsparserExtensionUpdate
 	}
 }
 
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_tsparserext.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/lib/class.tx_jfmulticontent_tsparserext.php']);
-}
-?>
