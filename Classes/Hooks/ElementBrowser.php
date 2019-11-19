@@ -162,7 +162,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 *
 	 * @return	string		HTML output. Returns content only if the ->expandPage value is set (pointing to a page uid to show tt_content records from ...)
 	 */
-	function expandPage() {
+	public function expandPage() {
 		$out='';
 		$expPageId = $this->browseLinks->expandPage;		// Set page id (if any) to expand
 

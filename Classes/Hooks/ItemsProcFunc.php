@@ -45,7 +45,10 @@ class ItemsProcFunc
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['jfmulticontent']['getViews'] as $_classRef) {
 				$_procObj = GeneralUtility::getUserObj($_classRef);
-				if (! method_exists($_procObj, 'isActive') || (method_exists($_procObj, 'isActive') && $_procObj->isActive())) {
+				if (
+                    !method_exists($_procObj, 'isActive') ||
+                    (method_exists($_procObj, 'isActive') && $_procObj->isActive())
+                ) {
 					$optionList[] = array(
 						trim($_procObj->getname()),
 						trim($_procObj->getIdentifier()),
@@ -161,14 +164,13 @@ class ItemsProcFunc
 	public function getClassInner($config, $item) {
 		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		$availableClasses = GeneralUtility::trimExplode(',', $confArr['classInner']);
-		if (count($availableClasses) < 1 || ! $confArr['classInner']) {
+		if (count($availableClasses) < 1 || !$confArr['classInner']) {
 			$availableClasses = array('','16','20','25','33','38','40','50','60','62','66','75','80');
 		}
 		$pageTS = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($config['row']['pid']);
-		debug ($pageTS, '$pageTS');
+
 		$jfmulticontentClasses = GeneralUtility::trimExplode(',', $pageTS['mod.']['jfmulticontent.']['classInner'], TRUE);
 		$optionList = array();
-		debug ($jfmulticontentClasses, '$jfmulticontentClasses');
 
 		if (count($jfmulticontentClasses) > 0) {
 			foreach ($availableClasses as $key => $availableClass) {
@@ -188,7 +190,6 @@ class ItemsProcFunc
 			}
 		}
 		$config['items'] = array_merge($config['items'], $optionList);
-		debug ($config, 'getClassInner ENDE $config');
 		return $config;
 	}
 
