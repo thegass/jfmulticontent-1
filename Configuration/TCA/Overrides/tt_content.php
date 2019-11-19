@@ -40,7 +40,7 @@ $temporaryColumns = array(
 				array('LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.view.I.1', 'page'),
 				array('LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.view.I.2', 'irre'),
 			),
-			'itemsProcFunc' => 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_itemsProcFunc.php:&tx_jfmulticontent_itemsProcFunc->getViews',
+			'itemsProcFunc' => 'JambageCom\\Jfmulticontent\\Hooks\\ItemsProcFunc->getViews',
 		)
 	),
 	'tx_jfmulticontent_pages' => array(
@@ -90,7 +90,17 @@ $temporaryColumns = array(
 );
 
 
-if ($confArr["useStoragePidOnly"]) {
+if ($confArr['useStoragePidOnly']) {
+
+    $foreignTableWhere = '';
+    if (
+        version_compare(TYPO3_version, '9.0.0', '>=')
+    ) {
+        $foreignTableWhere = 'AND {#tt_content}.{#pid} = ###PAGE_TSCONFIG_ID### AND {#tt_content}.{#hidden} = 0 AND {#tt_content}.{#deleted} = 0 AND {#tt_content}.{#sys_language_uid} IN (0,-1) ORDER BY tt_content.uid';
+    } else {
+        $foreignTableWhere = 'AND tt_content.pid=###PAGE_TSCONFIG_ID### AND tt_content.hidden=0 AND tt_content.deleted=0 AND tt_content.sys_language_uid IN (0,-1) ORDER BY tt_content.uid';
+    }
+
 	$temporaryColumns['tx_jfmulticontent_contents'] = array(
 		'exclude' => 1,
 		'displayCond' => 'FIELD:tx_jfmulticontent_view:IN:,content',
@@ -98,7 +108,7 @@ if ($confArr["useStoragePidOnly"]) {
 		'config' => array (
 			'type' => 'select',
 			'foreign_table' => 'tt_content',
-			'foreign_table_where' => 'AND tt_content.pid=###STORAGE_PID### AND tt_content.hidden=0 AND tt_content.deleted=0 AND tt_content.sys_language_uid IN (0,-1) ORDER BY tt_content.uid',
+			'foreign_table_where' => $foreignTableWhere,
 			'size' => 12,
 			'minitems' => 0,
 			'maxitems' => 1000,
@@ -114,7 +124,7 @@ if ($confArr["useStoragePidOnly"]) {
 					),
 					'params' => array(
 						'table'    => 'tt_content',
-						'pid'      => '###STORAGE_PID###',
+						'pid'      => '###PAGE_TSCONFIG_ID###',
 						'setValue' => 'prepend'
 					),
 				),
@@ -127,7 +137,7 @@ if ($confArr["useStoragePidOnly"]) {
 					),
 					'params' => array(
 						'table' => 'tt_content',
-						'pid'   => '###STORAGE_PID###',
+						'pid'   => '###PAGE_TSCONFIG_ID###',
 					),
 				),
 				'edit' => array(
@@ -167,7 +177,7 @@ if ($confArr["useStoragePidOnly"]) {
 					),
 					'params' => array(
 						'table'    => 'tt_content',
-						'pid'      => '###STORAGE_PID###',
+						'pid'      => '###PAGE_TSCONFIG_ID###',
 						'setValue' => 'prepend'
 					),
 				),
@@ -180,7 +190,7 @@ if ($confArr["useStoragePidOnly"]) {
 					),
 					'params' => array(
 						'table' => 'tt_content',
-						'pid'   => '###STORAGE_PID###',
+						'pid'   => '###PAGE_TSCONFIG_ID###',
 					),
 				),
 				'edit' => array(

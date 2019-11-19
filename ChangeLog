@@ -1,5 +1,9 @@
 
 
+
+2019-11-19  Franz Holzinger  <franz@ttproducts.de>
+    * compatibility: replace the deleted marker ###STORAGE_PID### by ###PAGE_TSCONFIG_ID### - a value you can set from Page TSconfig dynamically. TCEFORM.tt_content.tx_jfmulticontent_contents.PAGE_TSCONFIG_ID = 17
+
 2019-11-18  Franz Holzinger  <franz@ttproducts.de>
     * move lib/class.tx_jfmulticontent_browselinkshooks.php -> Classes/Hooks/ElementBrowser.php
     * move lib/class.tx_jfmulticontent_itemsProcFunc.php -> Classes/Hooks/ItemsProcFunc.php

@@ -42,8 +42,8 @@ call_user_func(function () {
             0 => 'LIST_EASYACCORDION',
             1 => 'LIST_EASYACCORDION'
         );
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['extraCodesHook'][]        = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_ttnews_extend.php:tx_jfmulticontent_ttnews_extend';
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['extraGlobalMarkerHook'][] = 'EXT:' . JFMULTICONTENT_EXT . '/lib/class.tx_jfmulticontent_ttnews_extend.php:tx_jfmulticontent_ttnews_extend';
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['extraCodesHook'][] = \JambageCom\Jfmulticontent\Hooks\TtNewsExtend::class;
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_news']['extraGlobalMarkerHook'][] = \JambageCom\Jfmulticontent\Hooks\TtNewsExtend::class;
     }
 
 

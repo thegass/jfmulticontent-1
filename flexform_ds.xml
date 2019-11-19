@@ -18,7 +18,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getStyle</itemsProcFunc>
+                                <itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getStyle</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</style>
@@ -64,7 +64,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getClassInner</itemsProcFunc>
+                                <itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getClassInner</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</column1>
@@ -77,7 +77,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getClassInner</itemsProcFunc>
+                                <itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getClassInner</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</column2>
@@ -90,7 +90,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getClassInner</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getClassInner</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</column3>
@@ -103,7 +103,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getClassInner</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getClassInner</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</column4>
@@ -116,7 +116,7 @@
 								<type>select</type>
 								<size>1</size>
 								<maxitems>1</maxitems>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getClassInner</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getClassInner</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</column5>
@@ -962,7 +962,7 @@
 										<numIndex index="1"></numIndex>
 									</numIndex>
 								</items>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getAnythingSliderThemes</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getAnythingSliderThemes</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</sliderTheme>
@@ -981,7 +981,7 @@
 										<numIndex index="1"></numIndex>
 									</numIndex>
 								</items>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getAnythingSliderModes</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getAnythingSliderModes</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</sliderMode>
@@ -1813,7 +1813,7 @@
 										<numIndex index="1"></numIndex>
 									</numIndex>
 								</items>
-								<itemsProcFunc>tx_jfmulticontent_itemsProcFunc->getEasyaccordionSkin</itemsProcFunc>
+								<itemsProcFunc>JambageCom\Jfmulticontent\Hooks\ItemsProcFunc->getEasyaccordionSkin</itemsProcFunc>
 							</config>
 						</TCEforms>
 					</easyaccordionSkin>
