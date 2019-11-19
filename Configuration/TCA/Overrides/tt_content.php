@@ -10,7 +10,7 @@ $GLOBALS['TCA'][$table]['types']['list']['subtypes_addlist'][$listType] = 'tx_jf
 // Add reload field to tt_content
 $GLOBALS['TCA'][$table]['ctrl']['requestUpdate'] .= ($GLOBALS['TCA'][$table]['ctrl']['requestUpdate'] ? ',' : '') . 'tx_jfmulticontent_view';
 
-$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][JFMULTICONTENT_EXT]);
+$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 
 $colPosOfIrreContent = intval($confArr['colPosOfIrreContent']);
 

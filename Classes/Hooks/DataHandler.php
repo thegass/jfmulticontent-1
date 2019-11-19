@@ -54,7 +54,7 @@ class DataHandler
 				foreach ($pObj->datamap['tt_content'] as $key => $val) {
 					if ($val['list_type'] == 'jfmulticontent_pi1' && $val['tx_jfmulticontent_view'] == 'irre') {
 						// Change the colPos of the IRRE tt_content values
-						$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+						$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 						$incomingFieldArray['colPos'] = $confArr['colPosOfIrreContent'];
 						// Workaround for templavoila
 						if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila')) {

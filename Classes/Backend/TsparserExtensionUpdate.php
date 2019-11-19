@@ -101,7 +101,7 @@ class TsparserExtensionUpdate
 			'anythingSliderModes',
 			'easyAccordionSkinFolder',
 		);
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		foreach ($confDefault as $val) {
 			if (!isset($confArr[$val]) && !isset($_POST['data'][$val])) {
 				return FALSE;

@@ -120,7 +120,7 @@ class ItemsProcFunc
 				'EXT:jfmulticontent/selicon_tt_content_tx_jfmulticontent_style_10.png',
 			),
 		);
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		$styles = $confArr['style.'];
 		if (count($styles) > 0) {
 			foreach ($styles as $key => $val) {
@@ -139,7 +139,7 @@ class ItemsProcFunc
 			}
 		}
 		$pageTS = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($config['row']['pid']);
-		$jfmulticontentStyles = GeneralUtility::trimExplode(",", $pageTS['mod.']['jfmulticontent.']['availableStyles'], TRUE);
+		$jfmulticontentStyles = GeneralUtility::trimExplode(',', $pageTS['mod.']['jfmulticontent.']['availableStyles'], TRUE);
 		$optionList = array();
 		if (count($jfmulticontentStyles) > 0) {
 			foreach ($allowedStyles as $key => $style) {
@@ -159,14 +159,17 @@ class ItemsProcFunc
 	 * @return array
 	 */
 	public function getClassInner($config, $item) {
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
-		$availableClasses = GeneralUtility::trimExplode(",", $confArr['classInner']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
+		$availableClasses = GeneralUtility::trimExplode(',', $confArr['classInner']);
 		if (count($availableClasses) < 1 || ! $confArr['classInner']) {
 			$availableClasses = array('','16','20','25','33','38','40','50','60','62','66','75','80');
 		}
 		$pageTS = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($config['row']['pid']);
-		$jfmulticontentClasses = GeneralUtility::trimExplode(",", $pageTS['mod.']['jfmulticontent.']['classInner'], TRUE);
+		debug ($pageTS, '$pageTS');
+		$jfmulticontentClasses = GeneralUtility::trimExplode(',', $pageTS['mod.']['jfmulticontent.']['classInner'], TRUE);
 		$optionList = array();
+		debug ($jfmulticontentClasses, '$jfmulticontentClasses');
+
 		if (count($jfmulticontentClasses) > 0) {
 			foreach ($availableClasses as $key => $availableClass) {
 				if (in_array(trim($availableClass), $jfmulticontentClasses)) {
@@ -185,6 +188,7 @@ class ItemsProcFunc
 			}
 		}
 		$config['items'] = array_merge($config['items'], $optionList);
+		debug ($config, 'getClassInner ENDE $config');
 		return $config;
 	}
 
@@ -193,10 +197,10 @@ class ItemsProcFunc
 	 * @return array
 	 */
 	public function getAnythingSliderThemes($config, $item) {
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		if (! is_dir(GeneralUtility::getFileAbsFileName($confArr['anythingSliderThemeFolder']))) {
 			// if the defined folder does not exist, define the default folder
-			$confArr['anythingSliderThemeFolder'] = "EXT:jfmulticontent/res/anythingslider/themes/";
+			$confArr['anythingSliderThemeFolder'] = 'EXT:jfmulticontent/res/anythingslider/themes/';
 		}
 		$items = GeneralUtility::get_dirs(GeneralUtility::getFileAbsFileName($confArr['anythingSliderThemeFolder']));
 		if (count($items) > 0) {
@@ -220,13 +224,13 @@ class ItemsProcFunc
 	 * @return array
 	 */
 	public function getAnythingSliderModes($config, $item) {
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
-		$availableModes = GeneralUtility::trimExplode(",", $confArr['anythingSliderModes']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
+		$availableModes = GeneralUtility::trimExplode(',', $confArr['anythingSliderModes']);
 		if (count($availableModes) < 1 || ! $confArr['anythingSliderModes']) {
 			$availableModes = array('horizontal', 'vertical', 'fade');
 		}
 		$pageTS = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($config['row']['pid']);
-		$jfmulticontentModes = GeneralUtility::trimExplode(",", $pageTS['mod.']['jfmulticontent.']['anythingSliderModes'], TRUE);
+		$jfmulticontentModes = GeneralUtility::trimExplode(',', $pageTS['mod.']['jfmulticontent.']['anythingSliderModes'], TRUE);
 		$optionList = array();
 		if (count($jfmulticontentModes) > 0) {
 			foreach ($availableModes as $key => $availableMode) {
@@ -254,10 +258,10 @@ class ItemsProcFunc
 	 * @return array
 	 */
 	public function getEasyaccordionSkin($config, $item) {
-		$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent']);
+		$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		if (! is_dir(GeneralUtility::getFileAbsFileName($confArr['easyAccordionSkinFolder']))) {
 			// if the defined folder does not exist, define the default folder
-			$confArr['easyAccordionSkinFolder'] = "EXT:jfmulticontent/res/easyaccordion/skins/";
+			$confArr['easyAccordionSkinFolder'] = 'EXT:jfmulticontent/res/easyaccordion/skins/';
 		}
 		$items = GeneralUtility::get_dirs(GeneralUtility::getFileAbsFileName($confArr['easyAccordionSkinFolder']));
 		if (count($items) > 0) {
