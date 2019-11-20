@@ -32,6 +32,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.columnOrder</label>
 							<config>
 								<type>select</type>
+                                <renderType>selectSingleBox</renderType>
 								<size>1</size>
 								<maxitems>1</maxitems>
 								<default></default>
@@ -127,7 +128,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.equalize</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -157,7 +158,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.tabCollapsible</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -198,7 +199,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.tabRandomContent</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -296,7 +297,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.tabCookieRoot</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -608,7 +609,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionCollapsible</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -635,7 +636,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionClosed</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -677,7 +678,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionRandomContent</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -760,7 +761,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionAnimate</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -787,6 +788,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionTransition</label>
 							<config>
 								<type>select</type>
+                                <renderType>selectSingleBox</renderType>
 								<size>1</size>
 								<maxitems>1</maxitems>
 								<items type="array">
@@ -853,6 +855,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.accordionTransitiondir</label>
 							<config>
 								<type>select</type>
+                                <renderType>selectSingleBox</renderType>
 								<size>1</size>
 								<maxitems>1</maxitems>
 								<items type="array">
@@ -927,7 +930,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderResizeContents</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -954,6 +957,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderTheme</label>
 							<config>
 								<type>select</type>
+                                <renderType>selectSingleBox</renderType>
 								<size>1</size>
 								<maxitems>1</maxitems>
 								<items type="array">
@@ -973,6 +977,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderMode</label>
 							<config>
 								<type>select</type>
+                                <renderType>selectSingleBox</renderType>
 								<size>1</size>
 								<maxitems>1</maxitems>
 								<items type="array">
@@ -1007,7 +1012,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderRandomContent</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1034,7 +1039,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderHashTags</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1061,7 +1066,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderBuildArrows</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1088,7 +1093,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderToggleArrows</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1115,7 +1120,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderNavigation</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1142,7 +1147,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderStartStop</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1169,7 +1174,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderPanelFromHeader</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1196,7 +1201,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderToggleControls</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1223,7 +1228,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderAutoStart</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1250,7 +1255,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderPauseOnHover</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1277,7 +1282,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderAllowRapidChange</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1304,7 +1309,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderResumeOnVideoEnd</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1331,7 +1336,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderStopAtEnd</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1358,7 +1363,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderPlayRtl</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1496,7 +1501,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.sliderAutoplay</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1667,7 +1672,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.slidedeckActivecorner</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1694,7 +1699,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.slidedeckIndex</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1721,7 +1726,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.slidedeckScroll</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1748,7 +1753,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.slidedeckKeys</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1775,7 +1780,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.slidedeckHidespines</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1854,7 +1859,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.easyaccordionSlideNum</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -1944,7 +1949,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletRTL</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2082,7 +2087,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletPageNumbers</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2109,7 +2114,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletManual</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2136,7 +2141,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletShadows</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2163,7 +2168,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletClosed</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2190,7 +2195,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletCovers</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2217,7 +2222,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletAutoCenter</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2244,7 +2249,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletHash</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2271,7 +2276,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletKeyboard</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2298,7 +2303,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletAuto</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2340,7 +2345,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletOverlays</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2367,7 +2372,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletArrows</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2394,7 +2399,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletArrowsHide</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2421,7 +2426,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.bookletHovers</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2450,7 +2455,7 @@
 							<displayCond>FIELD:style:=:typoscript</displayCond>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
@@ -2495,7 +2500,7 @@
 							<label>LLL:EXT:jfmulticontent/locallang_db.xml:tt_content.tx_jfmulticontent.autoplayCycle</label>
 							<config>
                                 <type>select</type>
-                                <renderType>selectSingle</renderType>
+                                <renderType>selectSingleBox</renderType>
                                 <size>1</size>
                                 <maxitems>1</maxitems>
                                 <items type="array">
