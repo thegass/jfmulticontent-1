@@ -82,7 +82,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		$parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
-		$this->pagerenderer = GeneralUtility::makeInstance('tx_jfmulticontent_pagerenderer');
+		$this->pagerenderer = GeneralUtility::makeInstance(\JambageCom\Jfmulticontent\Hooks\PageRenderer::class);
 		$this->pagerenderer->setConf($this->conf);
 
 		// Plugin or template?
@@ -510,7 +510,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->conf['config.'][$this->lConf['style'] . 'OptionsOverride'] = $this->lConf['optionsOverride'];
 			}
 
-			$view = $this->conf['views.'][$this->conf['config.']['view'].'.'];
+			$view = $this->conf['views.'][$this->conf['config.']['view'] . '.'];
 
 			if ($this->conf['config.']['view'] == 'page') {
 				// get the page ID's
@@ -522,11 +522,11 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 					if ($this->confArr['useOwnUserFuncForPages']) {
 						// TemplaVoila will render the content with a userFunc
-						$this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+						$innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+                        $this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					} else {
 						$row = NULL;
-						debug ($tsfe->sys_language_content, '$GLOBALS[\'TSFE\']->sys_language_content');
 						if ($tsfe->sys_language_content) {
                             if (
                                 version_compare(TYPO3_version, '9.0.0', '>=')
@@ -544,7 +544,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                     )
                                     ->execute()
                                     ->fetchAll();
-                                // +++
                             } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $tsfe->sys_language_content, '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -552,7 +551,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         }
 
 						if (!is_array($row)) {
-						debug ($row, '$row');
                             if (
                                 version_compare(TYPO3_version, '9.0.0', '>=')
                             ) {
@@ -577,13 +575,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								$tsfe->register['page_' . $key] = $val;
 							}
 						}
-
-						$this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+                        $innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+                        $this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 						$this->content_id[$a] = $page_ids[$a];
 					}
 
-					if ($this->titles[$a] == '' || !isset($this->titles[$a])) {
+					if (
+                        $this->titles[$a] == '' ||
+                        !isset($this->titles[$a])
+                    ) {
 						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
 					}
 				}
@@ -592,7 +593,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$content_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_contents']);
 				// get the informations for every content
 				for ($a = 0; $a < count($content_ids); $a++) {
-    						debug ($a, '$a');
 
 					// Select the content
                     if (
@@ -608,7 +608,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             )
                             ->execute()
                             ->fetchAll();
-                        // +++
                     } else {
                         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                             '*',
@@ -620,6 +619,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         );
                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                     }
+
 					if ($tsfe->sys_language_content) {
 						$row = $tsfe->sys_page->getRecordOverlay('tt_content', $row, $tsfe->sys_language_content, $tsfe->sys_language_contentOL);
 					} elseif ($tsfe->sys_page->versioningPreview) {
@@ -631,7 +631,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
 						$tsfe->register['title'] = $this->titles[$a];
 					}
-					$this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+					$innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+					$this->cElements[] = $innerContent;
 					$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					$this->content_id[$a] = $content_ids[$a];
 				}
@@ -641,7 +642,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				if ($tsfe->sys_page->versioningPreview) {
 					$elementUID = $this->cObj->data['_ORIG_uid'];
 				}
-                    debug ($elementUID, '$elementUID');
 
                 if (
                     version_compare(TYPO3_version, '9.0.0', '>=')
@@ -657,7 +657,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         ->orderBy('sorting', 'ASC')
                         ->execute()
                         ->fetchAll();
-                    // +++
                 } else {
                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                         '*',
@@ -668,7 +667,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     );
                     $a = 0;
                     while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                        $this->addIRREContent($a, $row);
+                        $this->addIRREContent($a, $row, $view);
                     }
                 }
             }
@@ -682,7 +681,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							// If the methode 'isActive' not exists, this will be true...
 							$_procObj->main($this->content, $this->conf, $this);
 							$this->titles = $_procObj->getTitles();
-							$this->cElements = $_procObj->getElements();
+							$innerContent = $_procObj->getElements();
+                            $this->cElements[] = $innerContent;
 							$this->content_id = $_procObj->getIds();
 							if (method_exists($_procObj, 'getRels')) {
 								$this->rels = $_procObj->getRels();
@@ -705,10 +705,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if (count($this->conf['contents.']) > 0) {
 				foreach ($this->conf['contents.'] as $key => $contents) {
 					$title = trim($this->cObj->cObjGetSingle($contents['title'], $contents['title.']));
-					$content = trim($this->cObj->cObjGetSingle($contents['content'], $contents['content.']));
-					if ($content) {
+					$innerContent = trim($this->cObj->cObjGetSingle($contents['content'], $contents['content.']));
+					if ($innerContent) {
 						$this->titles[] = $title;
-						$this->cElements[] = $content;
+						$this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($contents['rel'], $contents['rel.']);
 						$this->content_id[] = $this->cObj->stdWrap($contents['id'], $contents['id.']);
 					}
@@ -1063,7 +1063,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$options[] = "theme: '" . GeneralUtility::slashJS($this->conf['config.']['sliderTheme']) . "'";
 					if (substr($this->confArr['anythingSliderThemeFolder'], 0, 4) === 'EXT:') {
 						list($extKey, $local) = explode('/', substr($this->confArr['anythingSliderThemeFolder'], 4), 2);
-						$anythingSliderThemeFolder = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey) . $local;
+						$anythingSliderThemeFolder =
+                            \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey)) . $local; 
 					} else {
 						$anythingSliderThemeFolder = $this->confArr['anythingSliderThemeFolder'];
 					}
@@ -1337,9 +1338,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 
 		// Render the Template
-		$content = $this->renderTemplate();
+		$out = $this->renderTemplate();
 
-		return $this->pi_wrapInBaseClass($content);
+		return $this->pi_wrapInBaseClass($out);
 	}
 
 	/**
@@ -1348,7 +1349,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * @param array $row record
 	 * @return void
 	 */
-    public function addIRREContent(&$a, $row) {
+    public function addIRREContent(&$a, $row, $view) {
         $tsfe = $this->getTypoScriptFrontendController();
 
         if ($tsfe->sys_language_content) {
@@ -1366,7 +1367,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
             $tsfe->register['title'] = $this->titles[$a];
         }
-        $this->cElements[] = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+        $innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
+        $this->cElements[] = $innerContent;
         $this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
         $this->content_id[$a] = $row['uid'];
         $a++;
@@ -1422,6 +1424,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$markerArray["EQUALIZE_CLASS"] = '';
 		}
 		$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
+
 		// Get the title template
 		$titleCode = $parser->getSubpart($templateCode, "###TITLES###");
 		// Get the column template
@@ -1507,7 +1510,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$addContent = FALSE;
 			// override the CONTENT
-			if ($this->templatePart == 'TEMPLATE_COLUMNS' && $this->conf['config.']['columnOrder']) {
+			if (
+                $this->templatePart == 'TEMPLATE_COLUMNS' &&
+                $this->conf['config.']['columnOrder']
+            ) {
 				switch ($this->conf['config.']['columnOrder']) {
 					case 1 : {
 						// left to right, top to down
@@ -1516,7 +1522,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							if (intval($test) == $test) {
 								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
 								$addContent = TRUE;
-							}
+                            }
 						}
 						break;
 					}
@@ -1564,8 +1570,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					}
 				}
 			}
-
-			if ($markerArray['CONTENT'] || ($addContent && $this->confArr['showEmptyContent'])) {
+			if (
+                $markerArray['CONTENT'] ||
+                ($addContent && $this->confArr['showEmptyContent'])
+            ) {
 				// add content to COLUMNS
 				$columns .= $parser->substituteMarkerArray($columnCode, $markerArray, '###|###', 0);
 				// add content to TITLE
@@ -1574,7 +1582,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		$return_string = $templateCode;
 		$return_string = $parser->substituteSubpart($return_string, '###TITLES###', $titles, 0);
-		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);
+		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);		
 
 		if (isset($this->conf['additionalMarkers'])) {
 			$additonalMarkerArray = array();
@@ -1615,7 +1623,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	*/
 	protected function setFlexFormData()
 	{
-		if (!count($this->piFlexForm)) {
+		if (empty($this->piFlexForm)) {
 			$this->pi_initPIflexForm();
 			$this->piFlexForm = $this->cObj->data['pi_flexform'];
 		}

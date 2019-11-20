@@ -1,6 +1,8 @@
 
 
-
+2019-11-20  Franz Holzinger  <franz@ttproducts.de>
+    * compatibility: replace \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey) by
+    \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey))
 2019-11-19  Franz Holzinger  <franz@ttproducts.de>
     * replace $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['jfmulticontent'] by $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT]
     * convert manual.sxw -> manual.odt
