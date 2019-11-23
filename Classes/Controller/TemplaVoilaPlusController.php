@@ -1,4 +1,7 @@
 <?php
+
+namespace JambageCom\Jfmulticontent\Controller;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -27,63 +30,108 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
- * @author	Juergen Furrer <juergen.furrer@gmail.com>
- * @package	TYPO3
- * @subpackage	tx_jfmulticontent
- */
-class tx_jfmulticontent
+* @author	Juergen Furrer <juergen.furrer@gmail.com>
+* @package	TYPO3
+* @subpackage	tx_jfmulticontent
+*/
+class TemplaVoilaPlusController
 {
-	public $cObj;
+    public $cObj;
 
-	public function getContentFromTemplavoilaField($content, $conf)
-	{
-		$pageID = $this->cObj->stdWrap($conf['pageID'], $conf['pageID.']);
-		$field = $this->cObj->stdWrap($conf['field'], $conf['field.']);
+    public function getContentFromField($content, $conf)
+    {
+        $tsfe = $this->getTypoScriptFrontendController();
+        $pageID = $this->cObj->stdWrap($conf['pageID'], $conf['pageID.']);
+        $field = $this->cObj->stdWrap($conf['field'], $conf['field.']);
 
-		$row = NULL;
-		if ($GLOBALS['TSFE']->sys_language_content) {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid='.intval($pageID).' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_content, '', '', 1);
-			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		}
-		if (! is_array($row)) {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid='.intval($pageID), '', '', 1);
-			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		}
+        $row = NULL;
+        if ($tsfe->sys_language_content) {
+            if (
+                version_compare(TYPO3_version, '9.0.0', '>=')
+            ) {
+                // SELECT * FROM `pages_language_overlay` WHERE `deleted`=0 AND `hidden`=0 AND `pid`=<mypid> AND `sys_language_uid`=<mylanguageid>
+                $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('pages_language_overlay');
+                $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
+                $row = $queryBuilder->select('*')
+                    ->from('pages_language_overlay')
+                    ->where(
+                        $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageID, \PDO::PARAM_INT))
+                    )
+                    ->andWhere(
+                        $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($tsfe->sys_language_content, \PDO::PARAM_INT))
+                    )
+                    ->execute()
+                    ->fetchAll();
+            } else {
+                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($pageID) . ' AND sys_language_uid=' . $tsfe->sys_language_content, '', '', 1);
+                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                $GLOBALS['TYPO3_DB']->sql_free_result($res);
+            }
+        }
 
-		if (is_array($row)) {
-			foreach ($row as $key => $val) {
-				$GLOBALS['TSFE']->register['page_'.$key] = $val;
-			}
-		}
+        if (!is_array($row)) {
+            if (
+                version_compare(TYPO3_version, '9.0.0', '>=')
+            ) {
+                // SELECT * FROM `pages` WHERE `deleted`=0 AND `hidden`=0 AND `uid`=<mypid> 
+                $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('pages');
+                $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
+                $row = $queryBuilder->select('*')
+                    ->from('pages')
+                    ->where(
+                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pageID, \PDO::PARAM_INT))
+                    )
+                    ->execute()
+                    ->fetchAll();
+            } else {
+                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid='.intval($pageID), '', '', 1);
+                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+                $GLOBALS['TYPO3_DB']->sql_free_result($res);
+            }
+        }
 
-		$page_flex_array = GeneralUtility::xml2array($row['tx_templavoila_flex']);
+        if (is_array($row)) {
+            foreach ($row as $key => $val) {
+                $tsfe->register['page_' . $key] = $val;
+            }
+        }
 
-		$content_ids = array();
-		if (isset($page_flex_array['data'])) {
-			if (isset($page_flex_array['data']['sDEF'])) {
-				if (count($page_flex_array['data']['sDEF']['lDEF']) > 0) {
-					foreach ($page_flex_array['data']['sDEF']['lDEF'] as $key => $fields) {
-						if ($key == $field) {
-							$content_ids = array_merge($content_ids, GeneralUtility::trimExplode(',', $fields['vDEF']));
-						}
-					}
-				}
-			}
-		}
+        $flexformXml = '';
+        if (isset($row['tx_templavoilaplus_flex'])) {
+            $flexformXml = $row['tx_templavoilaplus_flex'];
+        } else if (isset($row['tx_templavoila_flex'])) {
+            $flexformXml = $row['tx_templavoila_flex'];
+        }
+        $page_flex_array = GeneralUtility::xml2array($flexformXml);
 
-		$content = NULL;
-		foreach ($content_ids as $content_id) {
-			$GLOBALS['TSFE']->register['uid'] = $content_id;
-			$content .= $this->cObj->cObjGetSingle($conf['contentRender'], $conf['contentRender.']);
-		}
+        $content_ids = array();
+        if (isset($page_flex_array['data'])) {
+            if (isset($page_flex_array['data']['sDEF'])) {
+                if (count($page_flex_array['data']['sDEF']['lDEF']) > 0) {
+                    foreach ($page_flex_array['data']['sDEF']['lDEF'] as $key => $fields) {
+                        if ($key == $field) {
+                            $content_ids = array_merge($content_ids, GeneralUtility::trimExplode(',', $fields['vDEF']));
+                        }
+                    }
+                }
+            }
+        }
 
-		return $content;
-	}
+        $content = NULL;
+        foreach ($content_ids as $content_id) {
+            $tsfe->register['uid'] = $content_id;
+            $content .= $this->cObj->cObjGetSingle($conf['contentRender'], $conf['contentRender.']);
+        }
+
+        return $content;
+    }
+    
+    /**
+    * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+    */
+    protected function getTypoScriptFrontendController ()
+    {
+        return $GLOBALS['TSFE'];
+    }
 }
 
-
-// XCLASS inclusion code
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.tx_jfmulticontent.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.tx_jfmulticontent.php']);
-}
-?>

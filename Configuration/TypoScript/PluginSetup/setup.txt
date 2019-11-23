@@ -291,7 +291,6 @@ plugin.tx_jfmulticontent_pi1 {
 
 /*
 # Example page-view for templavoila
-includeLibs.jfmulticontent = EXT:jfmulticontent/class.tx_jfmulticontent.php
 plugin.tx_jfmulticontent_pi1 {
 	views.page >
 	views {
@@ -300,7 +299,7 @@ plugin.tx_jfmulticontent_pi1 {
 			content {
 				10 = USER
 				10 {
-					userFunc = tx_jfmulticontent->getContentFromTemplavoilaField
+					userFunc = JambageCom\Jfmulticontent\Controller\TemplaVoilaPlusController->getContentFromField
 					field = field_feature
 					pageID.data = register:pid
 					contentRender = RECORDS

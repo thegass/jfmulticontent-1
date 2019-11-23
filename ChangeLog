@@ -1,5 +1,9 @@
 
 
+2019-11-23  Franz Holzinger  <franz@ttproducts.de>
+    * copy class.tx_jfmulticontent.php -> Classes/Controller/TemplaVoilaPlusController.php
+    * * TYPO3 9 support for TemplaVoilaPlus modifications
+
 2019-11-20  Franz Holzinger  <franz@ttproducts.de>
     * compatibility: replace \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey) by
     \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey))
