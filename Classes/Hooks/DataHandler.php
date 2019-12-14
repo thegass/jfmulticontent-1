@@ -30,7 +30,7 @@ namespace JambageCom\Jfmulticontent\Hooks;
 
 /**
  * This class implements a hook to TCEmain to ensure that data is correctly
- * inserted to pages when using TemplaVoila. It disables automatic TemplaVoila
+ * inserted to pages when using TemplaVoilaPlus. It disables automatic TemplaVoilaPlus
  * element referencing for content elements that are part of jfmulticontent post.
  *
  * @author     Juergen Furrer <juergen.furrer@gmail.com>
@@ -40,7 +40,7 @@ namespace JambageCom\Jfmulticontent\Hooks;
 class DataHandler
 {
 	/**
-	 * Checks if the colPos will be manipulated and if TemplaVoila references should be disabled for this record
+	 * Checks if the colPos will be manipulated and if TemplaVoilaPlus references should be disabled for this record
 	 *
 	 * @param array $incomingFieldArray
 	 * @param string $table
@@ -56,8 +56,12 @@ class DataHandler
 						// Change the colPos of the IRRE tt_content values
 						$confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 						$incomingFieldArray['colPos'] = $confArr['colPosOfIrreContent'];
-						// Workaround for templavoila
-						if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila')) {
+						// Workaround for TemplaVoilaPlus
+						if (
+                            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoilaplus') ||
+                            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila')
+                        ) {
+							$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_templavoilaplus_tcemain']['doNotInsertElementRefsToPage'] = TRUE;
 							$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_templavoila_tcemain']['doNotInsertElementRefsToPage'] = TRUE;
 						}
 					}

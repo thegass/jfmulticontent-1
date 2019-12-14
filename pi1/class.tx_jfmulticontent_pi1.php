@@ -79,11 +79,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		// get the config from EXT
 		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
 		$parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
-
-debug ( $this->conf['views.'], '$this->conf[\'views.\']');
-
-debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
-
 		$this->pagerenderer = GeneralUtility::makeInstance(\JambageCom\Jfmulticontent\Hooks\PageRenderer::class);
 		$this->pagerenderer->setConf($this->conf);
 
@@ -525,12 +520,10 @@ debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
 					if ($this->confArr['useOwnUserFuncForPages']) {
 						// TemplaVoilaPlus will render the content with a userFunc
 						$innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-        debug ($innerContent, '$innerContent Pos 1');
                         $this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					} else {
 						$row = NULL;
-						debug ($tsfe->sys_language_content, '$GLOBALS[\'TSFE\']->sys_language_content');
 						if ($tsfe->sys_language_content) {
                             if (
                                 version_compare(TYPO3_version, '9.0.0', '>=')
@@ -548,8 +541,6 @@ debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
                                     )
                                     ->execute()
                                     ->fetchAll();
-                                debug ($row, '$row +++ Pos 3');
-                                // +++
                             } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $tsfe->sys_language_content, '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -558,7 +549,6 @@ debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
                         }
 
 						if (!is_array($row)) {
-						debug ($row, '$row');
                             if (
                                 version_compare(TYPO3_version, '9.0.0', '>=')
                             ) {
@@ -572,8 +562,6 @@ debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
                                     )
                                     ->execute()
                                     ->fetchAll();
-                                debug ($row, '$row +++ Pos 4');
-                                // +++
                             } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -585,11 +573,7 @@ debug($this->conf['config.']['view'], '$this->conf[\'config.\'][\'view\']');
 								$tsfe->register['page_' . $key] = $val;
 							}
 						}
-debug ($view['content'], '$view[\'content\']');
-debug ($view['content.'], '$view[\'content.\']');
-
                         $innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-        debug ($innerContent, '$innerContent Pos 2');
                         $this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 						$this->content_id[$a] = $page_ids[$a];
@@ -599,8 +583,6 @@ debug ($view['content.'], '$view[\'content.\']');
                         $this->titles[$a] == '' ||
                         !isset($this->titles[$a])
                     ) {
-debug ($view['title'], '$view[\'title\']');
-debug ($view['title.'], '$view[\'title.\']');
 						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
 					}
 				}
@@ -609,8 +591,6 @@ debug ($view['title.'], '$view[\'title.\']');
 				$content_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_contents']);
 				// get the informations for every content
 				for ($a = 0; $a < count($content_ids); $a++) {
-    						debug ($a, '$a');
-
 					// Select the content
                     if (
                         version_compare(TYPO3_version, '9.0.0', '>=')
@@ -625,8 +605,6 @@ debug ($view['title.'], '$view[\'title.\']');
                             )
                             ->execute()
                             ->fetchAll();
-                        debug ($row, '$row +++ Pos 1');
-                        // +++
                     } else {
                         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                             '*',
@@ -651,15 +629,11 @@ debug ($view['title.'], '$view[\'title.\']');
 						$this->titles[$a] = $this->cObj->cObjGetSingle($view['title'], $view['title.']);
 						$tsfe->register['title'] = $this->titles[$a];
 					}
-            debug ($view['content'], '$view[\'content\']');
-            debug ($view['content.'], '$view[\'content.\']');
 
 					$innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-        debug ($innerContent, '$innerContent Pos 3');
 					$this->cElements[] = $innerContent;
 					$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					$this->content_id[$a] = $content_ids[$a];
-                debug ($this->content_id[$a], '$this->content_id['.$a.']');
 				}
 			} else if ($this->conf['config.']['view'] == 'irre') {
 				// get the content ID's
@@ -667,7 +641,6 @@ debug ($view['title.'], '$view[\'title.\']');
 				if ($tsfe->sys_page->versioningPreview) {
 					$elementUID = $this->cObj->data['_ORIG_uid'];
 				}
-                    debug ($elementUID, '$elementUID');
 
                 if (
                     version_compare(TYPO3_version, '9.0.0', '>=')
@@ -683,8 +656,6 @@ debug ($view['title.'], '$view[\'title.\']');
                         ->orderBy('sorting', 'ASC')
                         ->execute()
                         ->fetchAll();
-                    debug ($row, '$row +++ Pos 2');
-                    // +++
                 } else {
                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                         '*',
@@ -711,7 +682,6 @@ debug ($view['title.'], '$view[\'title.\']');
 							$_procObj->main($this->content, $this->conf, $this);
 							$this->titles = $_procObj->getTitles();
 							$innerContent = $_procObj->getElements();
-        debug ($innerContent, '$innerContent Pos 4');
                             $this->cElements[] = $innerContent;
 							$this->content_id = $_procObj->getIds();
 							if (method_exists($_procObj, 'getRels')) {
@@ -738,7 +708,6 @@ debug ($view['title.'], '$view[\'title.\']');
 					$innerContent = trim($this->cObj->cObjGetSingle($contents['content'], $contents['content.']));
 					if ($innerContent) {
 						$this->titles[] = $title;
-        debug ($innerContent, '$innerContent Pos 5');
 						$this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($contents['rel'], $contents['rel.']);
 						$this->content_id[] = $this->cObj->stdWrap($contents['id'], $contents['id.']);
@@ -777,8 +746,6 @@ debug ($view['title.'], '$view[\'title.\']');
 		} else {
 			$jQueryNoConflict = '';
 		}
-
-debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 
 		// style
 		switch ($this->conf['config.']['style']) {
@@ -1383,7 +1350,6 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 	 * @return void
 	 */
     public function addIRREContent(&$a, $row, $view) {
-    debug ($a, 'addIRREContent $a');
         $tsfe = $this->getTypoScriptFrontendController();
 
         if ($tsfe->sys_language_content) {
@@ -1402,7 +1368,6 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
             $tsfe->register['title'] = $this->titles[$a];
         }
         $innerContent = $this->cObj->cObjGetSingle($view['content'], $view['content.']);
-        debug ($innerContent, '$innerContent Pos 6');
         $this->cElements[] = $innerContent;
         $this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
         $this->content_id[$a] = $row['uid'];
@@ -1458,16 +1423,12 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 		} else {
 			$markerArray["EQUALIZE_CLASS"] = '';
 		}
-		debug ($templateCode, '$templateCode Pos 1');
 		$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
-		debug ($templateCode, '$templateCode Pos 2');
 
 		// Get the title template
 		$titleCode = $parser->getSubpart($templateCode, "###TITLES###");
-		debug ($titleCode, '$titleCode');
 		// Get the column template
 		$columnCode = $parser->getSubpart($templateCode, "###COLUMNS###");
-		debug ($columnCode, '$columnCode');
 		// Define the contentWrap
 		switch (count($this->contentWrap)) {
 			case 1 : {
@@ -1561,9 +1522,7 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 							if (intval($test) == $test) {
 								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
 								$addContent = TRUE;
-				debug ($markerArray['CONTENT'], '$markerArray[\'CONTENT\'] Pos 2');
-
-								}
+                            }
 						}
 						break;
 					}
@@ -1573,7 +1532,6 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 							$test = ($key - ($this->contentCount - ($a + 1))) / $this->contentCount;
 							if (intval($test) == $test) {
 								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
-				debug ($markerArray['CONTENT'], '$markerArray[\'CONTENT\'] Pos 3');
 								$addContent = TRUE;
 							}
 						}
@@ -1591,10 +1549,8 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 					}
 				}
 			} else {
-			debug ($this->cElements[$a], '$this->cElements['.$a.'] Pos 4');
 				// wrap the content
 				$markerArray['CONTENT'] = $this->cObj->stdWrap($this->cElements[$a], array('wrap' => $wrap));
-				debug ($markerArray['CONTENT'], '$markerArray[\'CONTENT\'] Pos 4');
 				$addContent = TRUE;
 			}
 			$markerArray['REL'] = htmlspecialchars($this->rels[$a]);
@@ -1614,7 +1570,7 @@ debug ($this->conf['config.']['style'], '$this->conf[\'config.\'][\'style\']');
 					}
 				}
 			}
-debug ($markerArray, '$markerArray');
+
 			if (
                 $markerArray['CONTENT'] ||
                 ($addContent && $this->confArr['showEmptyContent'])
@@ -1623,14 +1579,11 @@ debug ($markerArray, '$markerArray');
 				$columns .= $parser->substituteMarkerArray($columnCode, $markerArray, '###|###', 0);
 				// add content to TITLE
 				$titles .= $parser->substituteMarkerArray($titleCode, $markerArray, '###|###', 0);
-debug ($titles, '$titles');
 			}
 		}
 		$return_string = $templateCode;
 		$return_string = $parser->substituteSubpart($return_string, '###TITLES###', $titles, 0);
-		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);
-debug ($return_string, '$return_string');
-		
+		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);		
 
 		if (isset($this->conf['additionalMarkers'])) {
 			$additonalMarkerArray = array();
@@ -1645,7 +1598,6 @@ debug ($return_string, '$return_string');
 			// add addtional marker content to template
 			$return_string = $parser->substituteMarkerArray($return_string, $additonalMarkerArray, '###|###', 0);
 		}
-		debug ($return_string, 'renderTemplate ENDE $return_string');
 
 		return $return_string;
 	}

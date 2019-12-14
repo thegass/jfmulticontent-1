@@ -48,8 +48,8 @@ class TsparserExtensionUpdate
 	{
 		$out = '';
 
-		$checkConfig = NULL;
-		if ($this->checkConfig() === FALSE) {
+		$checkConfig = null;
+		if ($this->checkConfig() === false) {
 			$checkConfig = '
 	<div class="typo3-message message-warning">
 		<div class="message-header">' . $GLOBALS['LANG']->sL('LLL:EXT:jfmulticontent/locallang.xml:extmng.classInnerHeader') . '</div>
@@ -117,7 +117,7 @@ class TsparserExtensionUpdate
 		$confArr = $extensionConfiguration;
 		foreach ($confDefault as $val) {
 			if (!isset($confArr[$val]) && !isset($_POST['data'][$val])) {
-				return FALSE;
+				return false;
 			}
 		}
 		return TRUE;

@@ -1,6 +1,10 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
 
+if (!defined ('JFMULTICONTENT_EXT')) {
+    define('JFMULTICONTENT_EXT', 'jfmulticontent');
+}
+
 $table = 'tt_content';
 
 $listType = JFMULTICONTENT_EXT . '_pi1';
@@ -221,6 +225,3 @@ if ($confArr['useStoragePidOnly']) {
     'list_type',
     JFMULTICONTENT_EXT
 );
-
-
-
