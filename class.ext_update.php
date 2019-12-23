@@ -43,17 +43,23 @@ class ext_update
 	private $missingHtmlTemplates = array();
 	private $movedFields = array();
 	private $flexObj;
-	private $ll = 'LLL:EXT:jfmulticontent/locallang.xml:updater.';
+	private $ll = 'LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang.xml:updater.';
 	private $sheet_mapping = array(
-		"tab"       => "general",
-		"accordion" => "general",
-		"slider"    => "general",
-		"autoplay"  => "general",
+		'tab'       => 's_general',
+		'accordion' => 's_general',
+		'slider'    => 's_general',
+		'autoplay'  => 's_general',
+	);
+	private $sheet_naming = array(
+		'general'       => 's_general',
+		'title'         => 's_title',
+		'attribute'     => 's_attribute',
+		'special'       => 's_special',
 	);
 	private $style_mapping = array(
-		"2colomn" => "2column",
-		"3colomn" => "3column",
-		"4colomn" => "4column",
+		'2colomn' => '2column',
+		'3colomn' => '3column',
+		'4colomn' => '4column',
 	);
 
 
@@ -71,15 +77,15 @@ class ext_update
 		$this->wrongLanguage   = $this->getWrongLanguage();
 		$this->wrongStyle      = $this->getWrongStyle();
 		if (GeneralUtility::_GP('do_update')) {
-			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'back').'</a><br/>';
+			$out .= '<a href="' . GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $GLOBALS['LANG']->sL($this->ll . 'back') . '</a><br/>';
 			$func = trim(GeneralUtility::_GP('func'));
 			if (method_exists($this, $func)) {
 				$out .= '
 <div style="padding:15px 15px 20px 0;">
 	<div class="typo3-message message-ok">
-		<div class="message-header">'.$GLOBALS['LANG']->sL($this->ll.'updateresults').'</div>
+		<div class="message-header">' . $GLOBALS['LANG']->sL($this->ll . 'updateresults') . '</div>
 		<div class="message-body">
-		'.$this->$func().'
+		' . $this->$func() . '
 		</div>
 	</div>
 </div>';
@@ -87,15 +93,15 @@ class ext_update
 				$out .= '
 <div style="padding:15px 15px 20px 0;">
 	<div class="typo3-message message-error">
-		<div class="message-body">ERROR: '.$func.'() not found</div>
+		<div class="message-body">ERROR: ' . $func . '() not found</div>
 	</div>
 </div>';
 			}
 		} else {
-			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')).'">'.$GLOBALS['LANG']->sL($this->ll.'reload').'
-			<img style="vertical-align:bottom;" '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/refresh_n.gif', 'width="18" height="16"').'></a><br/>';
+			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $GLOBALS['LANG']->sL($this->ll . 'reload').'
+			<img style="vertical-align:bottom;" '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/refresh_n.gif', 'width="18" height="16"') . '></a><br/>';
 			$out .= $this->displayWarning();
-			$out .= '<h3>'.$GLOBALS['LANG']->sL($this->ll.'actions').'</h3>';
+			$out .= '<h3>' . $GLOBALS['LANG']->sL($this->ll . 'actions') . '</h3>';
 			// Update all flexform
 			$out .= $this->displayUpdateOption('searchFlexForm',      count($this->contentElements), 'updateFlexForm');
 			// Update wrong Style
@@ -116,17 +122,17 @@ class ext_update
 	 */
 	private function displayUpdateOption($k, $count, $func)
 	{
-		$msg = $GLOBALS['LANG']->sL($this->ll.'msg_'.$k).' ';
-		$msg .= '<br/><strong>'.str_replace('###COUNT###', $count, $GLOBALS['LANG']->sL($this->ll.'foundMsg_'.$k)).'</strong>';
+		$msg = $GLOBALS['LANG']->sL($this->ll . 'msg_' . $k) . ' ';
+		$msg .= '<br/><strong>' . str_replace('###COUNT###', $count, $GLOBALS['LANG']->sL($this->ll . 'foundMsg_' . $k)) . '</strong>';
 		$msg .= ' <img '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/icon_'.($count == 0 ? 'ok' : 'warning2').'.gif', 'width="18" height="16"').'>';
 		if ($count) {
-			$msg .= '<p style="margin:5px 0;">'.$GLOBALS['LANG']->sL($this->ll.'question_'.$k).'<p>';
-			$msg .= '<p style="margin-bottom:10px;"><em>'.$GLOBALS['LANG']->sL($this->ll.'questionInfo_'.$k).'</em><p>';
+			$msg .= '<p style="margin:5px 0;">' . $GLOBALS['LANG']->sL($this->ll.'question_' . $k) . '<p>';
+			$msg .= '<p style="margin-bottom:10px;"><em>' . $GLOBALS['LANG']->sL($this->ll . 'questionInfo_' . $k) . '</em><p>';
 			$msg .= $this->getButton($func);
 		} else {
-			$msg .= '<br/>'.$GLOBALS['LANG']->sL($this->ll.'nothingtodo');
+			$msg .= '<br/>' . $GLOBALS['LANG']->sL($this->ll . 'nothingtodo');
 		}
-		$out = $this->wrapForm($msg, $GLOBALS['LANG']->sL($this->ll.'lbl_'.$k));
+		$out = $this->wrapForm($msg, $GLOBALS['LANG']->sL($this->ll . 'lbl_' . $k));
 		$out .= '<br/><br/>';
 		return $out;
 	}
@@ -141,9 +147,9 @@ class ext_update
 		$out = '
 <div style="padding:15px 15px 20px 0;">
 	<div class="typo3-message message-warning">
-		<div class="message-header">'.$GLOBALS['LANG']->sL($this->ll.'warningHeader').'</div>
+		<div class="message-header">' . $GLOBALS['LANG']->sL($this->ll . 'warningHeader') . '</div>
 		<div class="message-body">
-			'.$GLOBALS['LANG']->sL($this->ll.'warningMsg').'
+			' . $GLOBALS['LANG']->sL($this->ll . 'warningMsg').'
 		</div>
 	</div>
 </div>';
@@ -162,8 +168,8 @@ class ext_update
 		$out = '
 <form action="">
 	<fieldset style="background:#f4f4f4;margin-right:15px;">
-		<legend>'.$fsLabel.'</legend>
-		'.$content.'
+		<legend>' . $fsLabel . '</legend>
+		' . $content . '
 	</fieldset>
 </form>';
 		return $out;
@@ -179,8 +185,8 @@ class ext_update
 	private function getButton($func, $lbl = 'DO IT')
 	{
 		$params = array('do_update' => 1, 'func' => $func);
-		$onClick = "document.location='".GeneralUtility::linkThisScript($params)."'; return false;";
-		$button = '<input type="submit" value="'.$lbl.'" onclick="'.htmlspecialchars($onClick).'">';
+		$onClick = "document.location='".GeneralUtility::linkThisScript($params) . "'; return false;";
+		$button = '<input type="submit" value="' . $lbl . '" onclick="' . htmlspecialchars($onClick) . '">';
 		return $button;
 	}
 
@@ -194,8 +200,8 @@ class ext_update
 		$select_fields = '*';
 		$from_table = 'tt_content';
 		$where_clause = '
-		CType='.$GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table).'
-		AND list_type='.$GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table).'
+		CType=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table) . '
+		AND list_type=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table) . '
 		AND deleted=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select_fields, $from_table, $where_clause);
 		if ($res) {
@@ -230,8 +236,8 @@ class ext_update
 		$select_fields = '*';
 		$from_table = 'tt_content';
 		$where_clause = '
-		CType='.$GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table).'
-		AND list_type='.$GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table).'
+		CType='.$GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table) . '
+		AND list_type=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table) . '
 		AND deleted=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select_fields, $from_table, $where_clause);
 		if ($res) {
@@ -266,33 +272,33 @@ class ext_update
 		$select_fields = '*';
 		$from_table = 'tt_content';
 		$where_clause = '
-		CType='.$GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table).'
-		AND list_type='.$GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table).'
+		CType=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table) . '
+		AND list_type=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table) . '
 		AND deleted=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select_fields, $from_table, $where_clause);
 		if ($res) {
 			$resultRows = array();
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				$addArray = FALSE;
+				$addArray = false;
 				$tempRows = array();
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					$select_fields,
 					$from_table,
-					'uid IN ('.implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(GeneralUtility::trimExplode(',', $row['tx_jfmulticontent_contents'], TRUE), $from_table)).')
+					'uid IN ('.implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(GeneralUtility::trimExplode(',', $row['tx_jfmulticontent_contents'], true), $from_table)).')
 					AND deleted=0'
 				);
 				while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))) {
 					if ($row2['sys_language_uid'] != 0) {
-						$addArray = TRUE;
+						$addArray = true;
 						$tempRows[] = $row2['l18n_parent'];
 					} else {
 						$tempRows[] = $row2['uid'];
 					}
 				}
-				if ($addArray === TRUE) {
+				if ($addArray === true) {
 					$resultRows[$row['uid']] = $tempRows;
 				}
-			}
+			}                  
 		}
 		return $resultRows;
 	}
@@ -304,7 +310,7 @@ class ext_update
 	 */
 	private function updateFlexForm()
 	{
-		$msg = NULL;
+		$msg = null;
 		if (count($this->contentElements) > 0 && count($this->sheet_mapping) > 0) {
 			foreach ($this->contentElements as $content_id => $contentElement) {
 				foreach ($this->sheet_mapping as $sheet_old => $sheet_new) {
@@ -318,12 +324,12 @@ class ext_update
 				}
 				// Update the content
 				$table = 'tt_content';
-				$where = 'uid='.$content_id;
+				$where = 'uid=' . $content_id;
 				$fields_values = array(
 					'pi_flexform' => $this->flexObj->flexArray2Xml($contentElement['ff_parsed'], 1)
 				);
 				if ($GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields_values)) {
-					$msg[] = 'Updated contentElement uid: '.$content_id.', pid: '.$this->contentElements[$content_id]['pid'];
+					$msg[] = 'Updated contentElement uid: ' . $content_id . ', pid: ' . $this->contentElements[$content_id]['pid'];
 				}
 			}
 		}
@@ -337,18 +343,18 @@ class ext_update
 	 */
 	private function updateWrongStyle()
 	{
-		$msg = NULL;
+		$msg = null;
 		if (count($this->wrongStyle) > 0 && count($this->style_mapping) > 0) {
 			foreach ($this->wrongStyle as $content_id => $contentElement) {
 				$contentElement['ff_parsed']['data']['general']['lDEF']['style']['vDEF'] = $this->style_mapping[$contentElement['ff_parsed']['data']['general']['lDEF']['style']['vDEF']];
 				// Update the content
 				$table = 'tt_content';
-				$where = 'uid='.$content_id;
+				$where = 'uid=' . $content_id;
 				$fields_values = array(
 					'pi_flexform' => $this->flexObj->flexArray2Xml($contentElement['ff_parsed'], 1)
 				);
 				if ($GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields_values)) {
-					$msg[] = 'Updated contentElement uid: '.$content_id.', pid: '.$this->wrongStyle[$content_id]['pid'];
+					$msg[] = 'Updated contentElement uid: ' . $content_id . ', pid: ' . $this->wrongStyle[$content_id]['pid'];
 				}
 			}
 		}
@@ -362,17 +368,17 @@ class ext_update
 	 */
 	private function updateWrongLanguage()
 	{
-		$msg = NULL;
+		$msg = null;
 		if (count($this->wrongLanguage) > 0) {
 			foreach ($this->wrongLanguage as $content_id => $contentElements) {
 				// Update the content
 				$table = 'tt_content';
-				$where = 'uid='.$content_id;
+				$where = 'uid=' . $content_id;
 				$fields_values = array(
 					'tx_jfmulticontent_contents' => implode(',', $contentElements)
 				);
 				if ($GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields_values)) {
-					$msg[] = 'Updated contentElement uid: '.$content_id;
+					$msg[] = 'Updated contentElement uid: ' . $content_id;
 				}
 			}
 		}
@@ -388,11 +394,11 @@ class ext_update
 	 */
 	public function access($what = 'all')
 	{
-		return TRUE;
+		return true;
 	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.ext_update.php']) {
 	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.ext_update.php']);
 }
-?>
+
