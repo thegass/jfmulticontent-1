@@ -1,3 +1,8 @@
+
+2020-01-04  Franz Holzinger  <franz@ttproducts.de>
+    * compatibility TYPO3 7.5, deprecation 69057: replace \TYPO3\CMS\Backend\Utility\IconUtility::skinImg by TYPO3\CMS\Core\Imaging\IconFactory
+    * deprecation 79259: EXT:t3skin removed
+
 2019-12-14  Franz Holzinger  <franz@ttproducts.de>
     * compatibility TYPO3 9: Add a flexform conversion tool to migration the flexform sheet names in a way where a leading s_ is added.
 

@@ -49,7 +49,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 * @param	array		additional parameters
 	 * @return	void
 	 */
-	public function init($parentObject, $additionalParameters) {
+	public function init ($parentObject, $additionalParameters) {
 		$invokingObjectClass = get_class($parentObject);
 		$this->invokingObject =& $parentObject;
 		$this->mode =& $this->invokingObject->mode;
@@ -67,7 +67,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 * @param	array	currently allowed items
 	 * @return	array	currently allowed items plus added items
 	 */
-	public function addAllowedItems($currentlyAllowedItems) {
+	public function addAllowedItems ($currentlyAllowedItems) {
 		$currentlyAllowedItems['jfmulticontent'] = 'jfmulticontent';
 		return $currentlyAllowedItems;
 	}
@@ -79,12 +79,12 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 * @param	array	menu definition
 	 * @return	array	modified menu definition
 	 */
-	public function modifyMenuDefinition($menuDefinition) {
+	public function modifyMenuDefinition ($menuDefinition) {
 		$menuDef =& $menuDefinition;
 		$menuDef['jfmulticontent']['isActive'] = $this->invokingObject->act == 'jfmulticontent';
 		$menuDef['jfmulticontent']['label'] =  $GLOBALS['LANG']->sL('LLL:EXT:jfmulticontent/locallang_db.xml:browserlink_tab',1);
 		$menuDef['jfmulticontent']['url'] = '#';
-		$menuDef['jfmulticontent']['addParams'] = 'onclick="jumpToUrl(\''.htmlspecialchars('?act=jfmulticontent&editorNo='.$this->invokingObject->editorNo.'&contentTypo3Language='.$this->invokingObject->contentTypo3Language.'&contentTypo3Charset='.$this->invokingObject->contentTypo3Charset).'\');return false;"';
+		$menuDef['jfmulticontent']['addParams'] = 'onclick="jumpToUrl(\'' . htmlspecialchars('?act=jfmulticontent&editorNo=' . $this->invokingObject->editorNo . '&contentTypo3Language=' . $this->invokingObject->contentTypo3Language . '&contentTypo3Charset=' . $this->invokingObject->contentTypo3Charset) . '\');return false;"';
 		return $menuDef;
 	}
 
@@ -95,10 +95,10 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 * @param	string		current link selector action
 	 * @return	string		a tab for the selected link action
 	 */
-	public function getTab($linkSelectorAction) {
+	public function getTab ($linkSelectorAction) {
 		// Only return content if the media tab was called.
 		if ($linkSelectorAction !== 'jfmulticontent') {
-			return FALSE;
+			return false;
 		}
 
 		$this->browseLinks = GeneralUtility::makeInstance('tx_rtehtmlarea_browse_links');
@@ -117,7 +117,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 		// Outputting Temporary DB mount notice:
 		if (intval($GLOBALS['BE_USER']->getSessionData('pageTree_temporaryMountPoint')))	{
 			$link = '<a href="' . htmlspecialchars(GeneralUtility::linkThisScript(array('setTempDBmount' => 0))) . '">' .
-								$GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_core.xml:labels.temporaryDBmount', 1) .
+                    $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_core.xml:labels.temporaryDBmount', 1) .
 							'</a>';
 			$flashMessage = GeneralUtility::makeInstance(
 				\TYPO3\CMS\Core\Messaging\FlashMessage::class,
@@ -152,7 +152,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 * @param	array		$info
 	 * @return	array
 	 */
-	public function parseCurrentUrl($href, $siteUrl, $info) {
+	public function parseCurrentUrl ($href, $siteUrl, $info) {
 		$info['act'] = 'jfmulticontent';
 		return $info;
 	}
@@ -162,7 +162,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 	 *
 	 * @return	string		HTML output. Returns content only if the ->expandPage value is set (pointing to a page uid to show tt_content records from ...)
 	 */
-	public function expandPage() {
+	public function expandPage () {
 		$out='';
 		$expPageId = $this->browseLinks->expandPage;		// Set page id (if any) to expand
 
@@ -181,7 +181,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 			$titleLen=intval($GLOBALS['BE_USER']->uc['titleLen']);
 			$mainPageRec = /**/\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordWSOL('pages',$expPageId);
 			$picon = IconUtility::getSpriteIconForRecord('pages', $mainPageRec);
-			$picon .= \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages', $mainPageRec, TRUE);
+			$picon .= \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages', $mainPageRec, true);
 			$out .= $picon.'<br />';
 
 				// Look up tt_content elements from the expanded page:
@@ -200,7 +200,13 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 			$c = 0;
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$c++;
-				$icon = IconUtility::getSpriteIconForRecord('tt_content', $row);
+        hier ++++
+                if (
+                    version_compare(TYPO3_version, '8.0.0', '>=')
+                ) {
+                } else {
+                    $icon = IconUtility::getSpriteIconForRecord('tt_content', $row);
+                }
 				if ($this->browseLinks->curUrlInfo['act'] == 'page' && $this->browseLinks->curUrlInfo['cElement'] == $row['uid'])	{
 					$arrCol='<img' . IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/blinkarrow_left.gif', 'width="5" height="9"') . ' class="c-blinkArrowL" alt="" />';
 				} else {
@@ -211,7 +217,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 						$arrCol .
 						'<a href="#" onclick="return link_typo3Page(\'' . $expPageId . '\',\'#' . $row['uid'] . '\');">'.
 						$icon .
-						\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('tt_content', $row, TRUE) .
+						\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('tt_content', $row, true) .
 						'</a><br />';
 
 				$contents = array();
@@ -226,7 +232,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 						break;
 					}
 					case 'irre' : {
-						$resIrre = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tt_content', 'tx_jfmulticontent_irre_parentid='.intval($row['uid']).' AND deleted = 0 AND hidden = 0', '', '');
+						$resIrre = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tt_content', 'tx_jfmulticontent_irre_parentid=' . intval($row['uid']) . ' AND deleted = 0 AND hidden = 0', '', '');
 						while ($rowIrre = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resIrre)) {
 							$contents[] = $rowIrre['uid'];
 						}
@@ -239,7 +245,7 @@ class ElementBrowser implements \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHoo
 					$out .= '<img' . IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/ol/line.gif', 'width="18" height="16"') . ' alt="" />' .
 							'<img' . IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/ol/blank.gif' , 'width="18" height="16"') . ' alt="" />';
 					foreach ($contents as $key => $content) {
-						$out .= '<a href="#" onclick="return link_typo3Page(\''.$expPageId.'\',\'#jfmulticontent_c'.$row['uid'].'-'.($key+1).'\');">'.
+						$out .= '<a href="#" onclick="return link_typo3Page(\''.$expPageId . '\',\'#jfmulticontent_c' . $row['uid'] . '-' . ($key + 1) . '\');">'.
 								'&nbsp;' . ($key + 1) . '&nbsp;' .
 								'</a>';
 					}

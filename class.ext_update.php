@@ -27,7 +27,6 @@
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * Class for updating jfmulticontent content elements
  *
@@ -49,8 +48,7 @@ class ext_update
 		'accordion' => 's_general',
 		'slider'    => 's_general',
 		'autoplay'  => 's_general',
-	);
-	private $sheet_naming = array(
+		// new since TYPO3 7.6:
 		'general'       => 's_general',
 		'title'         => 's_title',
 		'attribute'     => 's_attribute',
@@ -68,8 +66,10 @@ class ext_update
 	 *
 	 * @return	string		HTML
 	 */
-	public function main() {
+	public function main () {
 		$out = '';
+
+		$lang = $this->getLanguageService();
 
 		$this->flexObj = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class);
 		// analyze
@@ -77,13 +77,13 @@ class ext_update
 		$this->wrongLanguage   = $this->getWrongLanguage();
 		$this->wrongStyle      = $this->getWrongStyle();
 		if (GeneralUtility::_GP('do_update')) {
-			$out .= '<a href="' . GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $GLOBALS['LANG']->sL($this->ll . 'back') . '</a><br/>';
+			$out .= '<a href="' . GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $lang->sL($this->ll . 'back') . '</a><br/>';
 			$func = trim(GeneralUtility::_GP('func'));
 			if (method_exists($this, $func)) {
 				$out .= '
 <div style="padding:15px 15px 20px 0;">
 	<div class="typo3-message message-ok">
-		<div class="message-header">' . $GLOBALS['LANG']->sL($this->ll . 'updateresults') . '</div>
+		<div class="message-header">' . $lang->sL($this->ll . 'updateresults') . '</div>
 		<div class="message-body">
 		' . $this->$func() . '
 		</div>
@@ -98,10 +98,23 @@ class ext_update
 </div>';
 			}
 		} else {
-			$out .= '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $GLOBALS['LANG']->sL($this->ll . 'reload').'
-			<img style="vertical-align:bottom;" '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/refresh_n.gif', 'width="18" height="16"') . '></a><br/>';
+            $buttons = [];
+            if (
+                version_compare(TYPO3_version, '8.0.0', '>=')
+            ) {
+                $lang = $this->getLanguageService();
+                $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+                $buttons['reload'] = '<a href="' . htmlspecialchars(GeneralUtility::linkThisScript(array('do_update' => '', 'func' => ''))) . '" title="'
+                    . htmlspecialchars($lang->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.reload')) . '">'
+                    . $iconFactory->getIcon('actions-refresh', \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render() . '</a>';
+            } else {
+                $buttons['reload'] = '<a href="'.GeneralUtility::linkThisScript(array('do_update' => '', 'func' => '')) . '">' . $lang->sL($this->ll . 'reload').'
+                <img style="vertical-align:bottom;" ' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'typo3/sysext/t3skin/extjs/images/grid/refresh.gif', 'width="18" height="16"') . '></a><br/>';
+            }
+
+			$out .= $buttons['reload'];
 			$out .= $this->displayWarning();
-			$out .= '<h3>' . $GLOBALS['LANG']->sL($this->ll . 'actions') . '</h3>';
+			$out .= '<h3>' . $lang->sL($this->ll . 'actions') . '</h3>';
 			// Update all flexform
 			$out .= $this->displayUpdateOption('searchFlexForm',      count($this->contentElements), 'updateFlexForm');
 			// Update wrong Style
@@ -120,19 +133,31 @@ class ext_update
 	 * @param string $func
 	 * @return hteml
 	 */
-	private function displayUpdateOption($k, $count, $func)
-	{
-		$msg = $GLOBALS['LANG']->sL($this->ll . 'msg_' . $k) . ' ';
-		$msg .= '<br/><strong>' . str_replace('###COUNT###', $count, $GLOBALS['LANG']->sL($this->ll . 'foundMsg_' . $k)) . '</strong>';
-		$msg .= ' <img '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/icon_'.($count == 0 ? 'ok' : 'warning2').'.gif', 'width="18" height="16"').'>';
+	private function displayUpdateOption ($k, $count, $func)
+    {
+        $lang = $this->getLanguageService();
+        $msg = $lang->sL($this->ll . 'msg_' . $k) . ' ';
+        $msg .= '<br/><strong>' . str_replace('###COUNT###', $count, $lang->sL($this->ll . 'foundMsg_' . $k)) . '</strong>';
+
+        if (
+            version_compare(TYPO3_version, '8.0.0', '>=')
+        ) {
+            $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+            $imageIdentifier = 'status-dialog-' . ($count == 0 ? 'ok' : 'warning');
+            $image = $iconFactory->getIcon($imageIdentifier, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
+            $msg .= ' ' . $image;
+        } else {
+            $msg .= ' <img ' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/icon_' . ($count == 0 ? 'ok' : 'warning2') . '.gif', 'width="18" height="16"') . '>';
+		}
+
 		if ($count) {
-			$msg .= '<p style="margin:5px 0;">' . $GLOBALS['LANG']->sL($this->ll.'question_' . $k) . '<p>';
-			$msg .= '<p style="margin-bottom:10px;"><em>' . $GLOBALS['LANG']->sL($this->ll . 'questionInfo_' . $k) . '</em><p>';
+			$msg .= '<p style="margin:5px 0;">' . $lang->sL($this->ll.'question_' . $k) . '<p>';
+			$msg .= '<p style="margin-bottom:10px;"><em>' . $lang->sL($this->ll . 'questionInfo_' . $k) . '</em><p>';
 			$msg .= $this->getButton($func);
 		} else {
-			$msg .= '<br/>' . $GLOBALS['LANG']->sL($this->ll . 'nothingtodo');
+			$msg .= '<br/>' . $lang->sL($this->ll . 'nothingtodo');
 		}
-		$out = $this->wrapForm($msg, $GLOBALS['LANG']->sL($this->ll . 'lbl_' . $k));
+		$out = $this->wrapForm($msg, $lang->sL($this->ll . 'lbl_' . $k));
 		$out .= '<br/><br/>';
 		return $out;
 	}
@@ -142,14 +167,15 @@ class ext_update
 	 * 
 	 * @return html
 	 */
-	private function displayWarning()
+	private function displayWarning ()
 	{
+        $lang = $this->getLanguageService();
 		$out = '
 <div style="padding:15px 15px 20px 0;">
 	<div class="typo3-message message-warning">
-		<div class="message-header">' . $GLOBALS['LANG']->sL($this->ll . 'warningHeader') . '</div>
+		<div class="message-header">' . $lang->sL($this->ll . 'warningHeader') . '</div>
 		<div class="message-body">
-			' . $GLOBALS['LANG']->sL($this->ll . 'warningMsg').'
+			' . $lang->sL($this->ll . 'warningMsg').'
 		</div>
 	</div>
 </div>';
@@ -163,7 +189,7 @@ class ext_update
 	 * @param string $fsLabel
 	 * @return html
 	 */
-	private function wrapForm($content, $fsLabel)
+	private function wrapForm ($content, $fsLabel)
 	{
 		$out = '
 <form action="">
@@ -182,10 +208,10 @@ class ext_update
 	 * @param string $lbl
 	 * @return html
 	 */
-	private function getButton($func, $lbl = 'DO IT')
+	private function getButton ($func, $lbl = 'DO IT')
 	{
 		$params = array('do_update' => 1, 'func' => $func);
-		$onClick = "document.location='".GeneralUtility::linkThisScript($params) . "'; return false;";
+		$onClick = "document.location='" . GeneralUtility::linkThisScript($params) . "'; return false;";
 		$button = '<input type="submit" value="' . $lbl . '" onclick="' . htmlspecialchars($onClick) . '">';
 		return $button;
 	}
@@ -195,7 +221,7 @@ class ext_update
 	 * 
 	 * @return array
 	 */
-	private function getContentElements()
+	private function getContentElements ()
 	{
 		$select_fields = '*';
 		$from_table = 'tt_content';
@@ -231,12 +257,12 @@ class ext_update
 	 * 
 	 * @return string
 	 */
-	private function getWrongStyle()
+	private function getWrongStyle ()
 	{
 		$select_fields = '*';
 		$from_table = 'tt_content';
 		$where_clause = '
-		CType='.$GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table) . '
+		CType=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('list', $from_table) . '
 		AND list_type=' . $GLOBALS['TYPO3_DB']->fullQuoteStr('jfmulticontent_pi1', $from_table) . '
 		AND deleted=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select_fields, $from_table, $where_clause);
@@ -263,11 +289,11 @@ class ext_update
 	}
 
 	/**
-	 * Returns all contents with content from differend languages
+	 * Returns all contents with content from different languages
 	 * 
 	 * @return string
 	 */
-	private function getWrongLanguage()
+	private function getWrongLanguage ()
 	{
 		$select_fields = '*';
 		$from_table = 'tt_content';
@@ -279,13 +305,18 @@ class ext_update
 		if ($res) {
 			$resultRows = array();
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
+                if ($row['tx_jfmulticontent_contents'] == '') {
+                    continue;
+                }
 				$addArray = false;
 				$tempRows = array();
+				$where_clause = 'uid IN (' . implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(GeneralUtility::trimExplode(',', $row['tx_jfmulticontent_contents'], true), $from_table)) . ')
+					AND deleted=0';
+
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 					$select_fields,
 					$from_table,
-					'uid IN ('.implode(',', $GLOBALS['TYPO3_DB']->fullQuoteArray(GeneralUtility::trimExplode(',', $row['tx_jfmulticontent_contents'], true), $from_table)).')
-					AND deleted=0'
+					$where_clause
 				);
 				while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))) {
 					if ($row2['sys_language_uid'] != 0) {
@@ -308,12 +339,15 @@ class ext_update
 	 * 
 	 * @return string
 	 */
-	private function updateFlexForm()
+	private function updateFlexForm ()
 	{
 		$msg = null;
 		if (count($this->contentElements) > 0 && count($this->sheet_mapping) > 0) {
 			foreach ($this->contentElements as $content_id => $contentElement) {
 				foreach ($this->sheet_mapping as $sheet_old => $sheet_new) {
+                    if (!isset($contentElement['ff_parsed']['data'][$sheet_old])) {
+                        continue;
+                    }
 					$old_values = $contentElement['ff_parsed']['data'][$sheet_old]['lDEF'];
 					if (count($old_values) > 0) {
 						foreach ($old_values as $key => $val) {
@@ -322,12 +356,14 @@ class ext_update
 					}
 					unset($contentElement['ff_parsed']['data'][$sheet_old]);
 				}
+
 				// Update the content
 				$table = 'tt_content';
 				$where = 'uid=' . $content_id;
 				$fields_values = array(
 					'pi_flexform' => $this->flexObj->flexArray2Xml($contentElement['ff_parsed'], 1)
 				);
+
 				if ($GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields_values)) {
 					$msg[] = 'Updated contentElement uid: ' . $content_id . ', pid: ' . $this->contentElements[$content_id]['pid'];
 				}
@@ -366,7 +402,7 @@ class ext_update
 	 * 
 	 * @return string
 	 */
-	private function updateWrongLanguage()
+	private function updateWrongLanguage ()
 	{
 		$msg = null;
 		if (count($this->wrongLanguage) > 0) {
@@ -392,10 +428,19 @@ class ext_update
 	 * @param	string		$what: what should be updated
 	 * @return	boolean
 	 */
-	public function access($what = 'all')
+	public function access ($what = 'all')
 	{
 		return true;
 	}
+	
+    /**
+     * Returns the language service
+     * @return LanguageService
+     */
+    protected function getLanguageService()
+    {
+        return $GLOBALS['LANG'];
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/jfmulticontent/class.ext_update.php']) {

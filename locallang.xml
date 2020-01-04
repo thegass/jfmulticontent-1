@@ -32,7 +32,7 @@
 			</label>
 
 			<label index="updater.lbl_searchFlexForm">Search "old values" in FF</label>
-			<label index="updater.msg_searchFlexForm">Search for jfmulticontent content elements with old values in flexforms (This fields where moved to another sheet):</label>
+			<label index="updater.msg_searchFlexForm">Search for jfmulticontent content elements with old values in flexforms (These sheets have been renamed with a prefix s_, or the fields where moved to another sheet):</label>
 			<label index="updater.foundMsg_searchFlexForm">Found ###COUNT### content elements.</label>
 			<label index="updater.question_searchFlexForm">Should the updater fix this settings?</label>
 			<label index="updater.questionInfo_searchFlexForm">(If you click "DO IT" all old fields will be moved to the new flexform sheet)</label>

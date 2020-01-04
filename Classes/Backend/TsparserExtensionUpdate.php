@@ -120,7 +120,7 @@ class TsparserExtensionUpdate
 				return false;
 			}
 		}
-		return TRUE;
+		return true;
 	}
 }
 

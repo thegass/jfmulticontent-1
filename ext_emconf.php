@@ -37,11 +37,11 @@ $EM_CONF[$_EXTKEY] = array(
 			'cms' => '',
 			'php' => '5.5.0-7.3.99',
 			'typo3' => '7.6.0-9.5.99',
-			'patchlayout' => '0.0.1-0.1.9',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
+			'patchlayout' => '0.0.1-0.1.9',
 		),
 	),
 );

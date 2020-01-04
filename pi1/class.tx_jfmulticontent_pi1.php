@@ -38,17 +38,17 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
 	public $prefixId      = 'tx_jfmulticontent_pi1';
 	public $scriptRelPath = 'pi1/class.tx_jfmulticontent_pi1.php';
-	public $extKey        = 'jfmulticontent';
-	public $pi_checkCHash = TRUE;
+	public $extKey        = JFMULTICONTENT_EXT;
+	public $pi_checkCHash = true;
 	public $conf = array();
 	private $lConf = array();
 	private $confArr = array();
-	private $templateFile = NULL;
-	private $templateFileJS = NULL;
-	private $templatePart = NULL;
+	private $templateFile = null;
+	private $templateFileJS = null;
+	private $templatePart = null;
 	private $additionalMarker = array();
-	private $contentKey = NULL;
-	private $contentCount = NULL;
+	private $contentKey = null;
+	private $contentCount = null;
 	private $contentClass = array();
 	private $classes = array();
 	private $contentWrap = array();
@@ -58,7 +58,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	private $rels = array();
 	private $content_id = array();
 	private $piFlexForm = array();
-	private $pagerenderer = NULL;
+	private $pagerenderer = null;
 
 	/**
 	 * The main method of the PlugIn
@@ -67,7 +67,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 * @param	array		$conf: The PlugIn configuration
 	 * @return	The content that is displayed on the website
 	 */
-	public function main($content, $conf)
+	public function main ($content, $conf)
 	{
 		$this->content = $content;
 		$this->conf = $conf;
@@ -75,6 +75,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$this->pi_loadLL();
 
 		$tsfe = $this->getTypoScriptFrontendController();
+		$this->setFlexFormData();
 
 		// get the config from EXT
 		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
@@ -87,116 +88,116 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 			// It's a content, all data from flexform
 
-			$this->lConf['style'] = $this->getFlexformData('general', 'style');
+			$this->lConf['style'] = $this->getFlexformData('s_general', 'style');
 
 			if ($this->lConf['style'] != 'typoscript') {
-				$this->lConf['columnOrder'] = $this->getFlexformData('general', 'columnOrder', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
-				$this->lConf['column1']     = $this->getFlexformData('general', 'column1', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
-				$this->lConf['column2']     = $this->getFlexformData('general', 'column2', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
-				$this->lConf['column3']     = $this->getFlexformData('general', 'column3', in_array($this->lConf['style'], array('3column', '4column', '5column')));
-				$this->lConf['column4']     = $this->getFlexformData('general', 'column4', in_array($this->lConf['style'], array('4column', '5column')));
-				$this->lConf['column5']     = $this->getFlexformData('general', 'column5', in_array($this->lConf['style'], array('5column')));
-				$this->lConf['equalize']    = $this->getFlexformData('general', 'equalize', in_array($this->lConf['style'], array('1column', '2column', '3column', '4column', '5column')));
+				$this->lConf['columnOrder'] = $this->getFlexformData('s_general', 'columnOrder', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column1']     = $this->getFlexformData('s_general', 'column1', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column2']     = $this->getFlexformData('s_general', 'column2', in_array($this->lConf['style'], array('2column', '3column', '4column', '5column')));
+				$this->lConf['column3']     = $this->getFlexformData('s_general', 'column3', in_array($this->lConf['style'], array('3column', '4column', '5column')));
+				$this->lConf['column4']     = $this->getFlexformData('s_general', 'column4', in_array($this->lConf['style'], array('4column', '5column')));
+				$this->lConf['column5']     = $this->getFlexformData('s_general', 'column5', in_array($this->lConf['style'], array('5column')));
+				$this->lConf['equalize']    = $this->getFlexformData('s_general', 'equalize', in_array($this->lConf['style'], array('1column', '2column', '3column', '4column', '5column')));
 
 				$debuglog = ($this->lConf['style'] == 'tab');
-				$this->lConf['tabCollapsible']   = $this->getFlexformData('general', 'tabCollapsible', $debuglog);
-				$this->lConf['tabOpen']          = $this->getFlexformData('general', 'tabOpen', $debuglog);
-				$this->lConf['tabRandomContent'] = $this->getFlexformData('general', 'tabRandomContent', $debuglog);
-				$this->lConf['tabEvent']         = $this->getFlexformData('general', 'tabEvent', $debuglog);
-				$this->lConf['tabHeightStyle']   = $this->getFlexformData('general', 'tabHeightStyle', $debuglog);
-				$this->lConf['tabCookieExpires'] = $this->getFlexformData('general', 'tabCookieExpires', $debuglog);
-				$this->lConf['tabCookieRoot']    = $this->getFlexformData('general', 'tabCookieRoot', $debuglog);
-				$this->lConf['tabHideEffect']             = $this->getFlexformData('general', 'tabHideEffect', $debuglog);
-				$this->lConf['tabHideTransition']         = $this->getFlexformData('general', 'tabHideTransition', $debuglog);
-				$this->lConf['tabHideTransitiondir']      = $this->getFlexformData('general', 'tabHideTransitiondir', $debuglog);
-				$this->lConf['tabHideTransitionduration'] = $this->getFlexformData('general', 'tabHideTransitionduration', $debuglog);
-				$this->lConf['tabShowEffect']             = $this->getFlexformData('general', 'tabShowEffect', $debuglog);
-				$this->lConf['tabShowTransition']         = $this->getFlexformData('general', 'tabShowTransition', $debuglog);
-				$this->lConf['tabShowTransitiondir']      = $this->getFlexformData('general', 'tabShowTransitiondir', $debuglog);
-				$this->lConf['tabShowTransitionduration'] = $this->getFlexformData('general', 'tabShowTransitionduration', $debuglog);
+				$this->lConf['tabCollapsible']   = $this->getFlexformData('s_general', 'tabCollapsible', $debuglog);
+				$this->lConf['tabOpen']          = $this->getFlexformData('s_general', 'tabOpen', $debuglog);
+				$this->lConf['tabRandomContent'] = $this->getFlexformData('s_general', 'tabRandomContent', $debuglog);
+				$this->lConf['tabEvent']         = $this->getFlexformData('s_general', 'tabEvent', $debuglog);
+				$this->lConf['tabHeightStyle']   = $this->getFlexformData('s_general', 'tabHeightStyle', $debuglog);
+				$this->lConf['tabCookieExpires'] = $this->getFlexformData('s_general', 'tabCookieExpires', $debuglog);
+				$this->lConf['tabCookieRoot']    = $this->getFlexformData('s_general', 'tabCookieRoot', $debuglog);
+				$this->lConf['tabHideEffect']             = $this->getFlexformData('s_general', 'tabHideEffect', $debuglog);
+				$this->lConf['tabHideTransition']         = $this->getFlexformData('s_general', 'tabHideTransition', $debuglog);
+				$this->lConf['tabHideTransitiondir']      = $this->getFlexformData('s_general', 'tabHideTransitiondir', $debuglog);
+				$this->lConf['tabHideTransitionduration'] = $this->getFlexformData('s_general', 'tabHideTransitionduration', $debuglog);
+				$this->lConf['tabShowEffect']             = $this->getFlexformData('s_general', 'tabShowEffect', $debuglog);
+				$this->lConf['tabShowTransition']         = $this->getFlexformData('s_general', 'tabShowTransition', $debuglog);
+				$this->lConf['tabShowTransitiondir']      = $this->getFlexformData('s_general', 'tabShowTransitiondir', $debuglog);
+				$this->lConf['tabShowTransitionduration'] = $this->getFlexformData('s_general', 'tabShowTransitionduration', $debuglog);
 
 				$debuglog = ($this->lConf['style'] == 'accordion');
-				$this->lConf['accordionCollapsible']        = $this->getFlexformData('general', 'accordionCollapsible', $debuglog);
-				$this->lConf['accordionClosed']             = $this->getFlexformData('general', 'accordionClosed', $debuglog);
-				$this->lConf['accordionOpen']               = $this->getFlexformData('general', 'accordionOpen', $debuglog);
-				$this->lConf['accordionRandomContent']      = $this->getFlexformData('general', 'accordionRandomContent', $debuglog);
-				$this->lConf['accordionEvent']              = $this->getFlexformData('general', 'accordionEvent', $debuglog);
-				$this->lConf['accordionHeightStyle']        = $this->getFlexformData('general', 'accordionHeightStyle', $debuglog);
-				$this->lConf['accordionAnimate']            = $this->getFlexformData('general', 'accordionAnimate', $debuglog);
-				$this->lConf['accordionTransition']         = $this->getFlexformData('general', 'accordionTransition', $debuglog);
-				$this->lConf['accordionTransitiondir']      = $this->getFlexformData('general', 'accordionTransitiondir', $debuglog);
-				$this->lConf['accordionTransitionduration'] = $this->getFlexformData('general', 'accordionTransitionduration', $debuglog);
+				$this->lConf['accordionCollapsible']        = $this->getFlexformData('s_general', 'accordionCollapsible', $debuglog);
+				$this->lConf['accordionClosed']             = $this->getFlexformData('s_general', 'accordionClosed', $debuglog);
+				$this->lConf['accordionOpen']               = $this->getFlexformData('s_general', 'accordionOpen', $debuglog);
+				$this->lConf['accordionRandomContent']      = $this->getFlexformData('s_general', 'accordionRandomContent', $debuglog);
+				$this->lConf['accordionEvent']              = $this->getFlexformData('s_general', 'accordionEvent', $debuglog);
+				$this->lConf['accordionHeightStyle']        = $this->getFlexformData('s_general', 'accordionHeightStyle', $debuglog);
+				$this->lConf['accordionAnimate']            = $this->getFlexformData('s_general', 'accordionAnimate', $debuglog);
+				$this->lConf['accordionTransition']         = $this->getFlexformData('s_general', 'accordionTransition', $debuglog);
+				$this->lConf['accordionTransitiondir']      = $this->getFlexformData('s_general', 'accordionTransitiondir', $debuglog);
+				$this->lConf['accordionTransitionduration'] = $this->getFlexformData('s_general', 'accordionTransitionduration', $debuglog);
 
 				$debuglog = ($this->lConf['style'] == 'slider');
-				$this->lConf['sliderWidth']              = $this->getFlexformData('general', 'sliderWidth', $debuglog);
-				$this->lConf['sliderHeight']             = $this->getFlexformData('general', 'sliderHeight', $debuglog);
-				$this->lConf['sliderResizeContents']     = $this->getFlexformData('general', 'sliderResizeContents', $debuglog);
-				$this->lConf['sliderTheme']              = $this->getFlexformData('general', 'sliderTheme', $debuglog);
-				$this->lConf['sliderMode']               = $this->getFlexformData('general', 'sliderMode', $debuglog);
-				$this->lConf['sliderOpen']               = $this->getFlexformData('general', 'sliderOpen', $debuglog);
-				$this->lConf['sliderRandomContent']      = $this->getFlexformData('general', 'sliderRandomContent', $debuglog);
-				$this->lConf['sliderHashTags']           = $this->getFlexformData('general', 'sliderHashTags', $debuglog);
-				$this->lConf['sliderBuildArrows']        = $this->getFlexformData('general', 'sliderBuildArrows', $debuglog);
-				$this->lConf['sliderToggleArrows']       = $this->getFlexformData('general', 'sliderToggleArrows', $debuglog);
-				$this->lConf['sliderNavigation']         = $this->getFlexformData('general', 'sliderNavigation', $debuglog);
-				$this->lConf['sliderStartStop']          = $this->getFlexformData('general', 'sliderStartStop', $debuglog);
-				$this->lConf['sliderPanelFromHeader']    = $this->getFlexformData('general', 'sliderPanelFromHeader', $debuglog);
-				$this->lConf['sliderToggleControls']     = $this->getFlexformData('general', 'sliderToggleControls', $debuglog);
-				$this->lConf['sliderAutoStart']          = $this->getFlexformData('general', 'sliderAutoStart', $debuglog);
-				$this->lConf['sliderPauseOnHover']       = $this->getFlexformData('general', 'sliderPauseOnHover', $debuglog);
-				$this->lConf['sliderAllowRapidChange']   = $this->getFlexformData('general', 'sliderAllowRapidChange', $debuglog);
-				$this->lConf['sliderResumeOnVideoEnd']   = $this->getFlexformData('general', 'sliderResumeOnVideoEnd', $debuglog);
-				$this->lConf['sliderStopAtEnd']          = $this->getFlexformData('general', 'sliderStopAtEnd', $debuglog);
-				$this->lConf['sliderPlayRtl']            = $this->getFlexformData('general', 'sliderPlayRtl', $debuglog);
-				$this->lConf['sliderTransition']         = $this->getFlexformData('general', 'sliderTransition', $debuglog);
-				$this->lConf['sliderTransitiondir']      = $this->getFlexformData('general', 'sliderTransitiondir', $debuglog);
-				$this->lConf['sliderTransitionduration'] = $this->getFlexformData('general', 'sliderTransitionduration', $debuglog);
-				$this->lConf['sliderAutoplay']           = $this->getFlexformData('general', 'sliderAutoplay', $debuglog);
+				$this->lConf['sliderWidth']              = $this->getFlexformData('s_general', 'sliderWidth', $debuglog);
+				$this->lConf['sliderHeight']             = $this->getFlexformData('s_general', 'sliderHeight', $debuglog);
+				$this->lConf['sliderResizeContents']     = $this->getFlexformData('s_general', 'sliderResizeContents', $debuglog);
+				$this->lConf['sliderTheme']              = $this->getFlexformData('s_general', 'sliderTheme', $debuglog);
+				$this->lConf['sliderMode']               = $this->getFlexformData('s_general', 'sliderMode', $debuglog);
+				$this->lConf['sliderOpen']               = $this->getFlexformData('s_general', 'sliderOpen', $debuglog);
+				$this->lConf['sliderRandomContent']      = $this->getFlexformData('s_general', 'sliderRandomContent', $debuglog);
+				$this->lConf['sliderHashTags']           = $this->getFlexformData('s_general', 'sliderHashTags', $debuglog);
+				$this->lConf['sliderBuildArrows']        = $this->getFlexformData('s_general', 'sliderBuildArrows', $debuglog);
+				$this->lConf['sliderToggleArrows']       = $this->getFlexformData('s_general', 'sliderToggleArrows', $debuglog);
+				$this->lConf['sliderNavigation']         = $this->getFlexformData('s_general', 'sliderNavigation', $debuglog);
+				$this->lConf['sliderStartStop']          = $this->getFlexformData('s_general', 'sliderStartStop', $debuglog);
+				$this->lConf['sliderPanelFromHeader']    = $this->getFlexformData('s_general', 'sliderPanelFromHeader', $debuglog);
+				$this->lConf['sliderToggleControls']     = $this->getFlexformData('s_general', 'sliderToggleControls', $debuglog);
+				$this->lConf['sliderAutoStart']          = $this->getFlexformData('s_general', 'sliderAutoStart', $debuglog);
+				$this->lConf['sliderPauseOnHover']       = $this->getFlexformData('s_general', 'sliderPauseOnHover', $debuglog);
+				$this->lConf['sliderAllowRapidChange']   = $this->getFlexformData('s_general', 'sliderAllowRapidChange', $debuglog);
+				$this->lConf['sliderResumeOnVideoEnd']   = $this->getFlexformData('s_general', 'sliderResumeOnVideoEnd', $debuglog);
+				$this->lConf['sliderStopAtEnd']          = $this->getFlexformData('s_general', 'sliderStopAtEnd', $debuglog);
+				$this->lConf['sliderPlayRtl']            = $this->getFlexformData('s_general', 'sliderPlayRtl', $debuglog);
+				$this->lConf['sliderTransition']         = $this->getFlexformData('s_general', 'sliderTransition', $debuglog);
+				$this->lConf['sliderTransitiondir']      = $this->getFlexformData('s_general', 'sliderTransitiondir', $debuglog);
+				$this->lConf['sliderTransitionduration'] = $this->getFlexformData('s_general', 'sliderTransitionduration', $debuglog);
+				$this->lConf['sliderAutoplay']           = $this->getFlexformData('s_general', 'sliderAutoplay', $debuglog);
 
 				$debuglog = ($this->lConf['style'] == 'slidedeck');
-				$this->lConf['slidedeckHeight']             = $this->getFlexformData('general', 'slidedeckHeight', $debuglog);
-				$this->lConf['slidedeckTransition']         = $this->getFlexformData('general', 'slidedeckTransition', $debuglog);
-				$this->lConf['slidedeckTransitiondir']      = $this->getFlexformData('general', 'slidedeckTransitiondir', $debuglog);
-				$this->lConf['slidedeckTransitionduration'] = $this->getFlexformData('general', 'slidedeckTransitionduration', $debuglog);
-				$this->lConf['slidedeckStart']              = $this->getFlexformData('general', 'slidedeckStart', $debuglog);
-				$this->lConf['slidedeckActivecorner']       = $this->getFlexformData('general', 'slidedeckActivecorner', $debuglog);
-				$this->lConf['slidedeckIndex']              = $this->getFlexformData('general', 'slidedeckIndex', $debuglog);
-				$this->lConf['slidedeckScroll']             = $this->getFlexformData('general', 'slidedeckScroll', $debuglog);
-				$this->lConf['slidedeckKeys']               = $this->getFlexformData('general', 'slidedeckKeys', $debuglog);
-				$this->lConf['slidedeckHidespines']         = $this->getFlexformData('general', 'slidedeckHidespines', $debuglog);
+				$this->lConf['slidedeckHeight']             = $this->getFlexformData('s_general', 'slidedeckHeight', $debuglog);
+				$this->lConf['slidedeckTransition']         = $this->getFlexformData('s_general', 'slidedeckTransition', $debuglog);
+				$this->lConf['slidedeckTransitiondir']      = $this->getFlexformData('s_general', 'slidedeckTransitiondir', $debuglog);
+				$this->lConf['slidedeckTransitionduration'] = $this->getFlexformData('s_general', 'slidedeckTransitionduration', $debuglog);
+				$this->lConf['slidedeckStart']              = $this->getFlexformData('s_general', 'slidedeckStart', $debuglog);
+				$this->lConf['slidedeckActivecorner']       = $this->getFlexformData('s_general', 'slidedeckActivecorner', $debuglog);
+				$this->lConf['slidedeckIndex']              = $this->getFlexformData('s_general', 'slidedeckIndex', $debuglog);
+				$this->lConf['slidedeckScroll']             = $this->getFlexformData('s_general', 'slidedeckScroll', $debuglog);
+				$this->lConf['slidedeckKeys']               = $this->getFlexformData('s_general', 'slidedeckKeys', $debuglog);
+				$this->lConf['slidedeckHidespines']         = $this->getFlexformData('s_general', 'slidedeckHidespines', $debuglog);
 
 				$debuglog = ($this->lConf['style'] == 'easyaccordion');
-				$this->lConf['easyaccordionSkin']     = $this->getFlexformData('general', 'easyaccordionSkin', $debuglog);
-				$this->lConf['easyaccordionOpen']     = $this->getFlexformData('general', 'easyaccordionOpen', $debuglog);
-				$this->lConf['easyaccordionWidth']    = $this->getFlexformData('general', 'easyaccordionWidth', $debuglog);
-				$this->lConf['easyaccordionSlideNum'] = $this->getFlexformData('general', 'easyaccordionSlideNum', $debuglog);
+				$this->lConf['easyaccordionSkin']     = $this->getFlexformData('s_general', 'easyaccordionSkin', $debuglog);
+				$this->lConf['easyaccordionOpen']     = $this->getFlexformData('s_general', 'easyaccordionOpen', $debuglog);
+				$this->lConf['easyaccordionWidth']    = $this->getFlexformData('s_general', 'easyaccordionWidth', $debuglog);
+				$this->lConf['easyaccordionSlideNum'] = $this->getFlexformData('s_general', 'easyaccordionSlideNum', $debuglog);
 
 				$debuglog = ($this->lConf['style'] == 'booklet');
-				$this->lConf['bookletWidth']         = $this->getFlexformData('general', 'bookletWidth', $debuglog);
-				$this->lConf['bookletHeight']        = $this->getFlexformData('general', 'bookletHeight', $debuglog);
-				$this->lConf['bookletSpeed']         = $this->getFlexformData('general', 'bookletSpeed', $debuglog);
-				$this->lConf['bookletStartingPage']  = $this->getFlexformData('general', 'bookletStartingPage', $debuglog);
-				$this->lConf['bookletRTL']           = $this->getFlexformData('general', 'bookletRTL', $debuglog);
-				$this->lConf['bookletTransition']    = $this->getFlexformData('general', 'bookletTransition', $debuglog);
-				$this->lConf['bookletTransitiondir'] = $this->getFlexformData('general', 'bookletTransitiondir', $debuglog);
-				$this->lConf['bookletPagePadding']   = $this->getFlexformData('general', 'bookletPagePadding', $debuglog);
-				$this->lConf['bookletPageNumbers']   = $this->getFlexformData('general', 'bookletPageNumbers', $debuglog);
-				$this->lConf['bookletManual']        = $this->getFlexformData('general', 'bookletManual', $debuglog);
-				$this->lConf['bookletShadows']       = $this->getFlexformData('general', 'bookletShadows', $debuglog);
-				$this->lConf['bookletClosed']        = $this->getFlexformData('general', 'bookletClosed', $debuglog);
-				$this->lConf['bookletCovers']        = $this->getFlexformData('general', 'bookletCovers', $debuglog);
-				$this->lConf['bookletAutoCenter']    = $this->getFlexformData('general', 'bookletAutoCenter', $debuglog);
-				$this->lConf['bookletHash']          = $this->getFlexformData('general', 'bookletHash', $debuglog);
-				$this->lConf['bookletKeyboard']      = $this->getFlexformData('general', 'bookletKeyboard', $debuglog);
-				$this->lConf['bookletAuto']          = $this->getFlexformData('general', 'bookletAuto', $debuglog);
-				$this->lConf['bookletDelay']         = $this->getFlexformData('general', 'bookletDelay', $debuglog);
-				$this->lConf['bookletOverlays']      = $this->getFlexformData('general', 'bookletOverlays', $debuglog);
-				$this->lConf['bookletArrows']        = $this->getFlexformData('general', 'bookletArrows', $debuglog);
-				$this->lConf['bookletArrowsHide']    = $this->getFlexformData('general', 'bookletArrows', $debuglog);
-				$this->lConf['bookletHovers']        = $this->getFlexformData('general', 'bookletHovers', $debuglog);
+				$this->lConf['bookletWidth']         = $this->getFlexformData('s_general', 'bookletWidth', $debuglog);
+				$this->lConf['bookletHeight']        = $this->getFlexformData('s_general', 'bookletHeight', $debuglog);
+				$this->lConf['bookletSpeed']         = $this->getFlexformData('s_general', 'bookletSpeed', $debuglog);
+				$this->lConf['bookletStartingPage']  = $this->getFlexformData('s_general', 'bookletStartingPage', $debuglog);
+				$this->lConf['bookletRTL']           = $this->getFlexformData('s_general', 'bookletRTL', $debuglog);
+				$this->lConf['bookletTransition']    = $this->getFlexformData('s_general', 'bookletTransition', $debuglog);
+				$this->lConf['bookletTransitiondir'] = $this->getFlexformData('s_general', 'bookletTransitiondir', $debuglog);
+				$this->lConf['bookletPagePadding']   = $this->getFlexformData('s_general', 'bookletPagePadding', $debuglog);
+				$this->lConf['bookletPageNumbers']   = $this->getFlexformData('s_general', 'bookletPageNumbers', $debuglog);
+				$this->lConf['bookletManual']        = $this->getFlexformData('s_general', 'bookletManual', $debuglog);
+				$this->lConf['bookletShadows']       = $this->getFlexformData('s_general', 'bookletShadows', $debuglog);
+				$this->lConf['bookletClosed']        = $this->getFlexformData('s_general', 'bookletClosed', $debuglog);
+				$this->lConf['bookletCovers']        = $this->getFlexformData('s_general', 'bookletCovers', $debuglog);
+				$this->lConf['bookletAutoCenter']    = $this->getFlexformData('s_general', 'bookletAutoCenter', $debuglog);
+				$this->lConf['bookletHash']          = $this->getFlexformData('s_general', 'bookletHash', $debuglog);
+				$this->lConf['bookletKeyboard']      = $this->getFlexformData('s_general', 'bookletKeyboard', $debuglog);
+				$this->lConf['bookletAuto']          = $this->getFlexformData('s_general', 'bookletAuto', $debuglog);
+				$this->lConf['bookletDelay']         = $this->getFlexformData('s_general', 'bookletDelay', $debuglog);
+				$this->lConf['bookletOverlays']      = $this->getFlexformData('s_general', 'bookletOverlays', $debuglog);
+				$this->lConf['bookletArrows']        = $this->getFlexformData('s_general', 'bookletArrows', $debuglog);
+				$this->lConf['bookletArrowsHide']    = $this->getFlexformData('s_general', 'bookletArrows', $debuglog);
+				$this->lConf['bookletHovers']        = $this->getFlexformData('s_general', 'bookletHovers', $debuglog);
 
-				$this->lConf['delayDuration'] = $this->getFlexformData('general', 'delayDuration', in_array($this->lConf['style'], array('slider', 'slidedeck', 'easyaccordion')));
-				$this->lConf['autoplayCycle'] = $this->getFlexformData('general', 'autoplayCycle', ($this->lConf['style'] == 'slidedeck'));
+				$this->lConf['delayDuration'] = $this->getFlexformData('s_general', 'delayDuration', in_array($this->lConf['style'], array('slider', 'slidedeck', 'easyaccordion')));
+				$this->lConf['autoplayCycle'] = $this->getFlexformData('s_general', 'autoplayCycle', ($this->lConf['style'] == 'slidedeck'));
 
 				// columns
 				$this->conf['config.']['column1']     = $this->lConf['column1'];
@@ -481,11 +482,11 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->conf['config.']['style'] = $this->lConf['style'];
 			}
 
-			$this->lConf['titles']     = $this->getFlexformData('title', 'titles');
-			$this->lConf['attributes'] = $this->getFlexformData('attribute', 'attributes');
+			$this->lConf['titles']     = $this->getFlexformData('s_title', 'titles');
+			$this->lConf['attributes'] = $this->getFlexformData('s_attribute', 'attributes');
 
-			$this->lConf['options']         = $this->getFlexformData('special', 'options');
-			$this->lConf['optionsOverride'] = $this->getFlexformData('special', 'optionsOverride');
+			$this->lConf['options']         = $this->getFlexformData('s_special', 'options');
+			$this->lConf['optionsOverride'] = $this->getFlexformData('s_special', 'optionsOverride');
 
 			if ($this->cObj->data['tx_jfmulticontent_view']) {
 				$this->conf['config.']['view'] = $this->cObj->data['tx_jfmulticontent_view'];
@@ -501,6 +502,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if (trim($this->lConf['attributes'])) {
 				$this->attributes = GeneralUtility::trimExplode(chr(10), $this->lConf['attributes']);
 			}
+
 			// options
 			if ($this->lConf['optionsOverride'] || trim($this->lConf['options'])) {
 				$this->conf['config.'][$this->lConf['style'] . 'Options'] = $this->lConf['options'];
@@ -512,8 +514,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if ($this->conf['config.']['view'] == 'page') {
 				// get the page ID's
 				$page_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_pages']);
+
 				// get the informations for every page
-				for ($a=0; $a < count($page_ids); $a++) {
+				for ($a = 0; $a < count($page_ids); $a++) {
 
 					$tsfe->register['pid'] = $page_ids[$a];
 
@@ -523,15 +526,15 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         $this->cElements[] = $innerContent;
 						$this->rels[] = $this->cObj->cObjGetSingle($view['rel'], $view['rel.']);
 					} else {
-						$row = NULL;
+						$row = null;
 						if ($tsfe->sys_language_content) {
                             if (
-                                version_compare(TYPO3_version, '9.0.0', '>=')
+                                version_compare(TYPO3_version, '8.0.0', '>=')
                             ) {
                                 // SELECT * FROM `pages_language_overlay` WHERE `deleted`=0 AND `hidden`=0 AND `pid`=<mypid> AND `sys_language_uid`=<mylanguageid>
                                 $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('pages_language_overlay');
                                 $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
-                                $row = $queryBuilder->select('*')
+                                $statement = $queryBuilder->select('*')
                                     ->from('pages_language_overlay')
                                     ->where(
                                         $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($page_ids[$a], \PDO::PARAM_INT))
@@ -539,8 +542,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                     ->andWhere(
                                         $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($tsfe->sys_language_content, \PDO::PARAM_INT))
                                     )
-                                    ->execute()
-                                    ->fetchAll();
+                                    ->setMaxResults(1)
+                                    ->execute();
+                                $row = $statement->fetch();
                             } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages_language_overlay', 'deleted=0 AND hidden=0 AND pid=' . intval($page_ids[$a]) . ' AND sys_language_uid=' . $tsfe->sys_language_content, '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -550,18 +554,19 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 						if (!is_array($row)) {
                             if (
-                                version_compare(TYPO3_version, '9.0.0', '>=')
+                                version_compare(TYPO3_version, '8.0.0', '>=')
                             ) {
                                 // SELECT * FROM `pages` WHERE `deleted`=0 AND `hidden`=0 AND `uid`=<mypid>
                                 $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('pages');
                                 $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
-                                $row = $queryBuilder->select('*')
+                                $statement = $queryBuilder->select('*')
                                     ->from('pages')
                                     ->where(
                                         $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($page_ids[$a], \PDO::PARAM_INT))
                                     )
-                                    ->execute()
-                                    ->fetchAll();
+                                    ->setMaxResults(1)
+                                    ->execute();
+                                $row = $statement->fetch();
                             } else {
                                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'pages', 'deleted=0 AND hidden=0 AND uid=' . intval($page_ids[$a]), '', '', 1);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -589,22 +594,24 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			} else if ($this->conf['config.']['view'] == 'content') {
 				// get the content ID's
 				$content_ids = GeneralUtility::trimExplode(',', $this->cObj->data['tx_jfmulticontent_contents']);
+				
 				// get the informations for every content
 				for ($a = 0; $a < count($content_ids); $a++) {
 					// Select the content
                     if (
-                        version_compare(TYPO3_version, '9.0.0', '>=')
+                        version_compare(TYPO3_version, '8.0.0', '>=')
                     ) {
                         // SELECT * FROM `tt_content` WHERE `deleted`=0 AND `hidden`=0 AND `uid`=<mycontentid>
                         $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
                         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
-                        $row = $queryBuilder->select('*')
+                        $statement = $queryBuilder->select('*')
                             ->from('tt_content')
                             ->where(
                                 $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($content_ids[$a], \PDO::PARAM_INT))
                             )
-                            ->execute()
-                            ->fetchAll();
+                            ->setMaxResults(1)
+                            ->execute();
+                        $row = $statement->fetch();
                     } else {
                         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                             '*',
@@ -643,19 +650,22 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
                 if (
-                    version_compare(TYPO3_version, '9.0.0', '>=')
+                    version_compare(TYPO3_version, '8.0.0', '>=')
                 ) {
                     // SELECT * FROM `tt_content` WHERE `deleted`=0 AND `hidden`=0 AND `tx_jfmulticontent_irre_parentid`=<myrecordid>
                     $queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
                     $queryBuilder->setRestrictions(GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer::class));
-                    $row = $queryBuilder->select('*')
+                    $statement = $queryBuilder->select('*')
                         ->from('tt_content')
                         ->where(
                             $queryBuilder->expr()->eq('tx_jfmulticontent_irre_parentid', $queryBuilder->createNamedParameter($elementUID, \PDO::PARAM_INT))
                         )
                         ->orderBy('sorting', 'ASC')
-                        ->execute()
-                        ->fetchAll();
+                        ->execute();
+                    $a = 0;
+                    while ($row = $statement->fetch()) {
+                        $this->addIRREContent($a, $row, $view);
+                    }
                 } else {
                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                         '*',
@@ -716,9 +726,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 		}
 		$this->contentCount = count($this->cElements);
-		// return FALSE, if there is no element
+		// return false, if there is no element
 		if ($this->contentCount == 0) {
-			return FALSE;
+			return false;
 		}
 
 		// The template
@@ -833,7 +843,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 				// Add Cookies script, if cookie is active
 				if ($this->conf['config.']['tabCookieExpires'] > 0 && $this->conf['config.']['tabOpen'] != -1) {
-					if (T3JQUERY !== TRUE) {
+					if (T3JQUERY !== true) {
 						$this->pagerenderer->addJsFile($this->conf['jQueryCookies']);
 					}
 					unset($options['active']);
@@ -846,7 +856,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				if ($this->conf['config.']['tabHideEffect'] == 'none') {
-					$options['hide'] = "hide:false";
+					$options['hide'] = 'hide:false';
 				} elseif ($this->conf['config.']['tabHideEffect']) {
 					$fx = array();
 					$fx[] = "effect:'{$this->conf['config.']['tabHideEffect']}'";
@@ -886,14 +896,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$markerArray = array();
 				// get the template
 				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_TAB_JS###'))) {
-					$templateCode = $this->outputError('Template TEMPLATE_TAB_JS is missing', TRUE);
+					$templateCode = $this->outputError('Template TEMPLATE_TAB_JS is missing', true);
 				}
 
 				// open tab by hash
 				if ($this->confArr['tabSelectByHash']) {
 					$tabSelector = trim($parser->getSubpart($templateCode, '###TAB_SELECT_BY_HASH###'));
 				} else {
-					$tabSelector = NULL;
+					$tabSelector = null;
 				}
 				$templateCode = trim($parser->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
 
@@ -901,7 +911,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				if ($this->confArr['openExternalLink']) {
 					$openExtLink = trim($parser->getSubpart($templateCode, '###OPEN_EXTERNAL_LINK###'));
 				} else {
-					$openExtLink = NULL;
+					$openExtLink = null;
 				}
 				$templateCode = trim($parser->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
 
@@ -912,10 +922,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
 					$this->pagerenderer->addJsFile($this->conf['jQueryUI']);
 				}
@@ -938,7 +948,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				} elseif ($this->conf['config.']['accordionRandomContent']) {
 					$options['active'] = 'active:Math.floor(Math.random()*' . $this->contentCount . ')';
 				} elseif ($this->conf['config.']['accordionOpen'] > 0) {
-					$options['active'] = "active:".($this->conf['config.']['accordionOpen'] - 1);
+					$options['active'] = 'active:' . ($this->conf['config.']['accordionOpen'] - 1);
 				}
 				if (in_array($this->conf['config.']['accordionEvent'], array('click', 'mouseover'))) {
 					$options['event'] = "event:'{$this->conf['config.']['accordionEvent']}'";
@@ -948,18 +958,18 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 				// get the Template of the Javascript
 				$markerArray = array();
-				$markerArray["KEY"]            = $this->getContentKey();
-				$markerArray["CONTENT_COUNT"]  = $this->contentCount;
-				$markerArray["EASING"]         = (in_array($this->conf['config.']['accordionTransition'], array("swing", "linear")) ? "" : "ease".$this->conf['config.']['accordionTransitiondir'].$this->conf['config.']['accordionTransition']);
-				$markerArray["TRANS_DURATION"] = (is_numeric($this->conf['config.']['accordionTransitionduration']) ? $this->conf['config.']['accordionTransitionduration'] : 1000);
+				$markerArray['KEY']            = $this->getContentKey();
+				$markerArray['CONTENT_COUNT']  = $this->contentCount;
+				$markerArray['EASING']         = (in_array($this->conf['config.']['accordionTransition'], array('swing', 'linear')) ? '' : 'ease' . $this->conf['config.']['accordionTransitiondir'] . $this->conf['config.']['accordionTransition']);
+				$markerArray['TRANS_DURATION'] = (is_numeric($this->conf['config.']['accordionTransitionduration']) ? $this->conf['config.']['accordionTransitionduration'] : 1000);
 
 				// get the template for the Javascript
-				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_ACCORDION_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_ACCORDION_JS is missing", TRUE);
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_ACCORDION_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_ACCORDION_JS is missing', true);
 				}
-				$easingAnimation = NULL;
+				$easingAnimation = null;
 				if (!$this->conf['config.']['accordionAnimate']) {
-					$options['animate'] = "animate:false";
+					$options['animate'] = 'animate:false';
 				} else {
 					$fx = array();
 					if (is_numeric($this->conf['config.']['accordionTransitionduration'])) {
@@ -973,17 +983,17 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 				// app the open-link-template
 				if ($this->confArr['openExternalLink']) {
-					$openExtLink = trim($parser->getSubpart($templateCode, "###OPEN_EXTERNAL_LINK###"));
+					$openExtLink = trim($parser->getSubpart($templateCode, '###OPEN_EXTERNAL_LINK###'));
 				} else {
-					$openExtLink = NULL;
+					$openExtLink = null;
 				}
 				$templateCode = trim($parser->substituteSubpart($templateCode, '###OPEN_EXTERNAL_LINK###', $openExtLink, 0));
 
 				// open tab by hash
 				if ($this->confArr['tabSelectByHash']) {
-					$tabSelector = trim($parser->getSubpart($templateCode, "###TAB_SELECT_BY_HASH###"));
+					$tabSelector = trim($parser->getSubpart($templateCode, '###TAB_SELECT_BY_HASH###'));
 				} else {
-					$tabSelector = NULL;
+					$tabSelector = null;
 				}
 				$templateCode = trim($parser->substituteSubpart($templateCode, '###TAB_SELECT_BY_HASH###', $tabSelector, 0));
 
@@ -997,15 +1007,15 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// Replace default values
-				$markerArray["OPTIONS"] = implode(", ", $options);
+				$markerArray['OPTIONS'] = implode(', ', $options);
 				// Replace all markers
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
 					$this->pagerenderer->addJsFile($this->conf['jQueryUI']);
 				}
@@ -1013,31 +1023,31 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->pagerenderer->addJS(trim($templateCode));
 				break;
 			}
-			case "slider" : {
+			case 'slider' : {
 				// anythingslider
-				$this->templatePart = "TEMPLATE_SLIDER";
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['sliderWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_SLIDER';
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['sliderWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				//
 				if ($this->conf['config.']['sliderTransition']) {
-					$options[] = "easing: '".(in_array($this->conf['config.']['sliderTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['sliderTransitiondir']}")."{$this->conf['config.']['sliderTransition']}'";
+					$options[] = "easing: '".(in_array($this->conf['config.']['sliderTransition'], array('swing', 'linear')) ? '' : "ease{$this->conf['config.']['sliderTransitiondir']}")."{$this->conf['config.']['sliderTransition']}'";
 				}
 				if ($this->conf['config.']['sliderTransitionduration'] > 0) {
 					$options[] = "animationTime: {$this->conf['config.']['sliderTransitionduration']}";
 				}
 				if ($this->conf['config.']['sliderAutoplay']) {
-					$options[] = "autoPlay: true";
+					$options[] = 'autoPlay: true';
 				} else {
-					$options[] = "autoPlay: false";
+					$options[] = 'autoPlay: false';
 				}
 				if ($this->conf['config.']['delayDuration'] > 0) {
 					$options[] = "delay: {$this->conf['config.']['delayDuration']}";
-					$options[] = "startStopped: ".($this->conf['config.']['sliderAutoStart'] ? 'false' : 'true');
-					$options[] = "stopAtEnd: ".($this->conf['config.']['sliderStopAtEnd'] ? 'true' : 'false');
+					$options[] = 'startStopped: ' . ($this->conf['config.']['sliderAutoStart'] ? 'false' : 'true');
+					$options[] = 'stopAtEnd: ' . ($this->conf['config.']['sliderStopAtEnd'] ? 'true' : 'false');
 				} else {
 					// Toggle only if not autoplay
-					$options[] = "toggleArrows: ".($this->conf['config.']['sliderToggleArrows'] ? 'true' : 'false');
-					$options[] = "toggleControls: ".($this->conf['config.']['sliderToggleControls'] ? 'true' : 'false');
+					$options[] = 'toggleArrows: ' . ($this->conf['config.']['sliderToggleArrows'] ? 'true' : 'false');
+					$options[] = 'toggleControls: ' . ($this->conf['config.']['sliderToggleControls'] ? 'true' : 'false');
 				}
 				$sliderWidth = trim($this->conf['config.']['sliderWidth']);
 				$sliderHeight = trim($this->conf['config.']['sliderHeight']);
@@ -1054,7 +1064,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 "}");
 				}
 				if ($this->conf['config.']['sliderResizeContents']) {
-					$options[] = "resizeContents: true";
+					$options[] = 'resizeContents: true';
 				}
 				$this->pagerenderer->addCssFile($this->conf['sliderCSS']);
 				$this->pagerenderer->addCssFileInc($this->conf['sliderCSSie7'], 'lte IE 7');
@@ -1071,16 +1081,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$this->pagerenderer->addCssFile(GeneralUtility::slashJS($anythingSliderThemeFolder) . $this->conf['config.']['sliderTheme'] . '/style.css');
 				}
 				if ($this->conf['config.']['sliderMode']) {
-					$options[] = "mode: '".$this->conf['config.']['sliderMode']."'";
+					$options[] = "mode: '" . $this->conf['config.']['sliderMode'] . "'";
 				}
-				$options[] = "buildArrows: ".($this->conf['config.']['sliderBuildArrows'] ? 'true' : 'false');
-				$options[] = "allowRapidChange: ".($this->conf['config.']['sliderAllowRapidChange'] ? 'true' : 'false');
-				$options[] = "resumeOnVideoEnd: ".($this->conf['config.']['sliderResumeOnVideoEnd'] ? 'true' : 'false');
-				$options[] = "playRtl: ".($this->conf['config.']['sliderPlayRtl'] ? 'true' : 'false');
-				$options[] = "hashTags: ".($this->conf['config.']['sliderHashTags'] ? 'true' : 'false');
-				$options[] = "pauseOnHover: ".($this->conf['config.']['sliderPauseOnHover'] ? 'true' : 'false');
-				$options[] = "buildNavigation: ".($this->conf['config.']['sliderNavigation'] ? 'true' : 'false');
-				$options[] = "buildStartStop: ".($this->conf['config.']['sliderStartStop'] ? 'true' : 'false');
+				$options[] = 'buildArrows: ' . ($this->conf['config.']['sliderBuildArrows'] ? 'true' : 'false');
+				$options[] = 'allowRapidChange: ' . ($this->conf['config.']['sliderAllowRapidChange'] ? 'true' : 'false');
+				$options[] = 'resumeOnVideoEnd: ' . ($this->conf['config.']['sliderResumeOnVideoEnd'] ? 'true' : 'false');
+				$options[] = 'playRtl: ' . ($this->conf['config.']['sliderPlayRtl'] ? 'true' : 'false');
+				$options[] = 'hashTags: ' . ($this->conf['config.']['sliderHashTags'] ? 'true' : 'false');
+				$options[] = 'pauseOnHover: ' . ($this->conf['config.']['sliderPauseOnHover'] ? 'true' : 'false');
+				$options[] = 'buildNavigation: ' . ($this->conf['config.']['sliderNavigation'] ? 'true' : 'false');
+				$options[] = 'buildStartStop: ' . ($this->conf['config.']['sliderStartStop'] ? 'true' : 'false');
 
 				$options[] = "startText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_start')) . "'";
 				$options[] = "stopText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_stop')) . "'";
@@ -1095,16 +1105,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				if ($this->conf['config.']['sliderPanelFromHeader']) {
 					$tab = array();
 					for ($a=0; $a < $this->contentCount; $a++) {
-						$tab[] = "if(i==".($a+1).") return " . GeneralUtility::quoteJSvalue($this->titles[$a]) . ";";
+						$tab[] = 'if(i==' . ($a + 1) . ') return ' . GeneralUtility::quoteJSvalue($this->titles[$a]) . ';';
 					}
-					$options[] = "navigationFormatter: function(i,p){\n			".implode("\n			", $tab)."\n		}";
+					$options[] = "navigationFormatter: function(i,p){\n			" . implode("\n			", $tab) . "\n		}";
 				} elseif (trim($this->pi_getLL('slider_panel'))) {
 					$options[] = "navigationFormatter: function(i,p){ var str = '" . (GeneralUtility::slashJS($this->pi_getLL('slider_panel'))) . "'; return str.replace('%i%',i); }";
 				}
 				if ($this->conf['config.']['sliderRandomContent']) {
-					$options[] = "startPanel: Math.floor(Math.random()*".($this->contentCount + 1).")";
+					$options[] = "startPanel: Math.floor(Math.random()*" . ($this->contentCount + 1) . ")";
 				} elseif ($this->conf['config.']['sliderOpen'] > 1) {
-					$options[] = "startPanel: ".($this->conf['config.']['sliderOpen'] < $this->contentCount ? $this->conf['config.']['sliderOpen'] : $this->contentCount);
+					$options[] = "startPanel: " . ($this->conf['config.']['sliderOpen'] < $this->contentCount ? $this->conf['config.']['sliderOpen'] : $this->contentCount);
 				}
 
 				// overwrite all options if set
@@ -1119,20 +1129,20 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get the Template of the Javascript
 				$markerArray = array();
 				// get the template
-				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDER_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_SLIDER_JS is missing", TRUE);
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_SLIDER_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_SLIDER_JS is missing', true);
 				}
 
 				// Replace default values
-				$markerArray["KEY"] = $this->getContentKey();
-				$markerArray["OPTIONS"] = implode(", ", $options);
+				$markerArray['KEY'] = $this->getContentKey();
+				$markerArray['OPTIONS'] = implode(', ', $options);
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
 				}
 				$this->pagerenderer->addJsFile($this->conf['sliderJS']);
@@ -1178,22 +1188,22 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_SLIDEDECK_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_SLIDEDECK_JS is missing", TRUE);
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_SLIDEDECK_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_SLIDEDECK_JS is missing', true);
 				}
 				// Replace default values
 				$markerArray = array();
-				$markerArray["KEY"]     = $this->getContentKey();
-				$markerArray["HEIGHT"]  = ($this->conf['config.']['slidedeckHeight'] > 0 ? $this->conf['config.']['slidedeckHeight'] : 300);
-				$markerArray["OPTIONS"] = implode(", ", $options);
+				$markerArray['KEY']     = $this->getContentKey();
+				$markerArray['HEIGHT']  = ($this->conf['config.']['slidedeckHeight'] > 0 ? $this->conf['config.']['slidedeckHeight'] : 300);
+				$markerArray['OPTIONS'] = implode(', ', $options);
 				// Replace all markers
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
 				}
 				$this->pagerenderer->addJsFile($this->conf['slidedeckJS']);
@@ -1204,18 +1214,18 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->pagerenderer->addJS(trim($templateCode));
 				break;
 			}
-			case "easyaccordion" : {
+			case 'easyaccordion' : {
 				// easyaccordion
-				$this->templatePart = "TEMPLATE_EASYACCORDION";
-				$this->additionalMarker["SKIN"] = $this->conf['config.']['easyaccordionSkin'];
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['easyaccordionWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_EASYACCORDION';
+				$this->additionalMarker['SKIN'] = $this->conf['config.']['easyaccordionSkin'];
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['easyaccordionWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if ($this->conf['config.']['delayDuration'] > 0) {
-					$options['autoStart']     = "autoStart: true";
+					$options['autoStart']     = 'autoStart: true';
 					$options['slideInterval'] = "slideInterval: {$this->conf['config.']['delayDuration']}";
 				}
-				$options['slideNum'] = "slideNum: ".($this->conf['config.']['easyaccordionSlideNum'] ? 'true' : 'false');
+				$options['slideNum'] = 'slideNum: ' . ($this->conf['config.']['easyaccordionSlideNum'] ? 'true' : 'false');
 
 				// overwrite all options if set
 				if ($this->conf['config.']['optionsOverride']) {
@@ -1227,68 +1237,68 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_EASYACCORDION_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_EASYACCORDION_JS is missing", TRUE);
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_EASYACCORDION_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_EASYACCORDION_JS is missing', true);
 				}
 				// Replace default values
 				$markerArray = array();
-				$markerArray["KEY"]     = $this->getContentKey();
-				$markerArray["WIDTH"]   = ($this->conf['config.']['easyaccordionWidth'] > 0  ? $this->conf['config.']['easyaccordionWidth']  : 600);
-				$markerArray["OPTIONS"] = implode(", ", $options);
+				$markerArray['KEY']     = $this->getContentKey();
+				$markerArray['WIDTH']   = ($this->conf['config.']['easyaccordionWidth'] > 0  ? $this->conf['config.']['easyaccordionWidth']  : 600);
+				$markerArray['OPTIONS'] = implode(', ', $options);
 				// Replace all markers
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 				}
 				$this->pagerenderer->addJsFile($this->conf['easyaccordionJS']);
 				$this->pagerenderer->addCssFile($this->conf['easyaccordionCSS']);
-				$this->pagerenderer->addCssFile($this->confArr['easyAccordionSkinFolder'] . $this->conf['config.']['easyaccordionSkin'] . "/style.css");
+				$this->pagerenderer->addCssFile($this->confArr['easyAccordionSkinFolder'] . $this->conf['config.']['easyaccordionSkin'] . '/style.css');
 				$this->pagerenderer->addJS(trim($templateCode));
 				break;
 			}
-			case "booklet" : {
+			case 'booklet' : {
 				// easyaccordion
-				$this->templatePart = "TEMPLATE_BOOKLET";
-				$this->contentWrap = GeneralUtility::trimExplode("|*|", $this->conf['bookletWrap.']['wrap']);
+				$this->templatePart = 'TEMPLATE_BOOKLET';
+				$this->contentWrap = GeneralUtility::trimExplode('|*|', $this->conf['bookletWrap.']['wrap']);
 				$this->pagerenderer->addJS($jQueryNoConflict);
 				$options = array();
 				if (is_numeric($this->conf['config.']['bookletWidth'])) {
-					$options['width'] = "width: ".$this->conf['config.']['bookletWidth'];
+					$options['width'] = 'width: ' . $this->conf['config.']['bookletWidth'];
 				}
 				if (is_numeric($this->conf['config.']['bookletHeight'])) {
-					$options['height'] = "height: ".$this->conf['config.']['bookletHeight'];
+					$options['height'] = 'height: ' . $this->conf['config.']['bookletHeight'];
 				}
 				if (is_numeric($this->conf['config.']['bookletSpeed'])) {
-					$options['speed'] = "speed: ".$this->conf['config.']['bookletSpeed'];
+					$options['speed'] = 'speed: ' . $this->conf['config.']['bookletSpeed'];
 				}
 				if (is_numeric($this->conf['config.']['bookletStartingPage'])) {
-					$options['startingPage'] = "startingPage: ".$this->conf['config.']['bookletStartingPage'];
+					$options['startingPage'] = 'startingPage: ' . $this->conf['config.']['bookletStartingPage'];
 				}
 				if ($this->conf['config.']['bookletRTL']) {
-					$options['direction'] = "direction: 'RTL'";
+					$options['direction'] = 'direction: \'RTL\'';
 				}
 				if ($this->conf['config.']['bookletTransition']) {
 					$options['transition'] = "easing: '".(in_array($this->conf['config.']['bookletTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['bookletTransitiondir']}")."{$this->conf['config.']['bookletTransition']}'";
 				}
 				if (is_numeric($this->conf['config.']['bookletPagePadding'])) {
-					$options['pagePadding'] = "pagePadding: ".$this->conf['config.']['bookletPagePadding'];
+					$options['pagePadding'] = 'pagePadding: ' . $this->conf['config.']['bookletPagePadding'];
 				}
-				$options['pageNumbers'] = "pageNumbers: ".($this->conf['config.']['bookletPageNumbers'] ? 'true' : 'false');
-				$options['manual']      = "manual: ".($this->conf['config.']['bookletManual'] ? 'true' : 'false');
-				$options['shadows']     = "shadows: ".($this->conf['config.']['bookletShadows'] ? 'true' : 'false');
-				$options['closed']      = "closed: ".($this->conf['config.']['bookletClosed'] ? 'true' : 'false');
-				$options['covers']      = "covers: ".($this->conf['config.']['bookletCovers'] ? 'true' : 'false');
-				$options['autoCenter']  = "autoCenter: ".($this->conf['config.']['bookletAutoCenter'] ? 'true' : 'false');
-				$options['hash']        = "hash: ".($this->conf['config.']['bookletHash'] ? 'true' : 'false');
-				$options['keyboard']    = "keyboard: ".($this->conf['config.']['bookletKeyboard'] ? 'true' : 'false');
-				$options['overlays']    = "overlays: ".($this->conf['config.']['bookletOverlays'] ? 'true' : 'false');
-				$options['arrows']      = "arrows: ".($this->conf['config.']['bookletArrows'] ? 'true' : 'false');
-				$options['arrowsHide']  = "arrowsHide: ".($this->conf['config.']['bookletArrowsHide'] ? 'true' : 'false');
-				$options['hovers']      = "hovers: ".($this->conf['config.']['bookletHovers'] ? 'true' : 'false');
+				$options['pageNumbers'] = 'pageNumbers: ' . ($this->conf['config.']['bookletPageNumbers'] ? 'true' : 'false');
+				$options['manual']      = 'manual: ' . ($this->conf['config.']['bookletManual'] ? 'true' : 'false');
+				$options['shadows']     = "shadows: " . ($this->conf['config.']['bookletShadows'] ? 'true' : 'false');
+				$options['closed']      = "closed: " . ($this->conf['config.']['bookletClosed'] ? 'true' : 'false');
+				$options['covers']      = "covers: " . ($this->conf['config.']['bookletCovers'] ? 'true' : 'false');
+				$options['autoCenter']  = "autoCenter: " . ($this->conf['config.']['bookletAutoCenter'] ? 'true' : 'false');
+				$options['hash']        = "hash: " . ($this->conf['config.']['bookletHash'] ? 'true' : 'false');
+				$options['keyboard']    = "keyboard: " . ($this->conf['config.']['bookletKeyboard'] ? 'true' : 'false');
+				$options['overlays']    = "overlays: " . ($this->conf['config.']['bookletOverlays'] ? 'true' : 'false');
+				$options['arrows']      = "arrows: " . ($this->conf['config.']['bookletArrows'] ? 'true' : 'false');
+				$options['arrowsHide']  = "arrowsHide: " . ($this->conf['config.']['bookletArrowsHide'] ? 'true' : 'false');
+				$options['hovers']      = "hovers: " . ($this->conf['config.']['bookletHovers'] ? 'true' : 'false');
 
 				// overwrite all options if set
 				if ($this->conf['config.']['bookletOptionsOverride']) {
@@ -1300,23 +1310,23 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// get the template for the Javascript
-				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, "###TEMPLATE_BOOKLET_JS###"))) {
-					$templateCode = $this->outputError("Template TEMPLATE_BOOKLET_JS is missing", TRUE);
+				if (!$templateCode = trim($parser->getSubpart($this->templateFileJS, '###TEMPLATE_BOOKLET_JS###'))) {
+					$templateCode = $this->outputError('Template TEMPLATE_BOOKLET_JS is missing', true);
 				}
 
 				// Replace default values
 				$markerArray = array();
-				$markerArray["KEY"]     = $this->getContentKey();
-				$markerArray["OPTIONS"] = implode(",\n		", $options);
+				$markerArray['KEY']     = $this->getContentKey();
+				$markerArray['OPTIONS'] = implode(",\n		", $options);
 
 				// Replace all markers
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === TRUE) {
+				if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
-					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], TRUE);
+					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
 					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
 				}
 				$this->pagerenderer->addJsFile($this->conf['bookletJS']);
@@ -1325,7 +1335,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				break;
 			}
 			default: {
-				return $this->outputError("NO VALID TEMPLATE SELECTED", FALSE);
+				return $this->outputError('NO VALID TEMPLATE SELECTED', false);
 			}
 		}
 
@@ -1339,7 +1349,6 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 		// Render the Template
 		$out = $this->renderTemplate();
-
 		return $this->pi_wrapInBaseClass($out);
 	}
 
@@ -1349,7 +1358,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * @param array $row record
 	 * @return void
 	 */
-    public function addIRREContent(&$a, $row, $view) {
+    public function addIRREContent (&$a, $row, $view) {
         $tsfe = $this->getTypoScriptFrontendController();
 
         if ($tsfe->sys_language_content) {
@@ -1378,16 +1387,16 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 * Set the contentKey
 	 * @param string $contentKey
 	 */
-	public function setContentKey($contentKey=NULL)
+	public function setContentKey ($contentKey = null)
 	{
-		$this->contentKey = ($contentKey == NULL ? $this->extKey : $contentKey);
+		$this->contentKey = ($contentKey == null ? $this->extKey : $contentKey);
 	}
 
 	/**
 	 * Get the contentKey
 	 * @return string
 	 */
-	public function getContentKey()
+	public function getContentKey ()
 	{
 		return $this->contentKey;
 	}
@@ -1397,7 +1406,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 *
 	 * @return string
 	 */
-	public function renderTemplate()
+	public function renderTemplate ()
 	{
         $tsfe = $this->getTypoScriptFrontendController();
         $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
@@ -1412,23 +1421,23 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$tsfe->register['COLUMN_CLASSES'] = $markerArray['COLUMN_CLASSES'];
 
 		// get the template
-		if (!$templateCode = $parser->getSubpart($this->templateFile, "###{$this->templatePart}###")) {
-			$templateCode = $this->outputError("Template {$this->templatePart} is missing", FALSE);
+		if (!$templateCode = $parser->getSubpart($this->templateFile, '###' . $this->templatePart . '###')) {
+			$templateCode = $this->outputError('Template ' . $this->templatePart . ' is missing', false);
 		}
 		// Replace default values
-		$markerArray["KEY"] = $this->getContentKey();
+		$markerArray['KEY'] = $this->getContentKey();
 		// replace equalizeClass
 		if ($this->conf['config.']['equalize']) {
-			$markerArray["EQUALIZE_CLASS"] = ' '.$this->cObj->stdWrap($this->conf['equalizeClass'], $this->conf['equalizeClass.']);
+			$markerArray['EQUALIZE_CLASS'] = ' '.$this->cObj->stdWrap($this->conf['equalizeClass'], $this->conf['equalizeClass.']);
 		} else {
-			$markerArray["EQUALIZE_CLASS"] = '';
+			$markerArray['EQUALIZE_CLASS'] = '';
 		}
 		$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 		// Get the title template
-		$titleCode = $parser->getSubpart($templateCode, "###TITLES###");
+		$titleCode = $parser->getSubpart($templateCode, '###TITLES###');
 		// Get the column template
-		$columnCode = $parser->getSubpart($templateCode, "###COLUMNS###");
+		$columnCode = $parser->getSubpart($templateCode, '###COLUMNS###');
 		// Define the contentWrap
 		switch (count($this->contentWrap)) {
 			case 1 : {
@@ -1453,9 +1462,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			default: {
 				$contentWrap_array = array(
-					NULL,
-					NULL,
-					NULL
+					null,
+					null,
+					null
 				);
 				break;
 			}
@@ -1463,13 +1472,14 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if ($this->conf['config.']['easyaccordionOpen'] > $this->contentCount) {
 			$this->conf['config.']['easyaccordionOpen'] = $this->contentCount;
 		}
+
 		// fetch all contents
-		for ($a=0; $a < $this->contentCount; $a++) {
+		for ($a = 0; $a < $this->contentCount; $a++) {
 			$markerArray = array();
 			// get the attribute if exist
-			$markerArray["ATTRIBUTE"] = "";
+			$markerArray['ATTRIBUTE'] = '';
 			if ($this->attributes[$a] != '') {
-				$markerArray["ATTRIBUTE"] .= ' ' . $this->attributes[$a];
+				$markerArray['ATTRIBUTE'] .= ' ' . $this->attributes[$a];
 			}
 			// if the attribute does not have a class entry, the class will be wraped for yaml (c33l, c33l, c33r)
 			if ($this->classes[$a] && isset($this->contentClass[$a]) && !preg_match('/class\=/i', $markerArray['ATTRIBUTE'])) {
@@ -1485,8 +1495,8 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 			// render the content
 			$markerArray['CONTENT_ID'] = $this->content_id[$a];
-			$markerArray['ID']         = $a+1;
-			$markerArray['TITLE']      = NULL;
+			$markerArray['ID']         = $a + 1;
+			$markerArray['TITLE']      = null;
 
 			// Title will be selected if not COLUMNS (TAB, ACCORDION and SLIDER)
 			if ($this->templatePart != 'TEMPLATE_COLUMNS') {
@@ -1508,7 +1518,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			} else {
 				$wrap = $contentWrap_array[1];
 			}
-			$addContent = FALSE;
+			$addContent = false;
 			// override the CONTENT
 			if (
                 $this->templatePart == 'TEMPLATE_COLUMNS' &&
@@ -1521,7 +1531,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							$test = ($key - $a) / $this->contentCount;
 							if (intval($test) == $test) {
 								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
-								$addContent = TRUE;
+								$addContent = true;
                             }
 						}
 						break;
@@ -1532,7 +1542,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							$test = ($key - ($this->contentCount - ($a + 1))) / $this->contentCount;
 							if (intval($test) == $test) {
 								$markerArray['CONTENT'] .= $this->cObj->stdWrap($this->cElements[$key], array('wrap' => $wrap));
-								$addContent = TRUE;
+								$addContent = true;
 							}
 						}
 						break;
@@ -1551,7 +1561,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			} else {
 				// wrap the content
 				$markerArray['CONTENT'] = $this->cObj->stdWrap($this->cElements[$a], array('wrap' => $wrap));
-				$addContent = TRUE;
+				$addContent = true;
 			}
 			$markerArray['REL'] = htmlspecialchars($this->rels[$a]);
 			// Generate the QUOTE_TITLE
@@ -1566,7 +1576,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				// get additional marker configuration
 				if(count($additionalMarkers) > 0) {
 					foreach($additionalMarkers as $additonalMarker) {
-						$markerArray[strtoupper($additonalMarker)] = $this->cObj->cObjGetSingle($this->conf['additionalMarkerConf.'][$additonalMarker], $this->conf['additionalMarkerConf.'][$additonalMarker.'.']);
+						$markerArray[strtoupper($additonalMarker)] = $this->cObj->cObjGetSingle($this->conf['additionalMarkerConf.'][$additonalMarker], $this->conf['additionalMarkerConf.'][$additonalMarker . '.']);
 					}
 				}
 			}
@@ -1583,7 +1593,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		$return_string = $templateCode;
 		$return_string = $parser->substituteSubpart($return_string, '###TITLES###', $titles, 0);
-		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);		
+		$return_string = $parser->substituteSubpart($return_string, '###COLUMNS###', $columns, 0);
 
 		if (isset($this->conf['additionalMarkers'])) {
 			$additonalMarkerArray = array();
@@ -1592,7 +1602,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			// get additional marker configuration
 			if(count($additionalMarkers) > 0) {
 				foreach($additionalMarkers as $additonalMarker) {
-					$additonalMarkerArray[strtoupper($additonalMarker)] = $this->cObj->cObjGetSingle($this->conf['additionalMarkerConf.'][$additonalMarker], $this->conf['additionalMarkerConf.'][$additonalMarker.'.']);
+					$additonalMarkerArray[strtoupper($additonalMarker)] = $this->cObj->cObjGetSingle($this->conf['additionalMarkerConf.'][$additonalMarker], $this->conf['additionalMarkerConf.'][$additonalMarker . '.']);
 				}
 			}
 			// add addtional marker content to template
@@ -1608,12 +1618,12 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	* @param boolean $js
 	* @return string
 	*/
-	public function outputError($msg='', $js=FALSE) {
+	public function outputError ($msg='', $js=false) {
 		GeneralUtility::devLog($msg, $this->extKey, 3);
 		if ($this->confArr['frontendErrorMsg'] || !isset($this->confArr['frontendErrorMsg'])) {
 			return ($js ? 'alert(' . GeneralUtility::quoteJSvalue($msg) . ')' : '<p>' . $msg . '</p>');
 		} else {
-			return NULL;
+			return null;
 		}
 	}
 
@@ -1622,7 +1632,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	*
 	* @return void
 	*/
-	protected function setFlexFormData()
+	protected function setFlexFormData ()
 	{
 		if (empty($this->piFlexForm)) {
 			$this->pi_initPIflexForm();
@@ -1637,38 +1647,40 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	 * @param boolean $devlog
 	 * @return string
 	 */
-	protected function getFlexformData($sheet='', $name='', $devlog=TRUE)
+	protected function getFlexformData ($sheet = '', $name = '', $devlog = true)
 	{
-		$this->setFlexFormData();
+        $result = null;
+
 		if (!isset($this->piFlexForm['data'])) {
-			if ($devlog === TRUE) {
+			if ($devlog === true) {
 				GeneralUtility::devLog('Flexform Data not set', $this->extKey, 1);
 			}
-			return NULL;
+			return null;
 		}
 		if (!isset($this->piFlexForm['data'][$sheet])) {
-			if ($devlog === TRUE) {
+			if ($devlog === true) {
 				GeneralUtility::devLog('Flexform sheet ' . $sheet . ' not defined', $this->extKey, 1);
 			}
-			return NULL;
+			return null;
 		}
 		if (!isset($this->piFlexForm['data'][$sheet]['lDEF'][$name])) {
-			if ($devlog === TRUE) {
+			if ($devlog === true) {
 				GeneralUtility::devLog('Flexform Data [' . $sheet . '][' . $name . '] does not exist', $this->extKey, 1);
 			}
-			return NULL;
+			return null;
 		}
 		if (isset($this->piFlexForm['data'][$sheet]['lDEF'][$name]['vDEF'])) {
-			return $this->pi_getFFvalue($this->piFlexForm, $name, $sheet);
+			$result = $this->pi_getFFvalue($this->piFlexForm, $name, $sheet);
 		} else {
-			return $this->piFlexForm['data'][$sheet]['lDEF'][$name];
+			$result = $this->piFlexForm['data'][$sheet]['lDEF'][$name];
 		}
+		return $result;
 	}
 	
     /**
      * @return PageRepository
      */
-    protected function getPageRepository(): PageRepository
+    protected function getPageRepository (): PageRepository
     {
         return $this->getTypoScriptFrontendController()->sys_page ?: GeneralUtility::makeInstance(PageRepository::class);
     }
