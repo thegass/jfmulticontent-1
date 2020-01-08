@@ -1,4 +1,7 @@
 
+2020-01-08  Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add support for extension lib_jquery to include the jquery-1.10.0.min.js library in many versions.
+
 2020-01-04  Franz Holzinger  <franz@ttproducts.de>
     * compatibility TYPO3 7.5, deprecation 69057: replace \TYPO3\CMS\Backend\Utility\IconUtility::skinImg by TYPO3\CMS\Core\Imaging\IconFactory
     * deprecation 79259: EXT:t3skin removed

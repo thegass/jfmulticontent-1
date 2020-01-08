@@ -76,6 +76,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 		$tsfe = $this->getTypoScriptFrontendController();
 		$this->setFlexFormData();
+		$jQueryAvailable = false;
+		if (class_exists(\Sonority\LibJquery\Hooks\PageRenderer::class)) {
+            $jQueryAvailable = true;
+		}
 
 		// get the config from EXT
 		$this->confArr = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][JFMULTICONTENT_EXT];
@@ -842,8 +846,13 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 
 				// Add Cookies script, if cookie is active
-				if ($this->conf['config.']['tabCookieExpires'] > 0 && $this->conf['config.']['tabOpen'] != -1) {
-					if (T3JQUERY !== true) {
+				if (
+                    $this->conf['config.']['tabCookieExpires'] > 0 &&
+                    $this->conf['config.']['tabOpen'] != -1
+                ) {
+                    if ($jQueryAvailable) {
+                        // nothing 
+                    } else if (T3JQUERY !== true) {
 						$this->pagerenderer->addJsFile($this->conf['jQueryCookies']);
 					}
 					unset($options['active']);
@@ -864,9 +873,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$fx[] = "duration:'{$this->conf['config.']['tabHideTransitionduration']}'";
 					}
 					if ($this->conf['config.']['tabHideTransition']) {
-						$fx[] = "easing:'".(in_array($this->conf['config.']['tabHideTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabHideTransitiondir']}")."{$this->conf['config.']['tabHideTransition']}'";
+						$fx[] = "easing:'" . (in_array($this->conf['config.']['tabHideTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabHideTransitiondir']}") . "{$this->conf['config.']['tabHideTransition']}'";
 					}
-					$options['hide'] = "hide:{".implode(', ', $fx)."}";
+					$options['hide'] = "hide:{" . implode(', ', $fx) . "}";
 				}
 
 				if ($this->conf['config.']['tabShowEffect'] == 'none') {
@@ -878,7 +887,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$fx[] = "duration:'{$this->conf['config.']['tabShowTransitionduration']}'";
 					}
 					if ($this->conf['config.']['tabShowTransition']) {
-						$fx[] = "easing:'".(in_array($this->conf['config.']['tabShowTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabShowTransitiondir']}") . "{$this->conf['config.']['tabShowTransition']}'";
+						$fx[] = "easing:'" . (in_array($this->conf['config.']['tabShowTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['tabShowTransitiondir']}") . "{$this->conf['config.']['tabShowTransition']}'";
 					}
 					$options['show'] = "show:{" . implode(', ', $fx) . "}";
 				}
@@ -922,7 +931,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+                if ($jQueryAvailable) {
+					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
+					$this->pagerenderer->addJsFile($this->conf['jQueryUI']);
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
@@ -976,9 +988,9 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$fx[] = "duration:'{$this->conf['config.']['accordionTransitionduration']}'";
 					}
 					if ($this->conf['config.']['accordionTransition']) {
-						$fx[] = "easing:'".(in_array($this->conf['config.']['accordionTransition'], array("swing", "linear")) ? "" : "ease{$this->conf['config.']['accordionTransitiondir']}")."{$this->conf['config.']['accordionTransition']}'";
+						$fx[] = 'easing:\'' . (in_array($this->conf['config.']['accordionTransition'], array('swing', 'linear')) ? '' : 'ease' . $this->conf['config.']['accordionTransitiondir']) . $this->conf['config.']['accordionTransition'] . '\'';
 					}
-					$options['animate'] = "animate:{".implode(', ', $fx)."}";
+					$options['animate'] = 'animate:{' . implode(', ', $fx) . '}';
 				}
 
 				// app the open-link-template
@@ -1012,7 +1024,11 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+
+                if ($jQueryAvailable) {
+					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
+					$this->pagerenderer->addJsFile($this->conf['jQueryUI']);
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
@@ -1139,7 +1155,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+
+                if ($jQueryAvailable) {
+					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
@@ -1200,7 +1219,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+
+                if ($jQueryAvailable) {
+					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
@@ -1249,7 +1271,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+
+                if ($jQueryAvailable) {
+                    // nothing 
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
@@ -1323,7 +1348,10 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$templateCode = $parser->substituteMarkerArray($templateCode, $markerArray, '###|###', 0);
 
 				// Add all CSS and JS files
-				if (T3JQUERY === true) {
+
+                if ($jQueryAvailable) {
+					$this->pagerenderer->addJsFile($this->conf['jQueryEasing']);
+                } else if (T3JQUERY === true) {
 					tx_t3jquery::addJqJS();
 				} else {
 					$this->pagerenderer->addJsFile($this->conf['jQueryLibrary'], true);
