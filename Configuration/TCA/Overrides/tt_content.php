@@ -44,7 +44,7 @@ $temporaryColumns = array(
 				array('LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.view.I.1', 'page'),
 				array('LLL:EXT:' . JFMULTICONTENT_EXT . '/locallang_db.xml:tt_content.tx_jfmulticontent.view.I.2', 'irre'),
 			),
-			'itemsProcFunc' => 'JambageCom\\Jfmulticontent\\Hooks\\ItemsProcFunc->getViews',
+			'itemsProcFunc' => \JambageCom\Jfmulticontent\Hooks\ItemsProcFunc::class . '->getViews',
 		)
 	),
 	'tx_jfmulticontent_pages' => array(
