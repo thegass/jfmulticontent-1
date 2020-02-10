@@ -2,12 +2,6 @@
 
 ########################################################################
 # Extension Manager/Repository config file for ext "jfmulticontent".
-#
-# Auto generated 10-08-2015 09:40
-#
-# Manual updates:
-# Only the data in the array - everything else is removed by next
-# writing. "version" and "dependencies" must not be touched!
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
@@ -15,7 +9,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Arranges multiple contents into one content element with multiple columns, accordions, tabs, slider, slidedeck, easyAccordion or Booklet (Sponsored by http://www.made-in-nature.de/typo3-agentur.html). This extension will also extend tt_news with two new lists.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '2.11.1',
+	'version' => '2.11.2',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',

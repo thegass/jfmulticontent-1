@@ -1,3 +1,5 @@
+2020-02-10  Franz Holzinger  <franz@ttproducts.de>
+    * fix bug  #3: replace GeneralUtility::slashJS by static::slashJS which is a copy of the other slashJS method.
 
 2020-01-08  Franz Holzinger  <franz@ttproducts.de>
     * new feature: add support for extension lib_jquery to include the jquery-1.10.0.min.js library in many versions.

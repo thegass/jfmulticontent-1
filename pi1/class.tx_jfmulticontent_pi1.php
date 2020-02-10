@@ -1086,7 +1086,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$this->pagerenderer->addCssFileInc($this->conf['sliderCSSie7'], 'lte IE 7');
 
 				if ($this->conf['config.']['sliderTheme']) {
-					$options[] = "theme: '" . GeneralUtility::slashJS($this->conf['config.']['sliderTheme']) . "'";
+					$options[] = 'theme: \'' . static::slashJS($this->conf['config.']['sliderTheme']) . '\'';
 					if (substr($this->confArr['anythingSliderThemeFolder'], 0, 4) === 'EXT:') {
 						list($extKey, $local) = explode('/', substr($this->confArr['anythingSliderThemeFolder'], 4), 2);
 						$anythingSliderThemeFolder =
@@ -1094,7 +1094,7 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					} else {
 						$anythingSliderThemeFolder = $this->confArr['anythingSliderThemeFolder'];
 					}
-					$this->pagerenderer->addCssFile(GeneralUtility::slashJS($anythingSliderThemeFolder) . $this->conf['config.']['sliderTheme'] . '/style.css');
+					$this->pagerenderer->addCssFile(static::slashJS($anythingSliderThemeFolder) . $this->conf['config.']['sliderTheme'] . '/style.css');
 				}
 				if ($this->conf['config.']['sliderMode']) {
 					$options[] = "mode: '" . $this->conf['config.']['sliderMode'] . "'";
@@ -1108,24 +1108,24 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$options[] = 'buildNavigation: ' . ($this->conf['config.']['sliderNavigation'] ? 'true' : 'false');
 				$options[] = 'buildStartStop: ' . ($this->conf['config.']['sliderStartStop'] ? 'true' : 'false');
 
-				$options[] = "startText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_start')) . "'";
-				$options[] = "stopText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_stop')) . "'";
+				$options[] = 'startText: \'' . static::slashJS($this->pi_getLL('slider_start')) . '\'';
+				$options[] = 'stopText: \'' . static::slashJS($this->pi_getLL('slider_stop')) . '\'';
 				if ($this->pi_getLL('slider_forward')) {
-					$options[] = "forwardText: '".GeneralUtility::slashJS($this->pi_getLL('slider_forward')) . "'";
+					$options[] = 'forwardText: \'' . static::slashJS($this->pi_getLL('slider_forward')) . '\'';
 				}
 				if ($this->pi_getLL('slider_back')) {
-					$options[] = "backText: '" . GeneralUtility::slashJS($this->pi_getLL('slider_back')) . "'";
+					$options[] = 'backText: \'' . static::slashJS($this->pi_getLL('slider_back')) . '\'';
 				}
 
 				// define the paneltext
 				if ($this->conf['config.']['sliderPanelFromHeader']) {
 					$tab = array();
-					for ($a=0; $a < $this->contentCount; $a++) {
+					for ($a = 0; $a < $this->contentCount; $a++) {
 						$tab[] = 'if(i==' . ($a + 1) . ') return ' . GeneralUtility::quoteJSvalue($this->titles[$a]) . ';';
 					}
-					$options[] = "navigationFormatter: function(i,p){\n			" . implode("\n			", $tab) . "\n		}";
+					$options[] = 'navigationFormatter: function(i,p){' . PHP_EOL . implode(PHP_EOL . '			', $tab) . PHP_EOL . '		}';
 				} elseif (trim($this->pi_getLL('slider_panel'))) {
-					$options[] = "navigationFormatter: function(i,p){ var str = '" . (GeneralUtility::slashJS($this->pi_getLL('slider_panel'))) . "'; return str.replace('%i%',i); }";
+					$options[] = 'navigationFormatter: function(i,p){ var str = \'' . (static::slashJS($this->pi_getLL('slider_panel'))) . '\'; return str.replace(\'%i%\',i); }';
 				}
 				if ($this->conf['config.']['sliderRandomContent']) {
 					$options[] = "startPanel: Math.floor(Math.random()*" . ($this->contentCount + 1) . ")";
@@ -1704,7 +1704,18 @@ class tx_jfmulticontent_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		return $result;
 	}
-	
+
+    /**
+     * This function is used to escape any ' -characters when transferring text to JavaScript!
+     *
+     * @param string $string String to escape
+     * @return string Processed input string
+     */
+    public static function slashJS($string)
+    {
+        return str_replace($char, '\\' . $char, $string);
+    }
+
     /**
      * @return PageRepository
      */
