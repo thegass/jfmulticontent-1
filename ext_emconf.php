@@ -6,10 +6,10 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Multiple Content',
-	'description' => 'Arranges multiple contents into one content element with multiple columns, accordions, tabs, slider, slidedeck, easyAccordion or Booklet (Sponsored by http://www.made-in-nature.de/typo3-agentur.html). This extension will also extend tt_news with two new lists.',
+	'description' => 'Arranges multiple contents into one content element with multiple columns, accordions, tabs, slider, slidedeck, easyAccordion or Booklet. This extension will also extend tt_news with two new lists.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '2.11.2',
+	'version' => '2.11.3',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
